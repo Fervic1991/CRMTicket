@@ -97,44 +97,62 @@ const ContactImportWpModal = ({ isOpen, handleClose, selectedTags, hideNum, user
   }, [contactsToImport]);
 
   const handleOnExportContacts = async (model = false) => {
-    const allDatas = []; //const { data } = await api.get("/contacts");
+  const allDatas = [];
 
+  if (!model) {
     let i = 1;
-    if (!model) {
-      while (i !== 0) {
-        const { data } = await api.get("/contacts/", {
-          params: { searchParam: "", pageNumber: i, contactTag: JSON.stringify(selectedTags) },
-        });
-        console.log(data)
-        data.contacts.forEach((element) => {
-          const tagsContact = element?.tags?.map(tag => tag?.name).join(', '); // Concatenando as tags com vírgula
-          const contactWithTags = { ...element, tags: tagsContact }; // Substituindo as tags pelo valor concatenado
-          allDatas.push(contactWithTags);
-        });
 
-        const pages = data?.count / 20;
-        i++;
-        if (i > pages) {
-          i = 0;
-        }
-      }
-    } else {
-      allDatas.push({
-        name: "João",
-        number: "5599999999999",
-        email: "",
+    while (i !== 0) {
+      const { data } = await api.get("/contacts/", {
+        params: { searchParam: "", pageNumber: i }
       });
-    }
 
-    const exportData = allDatas.map((e) => {
-      return { name: e.name, number: (hideNum && userProfile === "user" ? e.isGroup ? e.number : e.number.slice(0, -6) + "**-**" + e.number.slice(-2) : e.number), email: e.email, tags: e.tags };
+      // Filtra SOLO i contatti che corrispondono ai tag selezionati
+      const filtered = data.contacts.filter(contact => {
+        if (!selectedTags || selectedTags.length === 0) return true;
+        return contact.tags?.some(tag => selectedTags.includes(tag.id));
+      });
+
+      // Aggiunge SOLO quelli filtrati nell’export
+      filtered.forEach(element => {
+        const tagsContact = element?.tags?.map(tag => tag.name).join(', ');
+        const contactWithTags = { ...element, tags: tagsContact };
+        allDatas.push(contactWithTags);
+      });
+
+      const pages = data.count / 20;
+      i++;
+      if (i > pages) {
+        i = 0;
+      }
+    }
+  } else {
+    allDatas.push({
+      name: "João",
+      number: "5599999999999",
+      email: "",
     });
-    //console.log({ allDatas });
-    let wb = XLSX.utils.book_new();
-    let ws = XLSX.utils.json_to_sheet(exportData);
-    XLSX.utils.book_append_sheet(wb, ws, "Contatos");
-    XLSX.writeFile(wb, "backup_contatos.xlsx");
-  };
+  }
+
+  const exportData = allDatas.map((e) => {
+    return {
+      name: e.name,
+      number: (hideNum && userProfile === "user"
+        ? e.isGroup
+          ? e.number
+          : e.number.slice(0, -6) + "**-**" + e.number.slice(-2)
+        : e.number),
+      email: e.email,
+      tags: e.tags
+    };
+  });
+
+  let wb = XLSX.utils.book_new();
+  let ws = XLSX.utils.json_to_sheet(exportData);
+  XLSX.utils.book_append_sheet(wb, ws, "Contacts");
+  XLSX.writeFile(wb, "backup_contacts.xlsx");
+};
+
 
   const handleImportChange = (e) => {
     const [file] = e.target.files;
