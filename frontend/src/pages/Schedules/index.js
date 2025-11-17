@@ -28,6 +28,7 @@ import { AuthContext } from "../../context/Auth/AuthContext";
 import usePlans from "../../hooks/usePlans";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "moment/locale/pt-br";
+import 'moment/locale/es';
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import SearchIcon from "@material-ui/icons/Search";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
@@ -47,7 +48,7 @@ const eventTitleStyle = {
   whiteSpace: "nowrap", // Evite a quebra de linha do texto
   textOverflow: "ellipsis", // Exiba "..." se o texto for muito longo
 };
-
+moment.locale('es');
 const localizer = momentLocalizer(moment);
 var defaultMessages = {
   date: i18n.t("schedules.date"),
