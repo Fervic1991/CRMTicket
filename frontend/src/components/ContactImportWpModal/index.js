@@ -97,6 +97,9 @@ const ContactImportWpModal = ({ isOpen, handleClose, selectedTags, hideNum, user
   }, [contactsToImport]);
 
   const handleOnExportContacts = async (model = false) => {
+  console.log(">>> handleOnExportContacts TRIGGERED");
+  console.log("model:", model);
+  console.log("selectedTags dentro export:", selectedTags);
   const allDatas = [];
 
   if (!model) {
