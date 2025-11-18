@@ -256,7 +256,6 @@ const Contacts = () => {
     }
     console.log(newSelected);
     setSelectedContacts(newSelected);
-    setSelectedTags(newSelected)
     setSelectAllMode(false); // Desativa modo "todos da empresa" quando seleciona individualmente
   };
 
@@ -804,6 +803,7 @@ const Contacts = () => {
           isOpen={importContactModalOpen}
           handleClose={() => setImportContactModalOpen(false)}
           selectedTags={selectedTags}
+          selectedContacts={selectedContacts}
           hideNum={hideNum}
           userProfile={user.profile}
         />

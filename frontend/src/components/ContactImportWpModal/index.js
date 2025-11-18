@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const ContactImportWpModal = ({ isOpen, handleClose, selectedTags, hideNum, userProfile }) => {
+const ContactImportWpModal = ({ isOpen, handleClose, selectedTags,selectedContacts, hideNum, userProfile }) => {
   const classes = useStyles();
   const { user } = useContext(AuthContext);
   const history = useHistory();
@@ -100,6 +100,7 @@ const ContactImportWpModal = ({ isOpen, handleClose, selectedTags, hideNum, user
   console.log(">>> handleOnExportContacts TRIGGERED");
   console.log("model:", model);
   console.log("selectedTags dentro export:", selectedTags);
+  console.log("selectedcontacts dentro export:", selectedContacts);
   const allDatas = [];
 
   if (!model) {
