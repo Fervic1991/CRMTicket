@@ -246,6 +246,8 @@ const Contacts = () => {
 
   // Funções para seleção múltipla CORRIGIDAS
   const handleSelectContact = (contactId) => {
+    console.log(contactId);
+     console.log(newSelected);
     const newSelected = new Set(selectedContacts);
     if (newSelected.has(contactId)) {
       newSelected.delete(contactId);
