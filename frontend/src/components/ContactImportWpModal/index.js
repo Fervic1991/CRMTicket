@@ -111,18 +111,22 @@ const ContactImportWpModal = ({ isOpen, handleClose, selectedTags,selectedContac
         params: { searchParam: "", pageNumber: i }
       });
 
-      // Filtra SOLO i contatti che corrispondono ai tag selezionati
-      const filtered = data.contacts.filter(contact => {
-        if (!selectedTags || selectedTags.length === 0) return true;
-        return contact.tags?.some(tag => selectedTags.includes(tag.id));
-      });
+    // Filtra SOLO i contatti che corrispondono ai contatti selezionati
+    const filtered = data.contacts.filter(contact => {
+      // Se non ci sono contatti selezionati, prendi tutti
+      if (!selectedContacts || selectedContacts.size === 0) return true;
+      
+      // Controlla se l'ID del contatto è nel set dei selezionati
+      return selectedContacts.has(contact.id);
+    });
 
-      // Aggiunge SOLO quelli filtrati nell’export
+// Aggiunge SOLO quelli filtrati nell’export
       filtered.forEach(element => {
         const tagsContact = element?.tags?.map(tag => tag.name).join(', ');
         const contactWithTags = { ...element, tags: tagsContact };
         allDatas.push(contactWithTags);
       });
+
 
       const pages = data.count / 20;
       i++;
