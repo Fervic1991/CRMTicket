@@ -254,7 +254,6 @@ const Contacts = () => {
     } else {
       newSelected.add(contactId);
     }
-    console.log(newSelected);
     setSelectedContacts(newSelected);
     setSelectAllMode(false); // Desativa modo "todos da empresa" quando seleciona individualmente
   };
@@ -268,7 +267,7 @@ const Contacts = () => {
       // Verificar se todos da página atual estão selecionados
       const currentPageIds = contacts.map(contact => contact.id);
       const allCurrentSelected = currentPageIds.every(id => selectedContacts.has(id));
-      
+      console.log("currentPageIds:", currentPageIds);
       if (allCurrentSelected && selectedContacts.size === currentPageIds.length) {
         // Se todos da página estão selecionados, ativar modo "todos da empresa"
         setSelectAllMode(true);
