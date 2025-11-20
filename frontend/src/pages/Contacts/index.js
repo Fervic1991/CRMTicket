@@ -270,10 +270,12 @@ const Contacts = () => {
       console.log("currentPageIds:", currentPageIds);
       if (allCurrentSelected && selectedContacts.size === currentPageIds.length) {
         // Se todos da página estão selecionados, ativar modo "todos da empresa"
+        console.log("solo selezionati:", currentPageIds);
         setSelectAllMode(true);
         setSelectedContacts(new Set()); // Limpar seleção individual
       } else {
         // Selecionar todos da página atual
+        console.log("pagina actual:",currentPageIds);
         setSelectedContacts(new Set(currentPageIds));
         setSelectAllMode(false);
       }
