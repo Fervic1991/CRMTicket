@@ -268,6 +268,7 @@ const Contacts = () => {
       const currentPageIds = contacts.map(contact => contact.id);
       const allCurrentSelected = currentPageIds.every(id => selectedContacts.has(id));
       console.log("currentPageIds:", currentPageIds);
+      console.log("allCurrentSelected:", allCurrentSelected);
       if (allCurrentSelected && selectedContacts.size === currentPageIds.length) {
         // Se todos da página estão selecionados, ativar modo "todos da empresa"
         console.log("solo selezionati:", currentPageIds);
