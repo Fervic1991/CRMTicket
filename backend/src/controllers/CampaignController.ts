@@ -583,3 +583,35 @@ export const stopRecurrence = async (req: Request, res: Response): Promise<Respo
     throw new AppError(err.message);
   }
 };
+
+export const report = async (req: Request, res: Response): Promise<Response> => {
+  const { id } = req.params;
+  const { companyId } = req.user;
+
+  console.log('[Campaign Report] Request per campaign id:', id, 'companyId:', companyId);
+
+  try {
+    const campaign = await Campaign.findOne({
+      where: { id, companyId },
+      include: [/* eventuali relazioni per il report */]
+    });
+
+    if (!campaign) {
+      return res.status(404).json({ error: 'Campagna non trovata' });
+    }
+
+    // Qui fai il calcolo/report dei dati della campagna
+    const reportData = {
+      id: campaign.id,
+      name: campaign.name,
+      status: campaign.status,
+      scheduledAt: campaign.scheduledAt,
+      // altre info
+    };
+
+    return res.json(reportData);
+  } catch (err: any) {
+    console.error('[Campaign Report] Errore:', err.message);
+    return res.status(500).json({ error: err.message });
+  }
+};
