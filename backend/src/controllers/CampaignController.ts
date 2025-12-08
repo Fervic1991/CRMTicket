@@ -24,6 +24,8 @@ import AppError from "../errors/AppError";
 import { CancelService } from "../services/CampaignService/CancelService";
 import { RestartService } from "../services/CampaignService/RestartService";
 import RecurrenceService from "../services/CampaignService/RecurrenceService";
+import heapdump from 'heapdump';
+heapdump.writeSnapshot('/tmp/heap-' + Date.now() + '.heapsnapshot');
 
 type IndexQuery = {
   searchParam: string;
