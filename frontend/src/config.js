@@ -15,7 +15,7 @@ function getConfig(name, defaultValue = null) {
 export function getBackendUrl() {
     // Default to localhost:8080 if not configured
     const url = getConfig('REACT_APP_BACKEND_URL', 'http://localhost:8080');
-    
+    console.log("Configuração REACT_APP_BACKEND_URL:", url);
     // If we're in development and no URL is set, use relative path (proxy will handle it)
     if (!url && process.env.NODE_ENV === 'development') {
         return '';
