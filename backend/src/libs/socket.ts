@@ -12,11 +12,20 @@ import BirthdayService from "../services/BirthdayService/BirthdayService";
 let io: SocketIO;
 
 export const initIO = (httpServer: Server): SocketIO => {
-  io = new SocketIO(httpServer, {
-    cors: {
-      origin: process.env.FRONTEND_URL
-    }
-  });
+io = new SocketIO(httpServer, {
+  cors: {
+    origin: [
+      process.env.FRONTEND_URL,
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "http://127.0.0.1:3000",
+      "http://127.0.0.1:3001"
+    ],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    credentials: true
+  }
+});
+
 
   if (process.env.SOCKET_ADMIN && JSON.parse(process.env.SOCKET_ADMIN)) {
     User.findByPk(1).then(
