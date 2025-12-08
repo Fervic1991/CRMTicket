@@ -24,14 +24,8 @@ import AppError from "../errors/AppError";
 import { CancelService } from "../services/CampaignService/CancelService";
 import { RestartService } from "../services/CampaignService/RestartService";
 import RecurrenceService from "../services/CampaignService/RecurrenceService";
-import heapdump from 'heapdump';
-heapdump.writeSnapshot('/tmp/heap-' + Date.now() + '.heapsnapshot');
 
-type IndexQuery = {
-  searchParam: string;
-  pageNumber: string;
-  companyId: string | number;
-};
+console.log('[Campaign Store] Inizio funzione store');
 
 // src/controllers/CampaignController.ts - Type StoreData completo
 
@@ -78,6 +72,7 @@ type FindParams = {
 export const index = async (req: Request, res: Response): Promise<Response> => {
   const { searchParam, pageNumber } = req.query as IndexQuery;
   const { companyId } = req.user;
+  console.log('[Campaign Store] Inizio funzione store');
 
   const { records, count, hasMore } = await ListService({
     searchParam,
@@ -165,6 +160,7 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
       recurrenceEndDate,
       maxExecutions
     }: StoreData = req.body;
+    console.log('[Campaign Store] Dati ricevuti dal body:', { isRecurring, recurrenceType, recurrenceDaysOfWeek });
 
     console.log('[Campaign Store] Dados recebidos:', {
       isRecurring,
@@ -230,8 +226,8 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     await schema.validate(processedData);
 
     const campaign = await Campaign.create(processedData);
-
-    console.log('[Campaign Store] Campanha criada:', campaign.id);
+    console.log('[Campaign Store] Prima di Campaign.create');
+    console.log('[Campaign Store] processedData size:', JSON.stringify(processedData).length, 'bytes');
 
     // Se for recorrente, calcular próxima execução
     if (campaign.isRecurring) {
