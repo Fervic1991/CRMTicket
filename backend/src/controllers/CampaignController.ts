@@ -28,7 +28,11 @@ import RecurrenceService from "../services/CampaignService/RecurrenceService";
 console.log('[Campaign Store] Inizio funzione store');
 
 // src/controllers/CampaignController.ts - Type StoreData completo
-
+type IndexQuery = {
+  searchParam: string;
+  pageNumber: string;
+  companyId: string | number;
+};
 type StoreData = {
   name: string;
   message1?: string;
