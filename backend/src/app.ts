@@ -130,5 +130,28 @@ app.use(async (err: Error, req: Request, res: Response, _: NextFunction) => {
   logger.error(err);
   return res.status(500).json({ error: "Internal server error" });
 });
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  console.error("=".repeat(80));
+  console.error("🔴 ERRORE CATTURATO:");
+  console.error("URL:", req.originalUrl);
+  console.error("Metodo:", req.method);
+  console.error("Corpo:", req.body);
+  console.error("Messaggio:", err.message);
+  console.error("Stack:", err.stack);
+  console.error("=".repeat(80));
 
+  if (err instanceof AppError) {
+    return res.status(err.statusCode).json({
+      error: true,
+      message: err.message,
+      statusCode: err.statusCode
+    });
+  }
+
+  return res.status(500).json({
+    error: true,
+    message: "Internal server error",
+    details: process.env.NODE_ENV === "development" ? err.message : undefined
+  });
+});
 export default app;
