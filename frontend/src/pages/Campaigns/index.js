@@ -212,6 +212,7 @@ const Campaigns = () => {
   const handleCloseCampaignModal = () => {
     setSelectedCampaign(null);
     setCampaignModalOpen(false);
+    fetchCampaigns();
   };
 
   const handleSearch = (event) => {
