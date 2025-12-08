@@ -768,23 +768,32 @@ async function verifyAndFinalizeCampaign(campaign) {
     }
   });
 
-  if (count1 === count2) {
-    // Incrementar contador de execuções
+  // ✅ NUOVO: Controlla se è passato troppo tempo
+  const campaignStarted = moment(campaign.updatedAt);
+  const now = moment();
+  const hoursElapsed = now.diff(campaignStarted, 'hours');
+  
+  // Se sono passate 24 ore, finalizza la campagna
+  const maxHours = 24;
+  const timedOut = hoursElapsed >= maxHours;
+
+  if (count1 === count2 || timedOut) {
+    console.log(`[Campaign] Campagna finalizada: ID=${campaign.id}, Enviados=${count2}/${count1}, Timeout=${timedOut}`);
+    
     await campaign.update({ 
+      status: "FINALIZADA", 
+      completedAt: moment(),
       executionCount: campaign.executionCount + 1,
       lastExecutedAt: new Date()
     });
 
-    // Verificar se é recorrente
+    // Se è ricorrente, schedula la prossima esecuzione
     if (campaign.isRecurring) {
       await RecurrenceService.scheduleNextExecution(campaign.id);
-    } else {
-      await campaign.update({ 
-        status: "FINALIZADA", 
-        completedAt: moment() 
-      });
     }
   }
+}
+
 
   const io = getIO();
   io.of(companyId).emit(`company-${campaign.companyId}-campaign`, {
