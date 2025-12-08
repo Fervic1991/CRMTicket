@@ -794,14 +794,6 @@ async function verifyAndFinalizeCampaign(campaign) {
   }
 }
 
-
-  const io = getIO();
-  io.of(companyId).emit(`company-${campaign.companyId}-campaign`, {
-    action: "update",
-    record: campaign
-  });
-}
-
 async function handleProcessCampaign(job) {
   try {
     const { id }: ProcessCampaignData = job.data;
