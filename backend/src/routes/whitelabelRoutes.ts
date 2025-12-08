@@ -26,7 +26,7 @@ whitelabelRoutes.get(
   "/current-logo",
   isAuth,
   WhitelabelController.getCurrentLogo
-);s
+);
 
 // Listar todas as configurações (apenas super admin)
 whitelabelRoutes.get(
