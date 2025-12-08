@@ -758,7 +758,7 @@ const handleSaveCampaign = async (values) => {
                         <Box display="flex" alignItems="center" mb={2}>
                           <RepeatIcon className={classes.recurrenceIcon} />
                           <Typography variant="h6">
-                            Configuração de Recorrência
+                            Configuracion de Recurrencia
                           </Typography>
                         </Box>
                         

@@ -626,10 +626,11 @@ const Campaigns = () => {
                               </IconButton>
                             </Tooltip>
                             <Tooltip title={i18n.t("campaigns.tooltips.edit")}>
-                              <IconButton
-                                size="small"
-                                onClick={() => handleEditCampaign(campaign)}
-                              >
+                                <IconButton
+                                    size="small"
+                                    onClick={() => handleEditCampaign(campaign)}
+                                    disabled={campaign.status === "EM_ANDAMENTO"}  // ✅ DISABILITA SE IN CORSO
+                                  >
                                 <EditIcon />
                               </IconButton>
                             </Tooltip>
