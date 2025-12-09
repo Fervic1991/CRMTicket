@@ -293,27 +293,63 @@ const CampaignModal = ({
   }, []);
 
   useEffect(() => {
-    if (searchParam.length < 3) {
-      setLoading(false);
-      setSelectedQueue("");
-      return;
+    if (isMounted.current) {
+      if (initialValues) {
+        setCampaign((prevState) => {
+          return { ...prevState, ...initialValues };
+        });
+      }
+
+      // ... caricamento liste contatti e whatsapp (rimuovi per brevità qui ma lasciali nel codice) ...
+
+      if (!campaignId) return;
+
+      console.log(`[DEBUG] Inizio caricamento campagna ID: ${campaignId}`); // LOG DI DEBUG
+
+      api.get(`/campaigns/${campaignId}`)
+        .then(({ data }) => {
+          console.log(`[DEBUG] Dati campagna ricevuti dal server:`, data); // LOG DI DEBUG
+
+          if (data?.user) setSelectedUser(data.user);
+          if (data?.queue) setSelectedQueue(data.queue.id);
+          
+          if (data?.whatsappId) {
+            setWhatsappId(parseInt(data.whatsappId)); 
+          } else {
+            setWhatsappId(null);
+          }
+          
+          setCampaign((prev) => {
+            let prevCampaignData = Object.assign({}, prev);
+
+            Object.entries(data).forEach(([key, value]) => {
+              if (key === "scheduledAt" && value !== "" && value !== null) {
+                prevCampaignData[key] = moment(value).format("YYYY-MM-DDTHH:mm");
+              } else if (key === "recurrenceEndDate" && value !== "" && value !== null) {
+                prevCampaignData[key] = moment(value).format("YYYY-MM-DD");
+              } else if (key === "recurrenceDaysOfWeek" && value) {
+                // Gestione sicura del JSON parse
+                try {
+                  prevCampaignData[key] = typeof value === 'string' ? JSON.parse(value) : value;
+                } catch(e) {
+                  prevCampaignData[key] = [];
+                }
+              } else {
+                prevCampaignData[key] = value === null ? "" : value;
+              }
+            });
+
+            console.log(`[DEBUG] Stato campagna finale aggiornato:`, prevCampaignData); // LOG DI DEBUG
+            return prevCampaignData;
+          });
+        })
+        .catch((err) => {
+           console.error("[DEBUG] Errore nel caricamento della campagna:", err);
+           toastError(err);
+        });
     }
-    const delayDebounceFn = setTimeout(() => {
-      setLoading(true);
-      const fetchUsers = async () => {
-        try {
-          const { data } = await api.get("/users/");
-          setOptions(data.users);
-          setLoading(false);
-        } catch (err) {
-          setLoading(false);
-          toastError(err);
-        }
-      };
-      fetchUsers();
-    }, 500);
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchParam]);
+  }, [campaignId, open, companyId]); // Ho rimosso initialValues dalle dipendenze per evitare loop
+
 
   useEffect(() => {
     if (isMounted.current) {

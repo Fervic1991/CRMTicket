@@ -228,6 +228,7 @@ const Campaigns = () => {
   };
 
   const handleEditCampaign = (campaign) => {
+    console.log('Editing campaign:', campaign);
     setSelectedCampaign(campaign);
     setCampaignModalOpen(true);
   };
