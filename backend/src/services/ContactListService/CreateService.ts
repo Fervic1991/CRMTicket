@@ -9,7 +9,7 @@ interface Data {
 
 const CreateService = async (data: Data): Promise<ContactList> => {
   const { name, companyId } = data;
-
+  console.log('[CreateService] start');
   const ticketnoteSchema = Yup.object().shape({
     name: Yup.string()
       .min(3, "ERR_CONTACTLIST_INVALID_NAME")
@@ -21,9 +21,9 @@ const CreateService = async (data: Data): Promise<ContactList> => {
   } catch (err: any) {
     throw new AppError(err.message);
   }
-
+  console.log('[CreateService] start, payload:', data);
   const record = await ContactList.create(data);
-
+  console.log('[CreateService] created id=', record);
   return record;
 };
 
