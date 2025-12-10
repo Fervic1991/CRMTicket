@@ -1034,11 +1034,9 @@ const messages = {
           closedMessage: "Cerrar Ticket con Mensaje de Despedida",
           closedNotMessage: "Cerrar Ticket sin Mensaje de Despedida",
         },
-        tickets: {
-          status: {
+        status: {
           pending: "Ticket Pendiente"
-      }
-    }
+        }
       },
       transferTicketModal: {
         title: "Transferir Ticket",
