@@ -1751,7 +1751,7 @@ const MessageInput = ({
       <Box className={classes.pendingAlert}>
         <Info style={{ fontSize: 20 }} />
         <span>
-          <strong>Ticket Aguardando:</strong> Apenas mensagens internas são permitidas neste momento.
+          <strong>{i18n.t("tickets.status.pending")}</strong> {i18n.t("messages.errors.onlyInternalAllowed")}
         </span>
       </Box>
     );

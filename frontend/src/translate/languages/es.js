@@ -784,6 +784,9 @@ const messages = {
           testSuccess: "¡Integración probada exitosamente!",
           addSuccess: "Integración agregada exitosamente.",
           editSuccess: "Integración editada exitosamente.",
+          errors: {
+            onlyInternalAllowed: "Solo se permiten mensajes internos (notas) en este momento."
+            }
         },
         integrationTypes: {
           dialogflow: "DialogFlow",
@@ -1031,6 +1034,11 @@ const messages = {
           closedMessage: "Cerrar Ticket con Mensaje de Despedida",
           closedNotMessage: "Cerrar Ticket sin Mensaje de Despedida",
         },
+        tickets: {
+          status: {
+          pending: "Ticket Pendiente"
+      }
+    }
       },
       transferTicketModal: {
         title: "Transferir Ticket",
