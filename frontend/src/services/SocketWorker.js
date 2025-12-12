@@ -74,19 +74,27 @@ class SocketWorker {
     }
   }
 
-  emit(event, data) {
-    if (this.socket && this.socket.connected) {
-      this.socket.emit(event, data);
-    } else {
-      this.connect();
-      // Retry dopo un breve delay
-      setTimeout(() => {
-        if (this.socket && this.socket.connected) {
-          this.socket.emit(event, data);
-        }
-      }, 100);
-    }
+emit(event, data) {
+  if (this.socket && this.socket.connected) {
+    this.socket.emit(event, data);
+  } else {
+    this.connect();
+    // Retry dopo un breve delay CON LIMITE
+    let retries = 0;
+    const maxRetries = 3;
+    
+    const retryEmit = () => {
+      if (this.socket && this.socket.connected) {
+        this.socket.emit(event, data);
+      } else if (retries < maxRetries) {
+        retries++;
+        setTimeout(retryEmit, 100 * retries);
+      }
+    };
+    
+    retryEmit();
   }
+}
 
   disconnect() {
     if (this.socket) {
