@@ -120,8 +120,8 @@ const UpdateTicketService = async ({
       });
 
       io.of(String(companyId))
-        // .to(oldStatus)
-        // .to(ticketId.toString())
+         .to(oldStatus)
+         .to(ticketId.toString())
         .emit(`company-${ticket.companyId}-ticket`, {
           action: "delete",
           ticketId: ticket.id
@@ -352,8 +352,8 @@ const UpdateTicketService = async ({
       });
 
       io.of(String(companyId))
-        // .to(oldStatus)
-        // .to(ticketId.toString())
+         .to(oldStatus)
+         .to(ticketId.toString())
         .emit(`company-${ticket.companyId}-ticket`, {
           action: "delete",
           ticketId: ticket.id
@@ -594,7 +594,7 @@ const UpdateTicketService = async ({
           });
           // console.log("emitiu socket 497", ticket.id, newTicketTransfer.id)
           io.of(String(companyId))
-            // .to(oldStatus)
+             .to(oldStatus)
             .emit(`company-${companyId}-ticket`, {
               action: "delete",
               ticketId: newTicketTransfer.id
@@ -602,9 +602,9 @@ const UpdateTicketService = async ({
         }
 
         io.of(String(companyId))
-          // .to(newTicketTransfer.status)
-          // .to("notification")
-          // .to(newTicketTransfer.id.toString())
+           .to(newTicketTransfer.status)
+           .to("notification")
+           .to(newTicketTransfer.id.toString())
           .emit(`company-${companyId}-ticket`, {
             action: "update",
             ticket: newTicketTransfer
@@ -885,7 +885,7 @@ const UpdateTicketService = async ({
       // console.log("emitiu socket 739", ticket.id)
 
       io.of(String(companyId))
-        // .to(oldStatus)
+         .to(oldStatus)
         .emit(`company-${companyId}-ticket`, {
           action: "delete",
           ticketId: ticket.id
@@ -894,9 +894,9 @@ const UpdateTicketService = async ({
     // console.log("emitiu socket 746", ticket.id)
 
     io.of(String(companyId))
-      // .to(ticket.status)
-      // .to("notification")
-      // .to(ticketId.toString())
+       .to(ticket.status)
+       .to("notification")
+       .to(ticketId.toString())
       .emit(`company-${companyId}-ticket`, {
         action: "update",
         ticket

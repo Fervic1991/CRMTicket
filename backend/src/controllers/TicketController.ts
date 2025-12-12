@@ -287,7 +287,7 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
 
   const io = getIO();
   io.of(String(companyId))
-    // .to(ticket.status)
+     .to(ticket.status)
     .emit(`company-${companyId}-ticket`, {
       action: "update",
       ticket
@@ -384,9 +384,9 @@ export const remove = async (
   const io = getIO();
 
   io.of(String(companyId))
-    // .to(ticket.status)
-    // .to(ticketId)
-    // .to("notification")
+     .to(ticket.status)
+     .to(ticketId)
+     .to("notification")
     .emit(`company-${companyId}-ticket`, {
       action: "delete",
       ticketId: +ticketId
