@@ -21,16 +21,14 @@ class SocketWorker {
   }
 
   configureSocket() {
-    this.socket = io(`${process.env.REACT_APP_BACKEND_URL}/${this?.companyId}` , {
-      autoConnect: true,
-      reconnection: true,
-      reconnectionDelay: 1000,
-      reconnectionAttempts: Infinity,
-      // transports: ["websocket", "polling", "flashsocket"],
-      // pingTimeout: 18000,
-      // pingInterval: 18000,
-      query: { userId: this.userId, token: this.token }
+    this.socket = io(process.env.REACT_APP_BACKEND_URL, {
+      query: {
+        userId: this.userId,
+        token: this.token,
+        companyId: this.companyId
+      }
     });
+
 
     this.socket.on("connect", () => {
       console.log("Conectado ao servidor Socket.IO");
