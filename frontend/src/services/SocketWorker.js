@@ -29,9 +29,14 @@ class SocketWorker {
 
       this.socket.on("connect", () => {
         console.log(`Connesso al namespace /${this.companyId}`);
-        // Ricollega tutti i listener già registrati
+        // Ricollega tutti i listener già registrati SOLO UNA VOLTA
         Object.keys(this.eventListeners).forEach(event => {
-          this.eventListeners[event].forEach(cb => this.socket.on(event, cb));
+          this.eventListeners[event].forEach(cb => {
+            // Rimuovi prima eventuali duplicati
+            this.socket.off(event, cb);
+            // Poi aggiungi il listener
+            this.socket.on(event, cb);
+          });
         });
       });
 
@@ -43,12 +48,17 @@ class SocketWorker {
 
   on(event, callback) {
     this.connect();
-    // registra callback localmente
+    
+    // Controlla se il callback è già registrato
     if (!this.eventListeners[event]) {
       this.eventListeners[event] = [];
     }
-    this.eventListeners[event].push(callback);
-    this.socket.on(event, callback);
+    
+    // Aggiungi il callback solo se non esiste già
+    if (!this.eventListeners[event].includes(callback)) {
+      this.eventListeners[event].push(callback);
+      this.socket.on(event, callback);
+    }
   }
 
   off(event, callback) {
@@ -65,8 +75,17 @@ class SocketWorker {
   }
 
   emit(event, data) {
-    this.connect();
-    this.socket.emit(event, data);
+    if (this.socket && this.socket.connected) {
+      this.socket.emit(event, data);
+    } else {
+      this.connect();
+      // Retry dopo un breve delay
+      setTimeout(() => {
+        if (this.socket && this.socket.connected) {
+          this.socket.emit(event, data);
+        }
+      }, 100);
+    }
   }
 
   disconnect() {
