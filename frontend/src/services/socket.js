@@ -3,13 +3,11 @@ import SocketWorker from "./SocketWorker";
 import api from "../services/api"; // per prendere il token
 
 export function socketConnection(params) {
-  if (!isObject(params)) return null;
+  if (socketInstance) return socketInstance;
 
-  const companyId = params?.user?.companyId;
-  const userId = params?.user?.id;
-  const token = api.defaults.headers.Authorization; // prendi il token attuale
+  let userId = params?.user?.id || "";
+  let companyId = params?.user?.companyId || "";
 
-  if (!companyId || !userId || !token) return null;
-
-  return SocketWorker(companyId, userId, token);
+  socketInstance = SocketWorker(companyId, userId);
+  return socketInstance;
 }
