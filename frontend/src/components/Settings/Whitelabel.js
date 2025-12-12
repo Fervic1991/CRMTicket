@@ -217,6 +217,7 @@ const LANGUAGE_OPTIONS = [
   { code: "es", label: "Español" },
   { code: "ar", label: "العربية" },
   { code: "tr", label: "Türkçe" },
+  { code: "it", label: "Italiano" },
 ];
 
 export default function Whitelabel(props) {
@@ -237,7 +238,7 @@ export default function Whitelabel(props) {
   const backgroundDarkInput = useRef(null);
   const appNameInput = useRef(null);
   const [appName, setAppName] = useState(settingsLoaded.appName || "");
-  const [enabledLanguages, setEnabledLanguages] = useState(["pt", "en", "es", "ar", "tr"]);
+  const [enabledLanguages, setEnabledLanguages] = useState(["pt", "en", "es", "ar", "tr","it"]);
 
   const { update } = useSettings();
 
@@ -281,7 +282,7 @@ export default function Whitelabel(props) {
       const enabledLanguagesSetting = settings.find(
         (s) => s.key === "enabledLanguages"
       )?.value;
-      let langs = ["pt", "en", "es", "ar", "tr"];
+      let langs = ["pt", "en", "es", "ar", "tr","it"];
       try {
         if (enabledLanguagesSetting) {
           langs = JSON.parse(enabledLanguagesSetting);

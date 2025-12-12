@@ -66,6 +66,7 @@ const languages = [
   { code: "es", name: "Español", flag: "🇪🇸" },
   { code: "ar", name: "العربية", flag: "🇸🇦" },
   { code: "tr", name: "Türkçe", flag: "🇹🇷" },
+  { code: "it", name: "Italiano", flag: "🇮🇹" },
 ];
 
 const LanguageSettings = () => {

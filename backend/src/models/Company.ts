@@ -96,7 +96,7 @@ class Company extends Model<Company> {
   @Column
   updatedAtFolder: string;
 
-  @Default(["pt", "en", "es", "ar", "tr"])
+  @Default(["pt", "en", "es", "ar", "tr","it"])
   @Column(DataType.JSONB)
   enabledLanguages: string[];
 

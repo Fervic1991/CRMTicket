@@ -25,7 +25,7 @@ class LanguageController {
         if (!settings?.featureEnabled) {
           // Sistema legado - todas as línguas disponíveis
           return res.json({
-            languages: ["pt", "en", "es", "ar", "tr"],
+            languages: ["pt", "en", "es", "ar", "tr","it"],
             currentLanguage: "pt",
             source: "public_legacy"
           });
@@ -33,7 +33,7 @@ class LanguageController {
         
         // Sistema novo - retornar línguas do sistema
         return res.json({
-          languages: settings.systemLanguages || ["pt", "en", "es", "ar", "tr"],
+          languages: settings.systemLanguages || ["pt", "en", "es", "ar", "tr","it"],
           currentLanguage: "pt",
           source: "public_backend"
         });
@@ -55,7 +55,7 @@ class LanguageController {
       if (!languageSettings?.featureEnabled) {
         // Sistema antigo - retornar todas as línguas
         return res.json({
-          languages: ["pt", "en", "es", "ar", "tr"],
+          languages: ["pt", "en", "es", "ar", "tr","it"],
           source: "legacy"
         });
       }
@@ -130,7 +130,7 @@ class LanguageController {
       // Validação
       const schema = Yup.object().shape({
         language: Yup.string()
-          .oneOf(["pt", "en", "es", "ar", "tr"])
+          .oneOf(["pt", "en", "es", "ar", "tr","it"])
           .required()
       });
 
@@ -147,7 +147,7 @@ class LanguageController {
         where: { companyId: user.companyId }
       });
       
-      const availableLanguages = company?.enabledLanguages || ["pt", "en", "es", "ar", "tr"];
+      const availableLanguages = company?.enabledLanguages || ["pt", "en", "es", "ar", "tr","it"];
 
       if (!availableLanguages.includes(language)) {
         throw new AppError("Language not available for this user", 403);
@@ -190,7 +190,7 @@ class LanguageController {
       // Validação
       const schema = Yup.object().shape({
         languages: Yup.array()
-          .of(Yup.string().oneOf(["pt", "en", "es", "ar", "tr"]))
+          .of(Yup.string().oneOf(["pt", "en", "es", "ar", "tr","it"]))
           .min(1, "At least one language must be selected")
           .required()
       });
@@ -208,7 +208,7 @@ class LanguageController {
       }
 
       // Verificar se as línguas estão dentro do conjunto permitido pelo super admin
-      const enabledLanguages = company.enabledLanguages || ["pt", "en", "es", "ar", "tr"];
+      const enabledLanguages = company.enabledLanguages || ["pt", "en", "es", "ar", "tr","it"];
       const invalidLanguages = languages.filter(lang => !enabledLanguages.includes(lang));
 
       if (invalidLanguages.length > 0) {
@@ -255,7 +255,7 @@ class LanguageController {
       // Validação
       const schema = Yup.object().shape({
         languages: Yup.array()
-          .of(Yup.string().oneOf(["pt", "en", "es", "ar", "tr"]))
+          .of(Yup.string().oneOf(["pt", "en", "es", "ar", "tr","it"]))
           .min(1, "At least one language must be selected")
           .required()
       });
@@ -326,7 +326,7 @@ class LanguageController {
         where: { companyId },
         defaults: {
           companyId,
-          systemLanguages: ["pt", "en", "es", "ar", "tr"],
+          systemLanguages: ["pt", "en", "es", "ar", "tr","it"],
           featureEnabled: false
         }
       });
@@ -366,7 +366,7 @@ class LanguageController {
         where: { companyId },
         defaults: {
           companyId,
-          systemLanguages: ["pt", "en", "es", "ar", "tr"],
+          systemLanguages: ["pt", "en", "es", "ar", "tr","it"],
           featureEnabled: false
         }
       });

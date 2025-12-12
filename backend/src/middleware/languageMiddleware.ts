@@ -40,7 +40,7 @@ const languageMiddleware = async (
     }
 
     // Definir idiomas aceitos (para futuras expansões)
-    (req as any).acceptLanguages = ["pt", "en", "es", "ar", "tr"];
+    (req as any).acceptLanguages = ["pt", "en", "es", "ar", "tr","it"];
 
     next();
   } catch (error) {

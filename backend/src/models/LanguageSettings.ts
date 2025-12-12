@@ -27,7 +27,7 @@ class LanguageSettings extends Model<LanguageSettings> {
   @BelongsTo(() => Company)
   company: Company;
 
-  @Default(["pt", "en", "es", "ar", "tr"])
+  @Default(["pt", "en", "es", "ar", "tr","it"])
   @Column(DataType.JSONB)
   systemLanguages: string[];
 

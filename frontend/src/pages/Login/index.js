@@ -24,6 +24,7 @@ const USFlag = '/flags/us.png';
 const ESFlag = '/flags/es.png';
 const ARFlag = '/flags/sa.png';
 const TRFlag = '/flags/tr.png';
+const ITFlag = '/flags/tr.png';
 import PublicLogo from "../../components/PublicLogo";
 import clsx from "clsx";
 import { getBackendUrl } from "../../config";
@@ -34,6 +35,7 @@ const languageOptions = [
   { value: "es", label: "Español", icon: ESFlag },
   { value: "ar", label: "العربية", icon: ARFlag },
   { value: "tr", label: "Türkçe", icon: TRFlag },
+  { value: "it", label: "Italiano", icon: ITFlag },
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -355,7 +357,7 @@ const Login = () => {
 
   const [open, setOpen] = useState(false);
   const ref = useRef();
-  const [enabledLanguages, setEnabledLanguages] = useState(["pt", "en", "es", "ar", "tr"]);
+  const [enabledLanguages, setEnabledLanguages] = useState(["pt", "en", "es", "ar", "tr", "it"]);
   const [backgroundLight, setBackgroundLight] = useState("");
   const [backgroundDark, setBackgroundDark] = useState("");
 
@@ -395,7 +397,7 @@ const Login = () => {
     getPublicSetting("enabledLanguages", companyId)
       .then((langs) => {
         if (isMounted) {
-          let arr = ["pt", "en", "es", "ar", "tr"];
+          let arr = ["pt", "en", "es", "ar", "tr","it"];
           try {
             if (langs) {
               const parsed = JSON.parse(langs);
@@ -408,7 +410,7 @@ const Login = () => {
       })
       .catch(() => {
         if (isMounted) {
-          setEnabledLanguages(["pt", "en", "es", "ar", "tr"]);
+          setEnabledLanguages(["pt", "en", "es", "ar", "tr", "it"]);
         }
       });
 

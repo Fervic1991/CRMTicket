@@ -17,6 +17,7 @@ const usFlag = '/flags/us.png';
 const esFlag = '/flags/es.png';
 const saFlag = '/flags/sa.png';
 const trFlag = '/flags/tr.png';
+const itFlag = '/flags/it.png';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -78,6 +79,7 @@ const languageNames = {
   es: { name: 'Español', nativeName: 'Español' },
   ar: { name: 'العربية', nativeName: 'العربية' },
   tr: { name: 'Türkçe', nativeName: 'Türkçe' },
+  tr: { name: 'Italiano', nativeName: 'Italiano' },
 };
 
 const LanguageSelector = ({ variant = 'default' }) => {
@@ -99,7 +101,7 @@ const LanguageSelector = ({ variant = 'default' }) => {
         
         if (data && isMounted) {
           // Filtrar apenas idiomas válidos
-          const validLanguages = (data.languages || ['pt', 'en', 'es', 'ar', 'tr'])
+          const validLanguages = (data.languages || ['pt', 'en', 'es', 'ar', 'tr','it'])
             .filter(code => languageNames[code] && languageFlags[code]);
           
           // Garantir que o idioma atual seja válido
@@ -122,7 +124,7 @@ const LanguageSelector = ({ variant = 'default' }) => {
           // Fallback para localStorage
           const saved = localStorage.getItem('i18nextLng') || 'pt';
           setCurrentLanguage(saved);
-          setAvailableLanguages(['pt', 'en', 'es', 'ar', 'tr']);
+          setAvailableLanguages(['pt', 'en', 'es', 'ar', 'tr', 'it']);
           setUseBackend(false);
           i18n.changeLanguage(saved);
         }

@@ -152,7 +152,7 @@ class LanguageService {
         
         // Fallback para todos os idiomas
         return {
-          languages: ["pt", "en", "es", "ar", "tr"],
+          languages: ["pt", "en", "es", "ar", "tr","it"],
           currentLanguage: localStorage.getItem("i18nextLng") || "pt",
           source: "localStorage"
         };
@@ -229,7 +229,7 @@ class LanguageService {
    */
   getDefaultLanguages() {
     return {
-      languages: ["pt", "en", "es", "ar", "tr"],
+      languages: ["pt", "en", "es", "ar", "tr","it"],
       currentLanguage: localStorage.getItem("i18nextLng") || "pt",
       source: "localStorage_fallback"
     };
@@ -436,8 +436,8 @@ class LanguageService {
       
       // Retornar configuração padrão em caso de erro
       return {
-        systemLanguages: ["pt", "en", "es", "ar", "tr"],
-        enabledLanguages: ["pt", "en", "es", "ar", "tr"],
+        systemLanguages: ["pt", "en", "es", "ar", "tr","it"],
+        enabledLanguages: ["pt", "en", "es", "ar", "tr","it"],
         featureEnabled: false
       };
     }
@@ -485,7 +485,7 @@ class LanguageService {
       i18n.changeLanguage(savedLang);
       
       return {
-        languages: ["pt", "en", "es", "ar", "tr"],
+        languages: ["pt", "en", "es", "ar", "tr","it"],
         currentLanguage: savedLang,
         source: "localStorage_init"
       };
