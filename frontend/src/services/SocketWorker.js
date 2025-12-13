@@ -7,56 +7,56 @@ class SocketWorker {
       this.userId = userId;
       this.token = token;
       this.socket = null;
-      this.eventListeners = {}; // memorizza i callback per ogni evento
-      this.connect();
+      this.eventListeners = {};
+      this.isConnecting = false; // Previene connessioni multiple
+      this.setupSocket();
       SocketWorker.instance = this;
     }
     return SocketWorker.instance;
   }
 
-  connect() {
-    if (!this.socket || !this.socket.connected) {
-      this.socket = io(`${process.env.REACT_APP_BACKEND_URL}/${this.companyId}`, {
-        autoConnect: true,
-        reconnection: true,
-        reconnectionDelay: 1000,
-        reconnectionAttempts: 5, // Limita i tentativi
-        reconnectionDelayMax: 5000,
-        transports: ["websocket"],
-        query: {
-          userId: this.userId,
-          token: this.token
-        }
-      });
+  setupSocket() {
+    if (this.socket) return; // Se esiste già, non creare uno nuovo
+    
+    this.socket = io(`${process.env.REACT_APP_BACKEND_URL}/${this.companyId}`, {
+      autoConnect: true,
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionAttempts: 5,
+      reconnectionDelayMax: 5000,
+      transports: ["websocket"],
+      query: {
+        userId: this.userId,
+        token: this.token
+      }
+    });
 
-      this.socket.on("connect", () => {
-        console.log(`Connesso al namespace /${this.companyId}`);
-        // Ricollega tutti i listener già registrati SOLO UNA VOLTA
-        Object.keys(this.eventListeners).forEach(event => {
-          this.eventListeners[event].forEach(cb => {
-            // Rimuovi prima eventuali duplicati
-            this.socket.off(event, cb);
-            // Poi aggiungi il listener
-            this.socket.on(event, cb);
-          });
+    this.socket.on("connect", () => {
+      console.log(`Connesso al namespace /${this.companyId}`);
+      // Ricollega tutti i listener
+      Object.keys(this.eventListeners).forEach(event => {
+        this.eventListeners[event].forEach(cb => {
+          this.socket.off(event, cb);
+          this.socket.on(event, cb);
         });
       });
+    });
 
-      this.socket.on("disconnect", () => {
-        console.log("Disconnesso dal server Socket.IO, tentativo di riconnessione...");
-      });
-    }
+    this.socket.on("disconnect", () => {
+      console.log("Disconnesso dal server Socket.IO");
+    });
   }
 
   on(event, callback) {
-    this.connect();
+    // NON CHIAMARE connect() qui!
+    if (!this.socket) {
+      this.setupSocket();
+    }
     
-    // Controlla se il callback è già registrato
     if (!this.eventListeners[event]) {
       this.eventListeners[event] = [];
     }
     
-    // Aggiungi il callback solo se non esiste già
     if (!this.eventListeners[event].includes(callback)) {
       this.eventListeners[event].push(callback);
       this.socket.on(event, callback);
@@ -76,27 +76,26 @@ class SocketWorker {
     }
   }
 
-emit(event, data) {
-  if (this.socket && this.socket.connected) {
-    this.socket.emit(event, data);
-  } else {
-    this.connect();
-    // Retry dopo un breve delay CON LIMITE
-    let retries = 0;
-    const maxRetries = 3;
-    
-    const retryEmit = () => {
-      if (this.socket && this.socket.connected) {
-        this.socket.emit(event, data);
-      } else if (retries < maxRetries) {
-        retries++;
-        setTimeout(retryEmit, 100 * retries);
-      }
-    };
-    
-    retryEmit();
+  emit(event, data) {
+    if (this.socket && this.socket.connected) {
+      this.socket.emit(event, data);
+    } else if (this.socket) {
+      // Socket esiste ma non connesso, aspetta la connessione
+      let retries = 0;
+      const maxRetries = 3;
+      
+      const retryEmit = () => {
+        if (this.socket && this.socket.connected) {
+          this.socket.emit(event, data);
+        } else if (retries < maxRetries) {
+          retries++;
+          setTimeout(retryEmit, 100 * retries);
+        }
+      };
+      
+      retryEmit();
+    }
   }
-}
 
   disconnect() {
     if (this.socket) {
@@ -111,13 +110,10 @@ emit(event, data) {
     if (this.socket) {
       this.socket.disconnect();
       this.socket.connect();
-    } else {
-      this.connect();
     }
   }
 }
 
-// Factory per ottenere sempre la stessa istanza
 const instance = (companyId, userId, token) => new SocketWorker(companyId, userId, token);
 
 export default instance;
