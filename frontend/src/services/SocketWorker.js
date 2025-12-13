@@ -20,7 +20,9 @@ class SocketWorker {
         autoConnect: true,
         reconnection: true,
         reconnectionDelay: 1000,
-        reconnectionAttempts: Infinity,
+        reconnectionAttempts: 5, // Limita i tentativi
+        reconnectionDelayMax: 5000,
+        transports: ["websocket"],
         query: {
           userId: this.userId,
           token: this.token
