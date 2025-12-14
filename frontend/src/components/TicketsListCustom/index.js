@@ -285,19 +285,20 @@ const TicketsListCustom = (props) => {
     );
 
     // Socket handlers memoizados
-    const onCompanyTicketTicketsList = useCallback((data) => {
-        console.log("🔔 Socket event ricevuto:", data.action, data.ticket?.status, data.ticketId);
-        if (data.action === "updateUnread") {
-            throttledDispatch({
-                type: "RESET_UNREAD",
-                payload: data.ticketId,
-                status: status,
-                sortDir: sortTickets
-            });
-        }
-        
-        if (data.action === "update" &&
-            shouldUpdateTicket(data.ticket) && data.ticket.status === status) {
+const onCompanyTicketTicketsList = useCallback((data) => {
+    console.log("🔔 Socket event ricevuto:", data.action, data.ticket?.status, data.ticketId);
+    if (data.action === "updateUnread") {
+        throttledDispatch({
+            type: "RESET_UNREAD",
+            payload: data.ticketId,
+            status: status,
+            sortDir: sortTickets
+        });
+    }
+    
+    // Quando arriva "update" CON ticket object
+    if (data.action === "update" && data.ticket) {
+        if (shouldUpdateTicket(data.ticket) && data.ticket.status === status) {
             throttledDispatch({
                 type: "UPDATE_TICKET",
                 payload: data.ticket,
@@ -306,7 +307,7 @@ const TicketsListCustom = (props) => {
             });
         }
 
-        if (data.action === "update" && notBelongsToUserQueues(data.ticket)) {
+        if (notBelongsToUserQueues(data.ticket)) {
             throttledDispatch({
                 type: "DELETE_TICKET", 
                 payload: data.ticket?.id, 
@@ -314,16 +315,19 @@ const TicketsListCustom = (props) => {
                 sortDir: sortTickets
             });
         }
+    }
 
-        if (data.action === "delete") {
-            throttledDispatch({
-                type: "DELETE_TICKET", 
-                payload: data?.ticketId, 
-                status: status,
-                sortDir: sortTickets
-            });
-        }
-    }, [shouldUpdateTicket, notBelongsToUserQueues, status, sortTickets, throttledDispatch]);
+    // Quando arriva "delete" SENZA ticket object (solo ticketId)
+    if (data.action === "delete") {
+        console.log("❌ Eliminando ticket:", data?.ticketId);
+        throttledDispatch({
+            type: "DELETE_TICKET", 
+            payload: data?.ticketId, 
+            status: status,
+            sortDir: sortTickets
+        });
+    }
+}, [shouldUpdateTicket, notBelongsToUserQueues, status, sortTickets, throttledDispatch]);
 
     const onCompanyAppMessageTicketsList = useCallback((data) => {
         if (data.action === "create" &&
