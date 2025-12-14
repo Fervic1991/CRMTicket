@@ -320,12 +320,19 @@ const onCompanyTicketTicketsList = useCallback((data) => {
     // Quando arriva "delete" SENZA ticket object (solo ticketId)
     if (data.action === "delete") {
         console.log("❌ Eliminando ticket:", data?.ticketId);
-        throttledDispatch({
+        dispatch({
             type: "DELETE_TICKET", 
             payload: data?.ticketId, 
             status: status,
             sortDir: sortTickets
         });
+        
+        // FORCE RELOAD: Ricarica la lista dal server dopo 500ms
+        setTimeout(() => {
+            console.log("🔄 Ricaricando lista ticket...");
+            dispatch({ type: "RESET" });
+            setPageNumber(1);
+        }, 500);
     }
 }, [shouldUpdateTicket, notBelongsToUserQueues, status, sortTickets, throttledDispatch]);
 
