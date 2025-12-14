@@ -286,6 +286,7 @@ const TicketsListCustom = (props) => {
 
     // Socket handlers memoizados
     const onCompanyTicketTicketsList = useCallback((data) => {
+        console.log("🔔 Socket event ricevuto:", data.action, data.ticket?.status, data.ticketId);
         if (data.action === "updateUnread") {
             throttledDispatch({
                 type: "RESET_UNREAD",
