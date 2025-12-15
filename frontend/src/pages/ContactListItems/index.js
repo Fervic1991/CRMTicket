@@ -158,27 +158,30 @@ const ContactListItems = () => {
 
   useEffect(() => {
     const companyId = user.companyId;
-    // const socket = socketManager.GetSocket();
 
     const onCompanyContactLists = (data) => {
-      if (data.action === "update" || data.action === "create") {
-        dispatch({ type: "UPDATE_CONTACTS", payload: data.record });
-      }
+        console.log('[ContactListItems] socket received:', data); // ← aggiungi log
+        
+        if (data.action === "update" || data.action === "create") {
+          dispatch({ type: "UPDATE_CONTACTS", payload: data.record });
+        }
 
-      if (data.action === "delete") {
-        dispatch({ type: "DELETE_CONTACT", payload: +data.id });
-      }
+        if (data.action === "delete") {
+          dispatch({ type: "DELETE_CONTACT", payload: +data.id });
+        }
 
-      if (data.action === "reload") {
-        dispatch({ type: "LOAD_CONTACTS", payload: data.records });
+        if (data.action === "reload") {
+          console.log('[ContactListItems] reloading contacts:', data.records.length); // ← log
+          dispatch({ type: "LOAD_CONTACTS", payload: data.records });
+        }
       }
-    }
-    socket.on(`company-${companyId}-ContactListItem`, onCompanyContactLists);
+      
+      socket.on(`company-${companyId}-ContactListItem`, onCompanyContactLists);
 
-    return () => {
-      socket.off(`company-${companyId}-ContactListItem`, onCompanyContactLists);
-    };
-  }, [contactListId]);
+      return () => {
+        socket.off(`company-${companyId}-ContactListItem`, onCompanyContactLists);
+      };
+    }, [socket, user.companyId]); // ← fix dipendenze
 
   const handleSearch = (event) => {
     setSearchParam(event.target.value.toLowerCase());
