@@ -214,22 +214,30 @@ const ContactSelectionModal = ({ open, onClose, contactListId, onAddContacts }) 
                 </TableRow>
               </TableHead>
               <TableBody>
-                {contacts.map((contact) => (
-                  <TableRow
-                    key={contact.id}
-                    onClick={() => handleSelectContact(contact.id)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <TableCell align="center">
-                      <Checkbox
-                        checked={selectedContacts.includes(contact.id)}
-                        onChange={() => handleSelectContact(contact.id)}
-                      />
-                    </TableCell>
-                    <TableCell>{contact.name}</TableCell>
-                    <TableCell>{contact.number}</TableCell>
-                  </TableRow>
-                ))}
+                {contacts.map((contact) => {
+                  const isSelected = selectedContacts.includes(contact.id);
+                  return (
+                    <TableRow
+                      key={contact.id}
+                      onClick={() => handleSelectContact(contact.id)}
+                      hover
+                      style={{
+                        cursor: "pointer",
+                        backgroundColor: isSelected ? "rgba(0,0,0,0.03)" : "inherit",
+                      }}
+                    >
+                      <TableCell align="center">
+                        <Checkbox
+                          checked={isSelected}
+                          onChange={() => handleSelectContact(contact.id)}
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      </TableCell>
+                      <TableCell>{contact.name}</TableCell>
+                      <TableCell>{contact.number}</TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           )}

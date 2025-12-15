@@ -318,7 +318,7 @@ const ContactListItems = () => {
                         }}
                       />
                     </Grid>
-                    <Grid xs={4} sm={2} item>
+                    <Grid xs={6} sm={3} item>
                       <Button
                         fullWidth
                         variant="contained"
@@ -328,7 +328,7 @@ const ContactListItems = () => {
                         {i18n.t("contactListItems.buttons.lists")}
                       </Button>
                     </Grid>
-                    <Grid xs={4} sm={2} item>
+                    <Grid xs={6} sm={3} item>
                       <Button
                         fullWidth
                         variant="contained"
@@ -341,7 +341,7 @@ const ContactListItems = () => {
                         {i18n.t("contactListItems.buttons.import")}
                       </Button>
                     </Grid>
-                    <Grid xs={4} sm={2} item>
+                    <Grid xs={6} sm={3} item>
                       <Button
                         fullWidth
                         variant="contained"
@@ -351,7 +351,7 @@ const ContactListItems = () => {
                         {i18n.t("contactListItems.buttons.importFromContacts")}
                       </Button>
                     </Grid>
-                    <Grid xs={4} sm={2} item>
+                    <Grid xs={6} sm={3} item>
                       <Button
                         fullWidth
                         variant="contained"
