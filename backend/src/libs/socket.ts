@@ -23,7 +23,7 @@ io = new SocketIO(httpServer, {
     ],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true
-  }
+  },
     // AGGIUNGI QUESTE CONFIGURAZIONI:
   maxHttpBufferSize: 1e6, // 1MB
   transports: ["websocket", "polling"],
