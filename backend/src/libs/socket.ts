@@ -24,13 +24,6 @@ io = new SocketIO(httpServer, {
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true
   },
-    // AGGIUNGI QUESTE CONFIGURAZIONI:
-  maxHttpBufferSize: 1e6, // 1MB
-  transports: ["websocket", "polling"],
-  pingInterval: 25000,
-  pingTimeout: 20000,
-  upgradeTimeout: 10000,
-  maxConnections: 10000
 });
 
 
