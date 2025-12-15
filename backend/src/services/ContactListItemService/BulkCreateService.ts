@@ -12,7 +12,9 @@ interface BulkData {
 const BulkCreateService = async (data: BulkData): Promise<ContactListItem[]> => {
   const { contactListId, contactIds, companyId } = data;
 
-  // Fetch contacts by IDs (assicurati che appartengono alla stessa azienda)
+  logger.info(`[BulkCreateService] start companyId=${companyId} contactListId=${contactListId} contactIds=${JSON.stringify(contactIds)}`);
+
+  // Fetch contacts by IDs (assicurati che appartengano alla stessa azienda)
   const contacts = await Contact.findAll({
     where: {
       id: contactIds,
@@ -20,16 +22,20 @@ const BulkCreateService = async (data: BulkData): Promise<ContactListItem[]> => 
     }
   });
 
+  logger.info(`[BulkCreateService] contacts found=${contacts.length}`);
+
+  // Se non ci sono contatti, ritorna array vuoto (non throw)
   if (contacts.length === 0) {
-    throw new Error("No contacts found with provided IDs");
+    logger.warn(`[BulkCreateService] no contacts found for provided ids for companyId=${companyId}`);
+    return [];
   }
 
-  const createdItems: ContactListItem[] = [];
+  const newlyCreatedItems: ContactListItem[] = [];
 
-  // Crea un ContactListItem per ogni contatto
+  // Crea un ContactListItem per ogni contatto (aggiunge solo i nuovi elementi)
   for (const contact of contacts) {
     try {
-      const [record] = await ContactListItem.findOrCreate({
+      const [record, created] = await ContactListItem.findOrCreate({
         where: {
           number: contact.number,
           companyId,
@@ -44,28 +50,34 @@ const BulkCreateService = async (data: BulkData): Promise<ContactListItem[]> => 
         }
       });
 
-      // Verifica numero WhatsApp
-      try {
-        const response: any = await CheckContactNumber(record.number, record.companyId);
-        if (response) {
-          record.isWhatsappValid = true;
-          record.number = response.jid.split("@")[0];
-        } else {
-          record.isWhatsappValid = false;
+      if (created) {
+        // Verifica numero WhatsApp solo per i nuovi record
+        try {
+          const response: any = await CheckContactNumber(record.number, record.companyId);
+          if (response) {
+            record.isWhatsappValid = true;
+            record.number = response.jid.split("@")[0];
+          } else {
+            record.isWhatsappValid = false;
+          }
+          await record.save();
+        } catch (whatsappError) {
+          logger.warn(`[BulkCreateService] Could not validate WhatsApp number for ${record.number}: ${whatsappError.message || whatsappError}`);
         }
-        await record.save();
-      } catch (whatsappError) {
-        logger.warn(`Could not validate WhatsApp number: ${record.number}`);
-      }
 
-      createdItems.push(record);
+        newlyCreatedItems.push(record);
+        logger.info(`[BulkCreateService] created ContactListItem id=${record.id} number=${record.number}`);
+      } else {
+        logger.info(`[BulkCreateService] already exists ContactListItem for number=${contact.number} contactId=${contact.id}`);
+      }
     } catch (err: any) {
-      logger.error(`Error creating contact list item for contact ${contact.id}: ${err.message}`);
+      logger.error(`[BulkCreateService] error creating item for contactId=${contact.id} err=${err.message || err}`);
       // continua con il prossimo contatto
     }
   }
 
-  return createdItems;
+  logger.info(`[BulkCreateService] finished created=${newlyCreatedItems.length}`);
+  return newlyCreatedItems;
 };
 
 export default BulkCreateService;
