@@ -44,7 +44,7 @@ const BulkCreateService = async (data: BulkData): Promise<ContactListItem[]> => 
         defaults: {
           name: contact.name,
           number: contact.number,
-          email: contact.email || null,
+          email: contact.email || "",
           companyId,
           contactListId
         }
