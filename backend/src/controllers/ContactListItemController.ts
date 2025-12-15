@@ -8,7 +8,7 @@ import ShowService from "../services/ContactListItemService/ShowService";
 import UpdateService from "../services/ContactListItemService/UpdateService";
 import DeleteService from "../services/ContactListItemService/DeleteService";
 import FindService from "../services/ContactListItemService/FindService";
-
+import BulkCreateService from "../services/ContactListItemService/BulkCreateService";
 import ContactListItem from "../models/ContactListItem";
 
 import AppError from "../errors/AppError";
@@ -145,4 +145,36 @@ export const findList = async (
   const records: ContactListItem[] = await FindService(params);
 
   return res.status(200).json(records);
+};
+export const bulkStore = async (req: Request, res: Response): Promise<Response> => {
+  const { companyId } = req.user;
+  const { contactListId, contactIds } = req.body;
+
+  // Validazione
+  const schema = Yup.object().shape({
+    contactListId: Yup.number().required(),
+    contactIds: Yup.array().of(Yup.number()).required().min(1)
+  });
+
+  try {
+    await schema.validate({ contactListId, contactIds });
+  } catch (err: any) {
+    throw new AppError(err.message);
+  }
+
+  const records = await BulkCreateService({
+    contactListId,
+    contactIds,
+    companyId
+  });
+
+  const io = getIO();
+  io.of(String(companyId))
+    .to(`ContactListItem-${contactListId}`)
+    .emit(`company-${companyId}-ContactListItem`, {
+      action: "reload",
+      records
+    });
+
+  return res.status(200).json({ success: true, created: records.length, records });
 };

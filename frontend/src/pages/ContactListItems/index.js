@@ -45,7 +45,7 @@ import { Grid } from "@material-ui/core";
 import planilhaExemplo from "../../assets/planilha.xlsx";
 import ForbiddenPage from "../../components/ForbiddenPage";
 // import { SocketContext } from "../../context/Socket/SocketContext";
-
+import ContactSelectionModal from "../../components/ContactSelectionModal";
 
 const reducer = (state, action) => {
   if (action.type === "LOAD_CONTACTS") {
@@ -240,15 +240,30 @@ const ContactListItems = () => {
   const goToContactLists = () => {
     history.push("/contact-lists");
   };
+  const [contactSelectionModalOpen, setContactSelectionModalOpen] = useState(false);
 
+  const handleOpenContactSelectionModal = () => setContactSelectionModalOpen(true);
+  const handleCloseContactSelectionModal = () => setContactSelectionModalOpen(false);
+
+  const handleAddContactsFromSelection = () => {
+    setSearchParam("");
+    setPageNumber(1);
+  };
   return (
     <MainContainer className={classes.mainContainer}>
+
       <ContactListItemModal
         open={contactListItemModalOpen}
         onClose={handleCloseContactListItemModal}
         aria-labelledby="form-dialog-title"
         contactId={selectedContactId}
       ></ContactListItemModal>
+      <ContactSelectionModal
+        open={contactSelectionModalOpen}
+        onClose={handleCloseContactSelectionModal}
+        contactListId={contactListId}
+        onAddContacts={handleAddContactsFromSelection}
+      />
       <ConfirmationModal
         title={
           deletingContact
@@ -324,6 +339,16 @@ const ContactListItems = () => {
                         }}
                       >
                         {i18n.t("contactListItems.buttons.import")}
+                      </Button>
+                    </Grid>
+                    <Grid xs={4} sm={2} item>
+                      <Button
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        onClick={handleOpenContactSelectionModal}
+                      >
+                        {i18n.t("contactListItems.buttons.importFromContacts")}
                       </Button>
                     </Grid>
                     <Grid xs={4} sm={2} item>

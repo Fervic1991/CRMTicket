@@ -21,7 +21,6 @@ import api from "../../services/api";
 import toastError from "../../errors/toastError";
 import { useParams } from "react-router-dom";
 import { AuthContext } from "../../context/Auth/AuthContext";
-
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -81,7 +80,6 @@ const ContactListItemModal = ({
     number: "",
     email: "",
   };
-
   const [contact, setContact] = useState(initialState);
 
   useEffect(() => {
@@ -143,7 +141,6 @@ const ContactListItemModal = ({
       toastError(err);
     }
   };
-
   return (
     <div className={classes.root}>
       <Dialog open={open} onClose={handleClose} maxWidth="lg" scroll="paper">
