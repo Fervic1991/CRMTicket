@@ -3272,6 +3272,8 @@ const handleMessage = async (
   companyId: number,
   isImported: boolean = false
 ): Promise<void> => {
+  logger.info(`[DEBUG] handleMessage chiamato per msg: ${msg.key.id} fromMe: ${msg.key.fromMe}`);
+
   if (isImported) {
     addLogs({
       fileName: `processImportMessagesWppId${wbot.id}.txt`,
@@ -3470,6 +3472,8 @@ const handleMessage = async (
         false,
         settings
       );
+        logger.info(`[DEBUG] Ticket creato/trovato: ${result?.id} per msg: ${msg.key.id}`);
+
       return result;
     });
 
