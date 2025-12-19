@@ -295,7 +295,16 @@ const onCompanyTicketTicketsList = useCallback((data) => {
             sortDir: sortTickets
         });
     }
-    
+    if (data.action === "create" && data.ticket) {
+    if (shouldUpdateTicket(data.ticket) && data.ticket.status === status) {
+        throttledDispatch({
+            type: "UPDATE_TICKET",
+            payload: data.ticket,
+            status: status,
+            sortDir: sortTickets
+        });
+    }
+}
     // Quando arriva "update" CON ticket object
     if (data.action === "update" && data.ticket) {
         if (shouldUpdateTicket(data.ticket) && data.ticket.status === status) {
