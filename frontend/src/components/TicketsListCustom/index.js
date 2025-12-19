@@ -328,11 +328,11 @@ const onCompanyTicketTicketsList = useCallback((data) => {
         });
         
         // FORCE RELOAD: Ricarica la lista dal server dopo 500ms
-        setTimeout(() => {
+        /*setTimeout(() => {
             console.log("🔄 Ricaricando lista ticket...");
             dispatch({ type: "RESET" });
             setPageNumber(1);
-        }, 500);
+        }, 500);*/
     }
 }, [shouldUpdateTicket, notBelongsToUserQueues, status, sortTickets, throttledDispatch]);
 
