@@ -3476,7 +3476,11 @@ const handleMessage = async (
 
       return result;
     });
-
+    const io = getIO();
+    io.of(String(companyId)).emit(`company-${companyId}-ticket`, {
+      action: "create",
+      ticket
+    });
     const ticketTraking = await FindOrCreateATicketTrakingService({
       ticketId: ticket.id,
       companyId,
