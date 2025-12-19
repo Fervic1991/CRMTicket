@@ -340,7 +340,7 @@ const onCompanyTicketTicketsList = useCallback((data) => {
         if (data.action === "create" &&
             shouldUpdateTicket(data.ticket) && data.ticket.status === status) {
             throttledDispatch({
-                type: "UPDATE_TICKET_UNREAD_MESSAGES",
+                type: "UPDATE_TICKET",
                 payload: data.ticket,
                 status: status,
                 sortDir: sortTickets
