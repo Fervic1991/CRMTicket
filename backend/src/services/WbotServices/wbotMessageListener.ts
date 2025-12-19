@@ -3476,6 +3476,7 @@ const handleMessage = async (
 
       return result;
     });
+    console.log("SOCKET CREATE TICKET", ticket.id, ticket.status, ticket.lastMessage);
     const io = getIO();
     io.of(String(companyId)).emit(`company-${companyId}-ticket`, {
       action: "create",
