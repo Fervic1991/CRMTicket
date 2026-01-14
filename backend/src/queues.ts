@@ -953,6 +953,14 @@ async function handlePrepareContact(job) {
 
 async function handleDispatchCampaign(job) {
   try {
+    // Blocco invio fuori orario 8:00-20:00
+    const now = new Date();
+    const hour = now.getHours();
+    if (hour < 8 || hour >= 20) {
+      logger.info(`Bloccato invio campagna fuori orario: ${hour}:00`);
+      return;
+    }
+
     const { data } = job;
     const { campaignShippingId, campaignId }: DispatchCampaignData = data;
     const campaign = await getCampaign(campaignId);
