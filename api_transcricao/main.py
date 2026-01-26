@@ -304,7 +304,7 @@ def transcrever():
             
             # Transcreve o segmento
             try:
-                return recognizer.recognize_google(audio_data, language='pt-BR')
+                return recognizer.recognize_google(audio_data, language='it-IT')
             except sr.UnknownValueError:
                 logging.warning(f"{request_time} - Segmento {i + 1}: Não foi possível reconhecer o áudio.")
                 return ""
