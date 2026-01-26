@@ -39,6 +39,7 @@ const TranscribeAudioMessageToText = async (wid: string, companyId: string, lang
         url: `${process.env.TRANSCRIBE_URL}/transcrever`,
         headers: {
           'Authorization': `Bearer ${process.env.TRANSCRIBE_API_KEY}`,
+          // NON forzare Content-Type, lascia che form-data lo gestisca
           ...data.getHeaders(),
         },
         data: data,
