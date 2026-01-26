@@ -28,9 +28,13 @@ const TranscribeAudioMessageToText = async (wid: string, companyId: string, lang
 
     // Verifica se a mediaUrl é uma URL válida
     if (msg.mediaUrl.startsWith('http')) {
-      // Se for uma URL, usa diretamente
+      // Usa sempre form-data anche per la URL
       data.append('url', msg.mediaUrl);
-      if (language) data.append('language', language);
+      if (language) {
+        data.append('language', language);
+      } else {
+        data.append('language', 'es'); // fallback esplicito
+      }
       config = {
         method: 'post',
         maxBodyLength: Infinity,
