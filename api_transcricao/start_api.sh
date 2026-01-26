@@ -2,7 +2,7 @@
 
 rm -rf /home/multi100/api_transcricao/venv
 
-cd /home/multi10/api_transcricao
+cd /home/deploy/ardilapp/api_transcricao
 python3 -m venv venv
 source venv/bin/activate
 
