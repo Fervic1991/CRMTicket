@@ -260,7 +260,7 @@ const AudioModal = ({ url, message, disableTranscription = false }) => {
                     {isTranscribingEs ? "Transcribiendo..." : "Transcribe in Spagnolo"}
                   </Button>
                 </div>
-                {/* Mostra la trascrizione se presente */}
+                /* Mostra la trascrizione se presente */
                 {transcriptionIt && (
                   <Typography className={classes.transcriptionText} variant="body2">
                     <strong>IT:</strong> {transcriptionIt}
