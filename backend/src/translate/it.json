@@ -1,0 +1,5 @@
+{
+  "ai.welcome": "Ciao! Sono {{name}}. Come posso aiutarti?",
+  "ai.welcome_objective": "Ciao! Sono {{name}}. {{objective}}",
+  "ai.welcome_continue": "Ciao! Sono {{name}}. Come posso aiutarti? (Digita \"{{keyword}}\" quando vuoi proseguire)"
+}

@@ -1,3 +1,13 @@
+
+import i18n from "i18n";
+import path from "path";
+i18n.configure({
+  locales: ["it"],
+  directory: path.join(__dirname, "../../translate"),
+  defaultLocale: "it",
+  objectNotation: true
+});
+
 import AppError from "../../errors/AppError";
 import { WebhookModel } from "../../models/Webhook";
 import { obterNomeEExtensaoDoArquivo, sendMessageFlow } from "../../controllers/MessageController";
@@ -608,10 +618,10 @@ export const ActionsWebhookService = async (
           // ✅ ENVIAR MENSAGEM DE BOAS-VINDAS IMEDIATAMENTE
           if (name) {
             const welcomeMessage = objective
-              ? `Olá! Sou ${name}. ${objective}`
+              ? i18n.__("ai.welcome_objective", { name, objective })
               : flowMode === "temporary" && continueKeywords?.length > 0
-                ? `Olá! Sou ${name}. Como posso ajudá-lo? (Digite "${continueKeywords[0]}" quando quiser prosseguir)`
-                : `Olá! Sou ${name}. Como posso ajudá-lo?`;
+                ? i18n.__("ai.welcome_continue", { name, keyword: continueKeywords[0] })
+                : i18n.__("ai.welcome", { name });
 
             logger.info(`[${provider.toUpperCase()} NODE] Enviando boas-vindas para ticket ${ticket.id}`);
 
