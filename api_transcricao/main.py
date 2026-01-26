@@ -280,6 +280,7 @@ def transcrever():
             return {'erro': 'Tipo de arquivo não suportado. Apenas formatos de áudio WAV, OGG, MP3, MP4, M4A, AAC e FLAC são permitidos.'}, 400
 
 
+
         # Leggi il parametro lingua dal form (default spagnolo)
         language = request.form.get('language', 'es')
         if language == 'it':
@@ -288,6 +289,7 @@ def transcrever():
             language_code = 'es-ES'
         else:
             language_code = 'es-ES'
+        logging.info(f"[DEBUG] Parametro language ricevuto: '{language}' | language_code usato: '{language_code}'")
 
         # Converte il file per WAV
         try:
