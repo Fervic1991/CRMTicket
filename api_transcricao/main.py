@@ -252,7 +252,7 @@ def transcrever():
             except Exception as e:
                 json_data = None
             logging.info(f"[DEBUG] request.json: {json_data}")
-    request_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            request_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     
     # Verifica a autenticação
     # if not verify_token(request):
