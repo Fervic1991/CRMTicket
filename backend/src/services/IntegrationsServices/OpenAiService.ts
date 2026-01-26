@@ -133,7 +133,7 @@ Pergunta: O objetivo foi completado com sucesso? Responda apenas "SIM" ou "NÃO"
 `;
 
     const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-3.5-turbo-0125",
       messages: [{ role: "user", content: analysisPrompt }],
       max_tokens: 10,
       temperature: 0
