@@ -230,47 +230,49 @@ const AudioModal = ({ url, message, disableTranscription = false }) => {
                   <strong>Transcrição:</strong> {transcription}
                 </Typography>
               ) : (
-                <div style={{ display: 'flex', gap: 8 }}>
-                  <Button
-                    onClick={() => handleTranscribe("it")}
-                    variant="contained"
-                    className={classes.transcribeButton}
-                    disabled={isTranscribingIt}
-                    style={{
-                      backgroundColor: isTranscribingIt
-                        ? "#ccc"
-                        : theme.palette.primary.main,
-                      color: "#fff",
-                    }}
-                  >
-                    {isTranscribingIt ? "Trascrivendo..." : "Trascrivi in Italiano"}
-                  </Button>
-                  <Button
-                    onClick={() => handleTranscribe("es")}
-                    variant="contained"
-                    className={classes.transcribeButton}
-                    disabled={isTranscribingEs}
-                    style={{
-                      backgroundColor: isTranscribingEs
-                        ? "#ccc"
-                        : theme.palette.primary.main,
-                      color: "#fff",
-                    }}
-                  >
-                    {isTranscribingEs ? "Transcribiendo..." : "Transcribe in Spagnolo"}
-                  </Button>
-                </div>
-                /* Mostra la trascrizione se presente */
-                {transcriptionIt && (
-                  <Typography className={classes.transcriptionText} variant="body2">
-                    <strong>IT:</strong> {transcriptionIt}
-                  </Typography>
-                )}
-                {transcriptionEs && (
-                  <Typography className={classes.transcriptionText} variant="body2">
-                    <strong>ES:</strong> {transcriptionEs}
-                  </Typography>
-                )}
+                <>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <Button
+                      onClick={() => handleTranscribe("it")}
+                      variant="contained"
+                      className={classes.transcribeButton}
+                      disabled={isTranscribingIt}
+                      style={{
+                        backgroundColor: isTranscribingIt
+                          ? "#ccc"
+                          : theme.palette.primary.main,
+                        color: "#fff",
+                      }}
+                    >
+                      {isTranscribingIt ? "Trascrivendo..." : "Trascrivi in Italiano"}
+                    </Button>
+                    <Button
+                      onClick={() => handleTranscribe("es")}
+                      variant="contained"
+                      className={classes.transcribeButton}
+                      disabled={isTranscribingEs}
+                      style={{
+                        backgroundColor: isTranscribingEs
+                          ? "#ccc"
+                          : theme.palette.primary.main,
+                        color: "#fff",
+                      }}
+                    >
+                      {isTranscribingEs ? "Transcribiendo..." : "Transcribe in Spagnolo"}
+                    </Button>
+                  </div>
+                  {/* Mostra la trascrizione se presente */}
+                  {transcriptionIt && (
+                    <Typography className={classes.transcriptionText} variant="body2">
+                      <strong>IT:</strong> {transcriptionIt}
+                    </Typography>
+                  )}
+                  {transcriptionEs && (
+                    <Typography className={classes.transcriptionText} variant="body2">
+                      <strong>ES:</strong> {transcriptionEs}
+                    </Typography>
+                  )}
+                </>
               )
             ) : (
               <Typography className={classes.transcriptionText} variant="body2">
