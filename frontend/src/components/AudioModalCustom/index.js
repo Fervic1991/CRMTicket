@@ -208,24 +208,32 @@ const AudioModalCustom = ({
     return <source src={sourceUrl} type="audio/ogg" />;
   };
 
-  const handleTranscribe = async () => {
-    setIsTranscribing(true);
+  // Stato separato per ogni lingua
+  const [isTranscribingIt, setIsTranscribingIt] = useState(false);
+  const [isTranscribingEs, setIsTranscribingEs] = useState(false);
+  const [transcriptionIt, setTranscriptionIt] = useState(null);
+  const [transcriptionEs, setTranscriptionEs] = useState(null);
+
+  const handleTranscribe = async (language) => {
+    if (language === "it") setIsTranscribingIt(true);
+    if (language === "es") setIsTranscribingEs(true);
     try {
       let audioData = {
         wid: message.wid,
+        language,
       };
-
       const { data } = await api.post(`/message/transcribeAudio`, audioData);
-
       if (data) {
-        setTranscription(data);
+        if (language === "it") setTranscriptionIt(data);
+        if (language === "es") setTranscriptionEs(data);
       } else {
         console.error("Invalid response data:", data);
       }
     } catch (error) {
-      console.error("Erro ao transcrever áudio:", error);
+      console.error("Erro ao transcrivere audio:", error);
     } finally {
-      setIsTranscribing(false);
+      if (language === "it") setIsTranscribingIt(false);
+      if (language === "es") setIsTranscribingEs(false);
     }
   };
 
@@ -266,20 +274,47 @@ const AudioModalCustom = ({
                   <strong>Transcrição:</strong> {transcription}
                 </Typography>
               ) : (
-                <Button
-                  onClick={handleTranscribe}
-                  variant="contained"
-                  className={classes.transcribeButton}
-                  disabled={isTranscribing}
-                  style={{
-                    backgroundColor: isTranscribing
-                      ? "#ccc"
-                      : theme.palette.primary.main,
-                    color: "#fff",
-                  }}
-                >
-                  {isTranscribing ? "Transcrevendo..." : "Transcrever"}
-                </Button>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <Button
+                    onClick={() => handleTranscribe("it")}
+                    variant="contained"
+                    className={classes.transcribeButton}
+                    disabled={isTranscribingIt}
+                    style={{
+                      backgroundColor: isTranscribingIt
+                        ? "#ccc"
+                        : theme.palette.primary.main,
+                      color: "#fff",
+                    }}
+                  >
+                    {isTranscribingIt ? "Trascrivendo..." : "Trascrivi in Italiano"}
+                  </Button>
+                  <Button
+                    onClick={() => handleTranscribe("es")}
+                    variant="contained"
+                    className={classes.transcribeButton}
+                    disabled={isTranscribingEs}
+                    style={{
+                      backgroundColor: isTranscribingEs
+                        ? "#ccc"
+                        : theme.palette.primary.main,
+                      color: "#fff",
+                    }}
+                  >
+                    {isTranscribingEs ? "Transcribiendo..." : "Transcribe in Spagnolo"}
+                  </Button>
+                </div>
+                {/* Mostra la trascrizione se presente */}
+                {transcriptionIt && (
+                  <Typography className={classes.transcriptionText} variant="body2">
+                    <strong>IT:</strong> {transcriptionIt}
+                  </Typography>
+                )}
+                {transcriptionEs && (
+                  <Typography className={classes.transcriptionText} variant="body2">
+                    <strong>ES:</strong> {transcriptionEs}
+                  </Typography>
+                )}
               )
             ) : (
               <Typography className={classes.transcriptionText} variant="body2">

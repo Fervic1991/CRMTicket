@@ -778,9 +778,9 @@ export const sendMessageFlow = async (
 
 export const transcribeAudioMessage = async (req: Request, res: Response): Promise<Response> => {
   const { companyId } = req.user;
-  const { wid } = req.body;
+  const { wid, language } = req.body;
 
-  const transcribedText = await TranscribeAudioMessageToText(wid, companyId.toString());
+  const transcribedText = await TranscribeAudioMessageToText(wid, companyId.toString(), language);
 
   return res.send(transcribedText);
 }

@@ -279,21 +279,30 @@ def transcrever():
             logging.error(f"{request_time} - Tipo de arquivo não suportado: {content_type}")
             return {'erro': 'Tipo de arquivo não suportado. Apenas formatos de áudio WAV, OGG, MP3, MP4, M4A, AAC e FLAC são permitidos.'}, 400
 
-        # Converte o arquivo para WAV
+
+        # Leggi il parametro lingua dal form (default spagnolo)
+        language = request.form.get('language', 'es')
+        if language == 'it':
+            language_code = 'it-IT'
+        elif language == 'es':
+            language_code = 'es-ES'
+        else:
+            language_code = 'es-ES'
+
+        # Converte il file per WAV
         try:
             audio = convert_audio_to_wav(audio_data, content_type)
         except Exception as e:
             logging.error(f"{request_time} - Erro ao converter áudio: {e}")
             return {'erro': f'Erro ao converter o arquivo de áudio: {str(e)}'}, 500
 
-        # Divide o áudio em pedaços menores
-        chunk_length_ms = 12 * 1000  # 12 segundos
+        # Divide o áudio in chunks
+        chunk_length_ms = 12 * 1000  # 12 secondi
         audio_chunks = [audio[i:i + chunk_length_ms] for i in range(0, len(audio), chunk_length_ms)]
 
         def process_chunk(i, chunk):
             logging.info(f"{request_time} - Processando segmento {i + 1} de {len(audio_chunks)}")
-            
-            # Salva o segmento como um arquivo temporário
+            # Salva il chunk come file temporaneo
             chunk_io = io.BytesIO()
             chunk.export(chunk_io, format='wav')
             chunk_io.seek(0)
@@ -301,15 +310,13 @@ def transcrever():
             recognizer = sr.Recognizer()
             with sr.AudioFile(chunk_io) as source:
                 audio_data = recognizer.record(source)
-            
-            # Transcreve o segmento
             try:
-                return recognizer.recognize_google(audio_data, language='es-ES')
+                return recognizer.recognize_google(audio_data, language=language_code)
             except sr.UnknownValueError:
                 logging.warning(f"{request_time} - Segmento {i + 1}: Não foi possível reconhecer o áudio.")
                 return ""
             except sr.RequestError as e:
-                logging.error(f"{request_time} - Segmento {i + 1}: Erro ao se comunicar com o serviço de reconhecimento de fala: {e}")
+                logging.error(f"{request_time} - Segmento {i + 1}: Erro ao se comunicar com o serviço di riconoscimento vocale: {e}")
                 raise
 
         # Processa os chunks em paralelo

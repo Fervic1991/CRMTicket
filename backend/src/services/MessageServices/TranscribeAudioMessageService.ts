@@ -8,7 +8,7 @@ import { Transcription } from "openai/resources/audio/transcriptions";
 
 type Response = Transcription | string;
 
-const TranscribeAudioMessageToText = async (wid: string, companyId: string): Promise<Response> => {
+const TranscribeAudioMessageToText = async (wid: string, companyId: string, language?: string): Promise<Response> => {
   try {
     // Busca a mensagem com os detalhes do arquivo de áudio
     const msg = await Message.findOne({
@@ -17,6 +17,7 @@ const TranscribeAudioMessageToText = async (wid: string, companyId: string): Pro
         companyId: companyId,
       },
     });
+
 
     if (!msg) {
       throw new Error("Mensagem não encontrada");
@@ -29,12 +30,12 @@ const TranscribeAudioMessageToText = async (wid: string, companyId: string): Pro
     if (msg.mediaUrl.startsWith('http')) {
       // Se for uma URL, usa diretamente
       data.append('url', msg.mediaUrl);
+      if (language) data.append('language', language);
       config = {
         method: 'post',
         maxBodyLength: Infinity,
         url: `${process.env.TRANSCRIBE_URL}/transcrever`,
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${process.env.TRANSCRIBE_API_KEY}`,
           ...data.getHeaders(),
         },
@@ -54,12 +55,12 @@ const TranscribeAudioMessageToText = async (wid: string, companyId: string): Pro
       }
 
       data.append('audio', fs.createReadStream(filePath));
+      if (language) data.append('language', language);
       config = {
         method: 'post',
         maxBodyLength: Infinity,
         url: `${process.env.TRANSCRIBE_URL}/transcrever`,
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${process.env.TRANSCRIBE_API_KEY}`,
           ...data.getHeaders(),
         },
