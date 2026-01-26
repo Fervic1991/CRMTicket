@@ -281,8 +281,14 @@ def transcrever():
 
 
 
-        # Leggi il parametro lingua dal form (default spagnolo)
-        language = request.form.get('language', 'es')
+        # Leggi il parametro lingua da qualsiasi fonte (form, values, args, json)
+        language = (
+            request.form.get('language')
+            or request.values.get('language')
+            or (request.json.get('language') if request.is_json and request.json else None)
+            or request.args.get('language')
+            or 'es'
+        )
         if language == 'it':
             language_code = 'it-IT'
         elif language == 'es':
