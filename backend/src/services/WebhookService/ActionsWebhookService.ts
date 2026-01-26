@@ -1,12 +1,6 @@
-
-import i18n from "i18n";
 import path from "path";
-i18n.configure({
-  locales: ["it"],
-  directory: path.join(__dirname, "../../translate"),
-  defaultLocale: "it",
-  objectNotation: true
-});
+
+
 
 import AppError from "../../errors/AppError";
 import { WebhookModel } from "../../models/Webhook";
@@ -25,7 +19,7 @@ import Ticket from "../../models/Ticket";
 import Message from "../../models/Message";
 import fs from "fs";
 import GetWhatsappWbot from "../../helpers/GetWhatsappWbot";
-import path from "path";
+// import path from "path"; // già importato sopra
 import SendWhatsAppMedia from "../WbotServices/SendWhatsAppMedia";
 import SendWhatsAppMediaFlow, { typeSimulation } from "../WbotServices/SendWhatsAppMediaFlow";
 import { randomizarCaminho } from "../../utils/randomizador";
@@ -618,10 +612,10 @@ export const ActionsWebhookService = async (
           // ✅ ENVIAR MENSAGEM DE BOAS-VINDAS IMEDIATAMENTE
           if (name) {
             const welcomeMessage = objective
-              ? i18n.__("ai.welcome_objective", { name, objective })
+              ? `Benvenuto ${name}, obiettivo: ${objective}`
               : flowMode === "temporary" && continueKeywords?.length > 0
-                ? i18n.__("ai.welcome_continue", { name, keyword: continueKeywords[0] })
-                : i18n.__("ai.welcome", { name });
+                ? `Benvenuto ${name}, continua con la parola chiave: ${continueKeywords[0]}`
+                : `Benvenuto ${name}`;
 
             logger.info(`[${provider.toUpperCase()} NODE] Enviando boas-vindas para ticket ${ticket.id}`);
 
