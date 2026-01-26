@@ -243,6 +243,15 @@ def convert_audio_to_wav(audio_data, content_type):
 
 @app.route('/transcrever', methods=['POST'])
 def transcrever():
+            # Logga tutte le possibili fonti del parametro language per debug
+            logging.info(f"[DEBUG] request.form: {dict(request.form)}")
+            logging.info(f"[DEBUG] request.values: {dict(request.values)}")
+            logging.info(f"[DEBUG] request.args: {dict(request.args)}")
+            try:
+                json_data = request.get_json(force=False, silent=True)
+            except Exception as e:
+                json_data = None
+            logging.info(f"[DEBUG] request.json: {json_data}")
     request_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     
     # Verifica a autenticação
