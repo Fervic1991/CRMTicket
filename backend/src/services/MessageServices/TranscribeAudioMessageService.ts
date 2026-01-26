@@ -30,11 +30,9 @@ const TranscribeAudioMessageToText = async (wid: string, companyId: string, lang
     if (msg.mediaUrl.startsWith('http')) {
       // Usa sempre form-data anche per la URL
       data.append('url', msg.mediaUrl);
-      if (language) {
-        data.append('language', language);
-      } else {
-        data.append('language', 'es'); // fallback esplicito
-      }
+      let langToSend = language || 'es';
+      data.append('language', langToSend);
+      console.log('[DEBUG BACKEND] language inviato a Python:', langToSend);
       config = {
         method: 'post',
         maxBodyLength: Infinity,
