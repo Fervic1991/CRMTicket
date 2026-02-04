@@ -11,7 +11,7 @@ module.exports = {
   },
 
   down: (queryInterface: QueryInterface) => {
-    queryInterface.removeColumn("Whatsapps", "timeAwaitActiveFlow");
+    return queryInterface.removeColumn("Whatsapps", "timeAwaitActiveFlow");
   }
 
 }

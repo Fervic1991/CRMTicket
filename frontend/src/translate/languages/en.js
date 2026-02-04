@@ -289,6 +289,7 @@ const messages = {
           selectConnections: "Select source and destination connections",
           differentConnections: "Source and destination connections must be different",
           successMessage: "Tickets transferred successfully!",
+          successMessageWithCount: "Transfer successful: {{count}} tickets transferred.",
           transferComplete: "Transfer completed!",
           transferError: "Error transferring tickets.",
           progressTitle: "Transferring Tickets",

@@ -402,7 +402,9 @@ export const initWASocket = async (whatsapp: Whatsapp): Promise<Session> => {
                 `Socket  ${name} Connection Update ${connection || ""} ${lastDisconnect ? lastDisconnect.error.message : ""
                 }`
               );
-              if ((lastDisconnect?.error as Boom)?.output?.statusCode === 403) {
+              const statusCode = (lastDisconnect?.error as Boom)?.output?.statusCode;
+
+              if (statusCode === 403) {
                 await whatsapp.update({ status: "PENDING", session: "" });
                 await DeleteBaileysService(whatsapp.id);
                 await cacheLayer.delFromPattern(`sessions:${whatsapp.id}:*`);
@@ -412,11 +414,20 @@ export const initWASocket = async (whatsapp: Whatsapp): Promise<Session> => {
                     session: whatsapp
                   });
                 removeWbot(id, false);
+                setTimeout(
+                  () => StartWhatsAppSession(whatsapp, whatsapp.companyId),
+                  2000
+                );
+                return;
               }
-              if (
-                (lastDisconnect?.error as Boom)?.output?.statusCode !==
-                DisconnectReason.loggedOut
-              ) {
+
+              if (statusCode !== DisconnectReason.loggedOut) {
+                await whatsapp.update({ status: "DISCONNECTED" });
+                io.of(String(companyId))
+                  .emit(`company-${whatsapp.companyId}-whatsappSession`, {
+                    action: "update",
+                    session: whatsapp
+                  });
                 removeWbot(id, false);
                 setTimeout(
                   () => StartWhatsAppSession(whatsapp, whatsapp.companyId),

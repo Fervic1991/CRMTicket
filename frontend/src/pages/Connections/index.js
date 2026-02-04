@@ -611,7 +611,10 @@ const Connections = () => {
         setTransferProgressModalOpen(true);
         setTransferProgress({ current: 0, total: response.data.totalTickets, percentage: 0 });
       } else {
-        toast.success(i18n.t("connections.transfer.successMessage") + ` ${response.data.transferred || 0} tickets transferidos.`);
+        const transferredCount = response.data.transferred || 0;
+        toast.success(
+          i18n.t("connections.transfer.successMessageWithCount", { count: transferredCount })
+        );
         handleCloseTransferModal();
       }
     } catch (err) {
