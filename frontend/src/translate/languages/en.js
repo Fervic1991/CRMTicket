@@ -247,6 +247,12 @@ const messages = {
         add: "Add",
         task: "Tasks",
       },
+      audioRecorder: {
+        recordButton: "Record Audio",
+        recordingLabel: "Recording...",
+        recordedLabel: "Audio recorded - {{time}}",
+        recordedHelp: "Click ✓ to confirm or 🗑️ to delete",
+      },
       contactImportWpModal: {
         title: "Export Contacts to Excel",
         buttons: {

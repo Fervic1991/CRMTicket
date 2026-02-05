@@ -246,6 +246,12 @@ const messages = {
         add: "Agregar",
         task: "Tareas",
       },
+      audioRecorder: {
+        recordButton: "Grabar Audio",
+        recordingLabel: "Grabando...",
+        recordedLabel: "Audio grabado - {{time}}",
+        recordedHelp: "Haz clic en ✓ para confirmar o en 🗑️ para eliminar",
+      },
       contactImportWpModal: {
         title: "Exportar Contactos a Excel",
         buttons: {

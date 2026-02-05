@@ -15,6 +15,7 @@ import {
   Check as CheckIcon
 } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
+import { i18n } from "../../translate/i18n";
 
 const useStyles = makeStyles((theme) => ({
   recorderContainer: {
@@ -228,7 +229,7 @@ const AudioRecorder = ({ onAudioRecorded, onAudioDeleted, disabled = false }) =>
           disabled={disabled}
           size="large"
         >
-          Gravar Áudio
+          {i18n.t("audioRecorder.recordButton")}
         </Button>
       )}
 
@@ -236,7 +237,7 @@ const AudioRecorder = ({ onAudioRecorded, onAudioDeleted, disabled = false }) =>
         <Box className={classes.recordingIndicator}>
           <Chip 
             icon={<MicIcon />} 
-            label="Gravando..." 
+            label={i18n.t("audioRecorder.recordingLabel")}
             color="secondary" 
             variant="outlined"
           />
@@ -253,7 +254,7 @@ const AudioRecorder = ({ onAudioRecorded, onAudioDeleted, disabled = false }) =>
         <>
           <Box className={classes.waveformPlaceholder}>
             <Typography variant="body2" color="textSecondary">
-              Áudio gravado - {formatTime(recordingTime)}
+              {i18n.t("audioRecorder.recordedLabel", { time: formatTime(recordingTime) })}
             </Typography>
           </Box>
           
@@ -274,7 +275,7 @@ const AudioRecorder = ({ onAudioRecorded, onAudioDeleted, disabled = false }) =>
             
             <Box sx={{ flexGrow: 1 }}>
               <Typography variant="body2" align="center">
-                Clique em ✓ para confirmar ou 🗑️ para excluir
+                {i18n.t("audioRecorder.recordedHelp")}
               </Typography>
             </Box>
             

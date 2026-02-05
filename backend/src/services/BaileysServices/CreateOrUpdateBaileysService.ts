@@ -19,12 +19,21 @@ const createOrUpdateBaileysService = async ({
     });
 
     if (baileysExists) {
-      const getChats = baileysExists.chats
-        ? JSON.parse(baileysExists.chats)
-        : [];
-      const getContacts = baileysExists.contacts
-        ? JSON.parse(baileysExists.contacts)
-        : [];
+      const parseMaybeJson = <T>(value: unknown, fallback: T): T => {
+        if (!value) return fallback;
+        if (typeof value === "string") {
+          try {
+            return JSON.parse(value) as T;
+          } catch {
+            return fallback;
+          }
+        }
+        if (Array.isArray(value)) return value as T;
+        return fallback;
+      };
+
+      const getChats = parseMaybeJson<Chat[]>(baileysExists.chats, []);
+      const getContacts = parseMaybeJson<Contact[]>(baileysExists.contacts, []);
 
       if (chats) {
         getChats.push(...chats);
@@ -57,7 +66,7 @@ const createOrUpdateBaileysService = async ({
     return baileys;
   } catch (error) {
     console.log(error, whatsappId, contacts);
-    throw new Error(error);
+    throw error;
   }
 };
 
