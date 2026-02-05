@@ -17,8 +17,14 @@ const useStyles = makeStyles((theme) => ({
     minWidth: '300px',  // ✅ Largura mínima
     padding: 0,
     margin: 0,
-    backgroundColor: 'transparent',
-    border: 'none'
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    border: '1px solid rgba(148, 163, 184, 0.35)',
+    borderRadius: 14,
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+    paddingTop: theme.spacing(0.75),
+    paddingBottom: theme.spacing(1),
+    boxShadow: '0 10px 22px rgba(15, 23, 42, 0.08)'
   },
   audioPlayerContainer: {
     position: 'relative',
@@ -60,9 +66,9 @@ const useStyles = makeStyles((theme) => ({
     lineHeight: 1.4,
     wordBreak: 'break-word',
     padding: theme.spacing(1),
-    backgroundColor: theme.palette.action.hover,
-    borderRadius: theme.shape.borderRadius,
-    border: `1px solid ${theme.palette.divider}`,
+    backgroundColor: 'rgba(248, 250, 252, 0.9)',
+    borderRadius: 12,
+    border: `1px solid rgba(148, 163, 184, 0.35)`,
     width: '100%',
     boxSizing: 'border-box'
   },
@@ -72,7 +78,10 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 'auto',
     height: '32px',
     // ✅ CORREÇÃO: Centralizar o botão
-    alignSelf: 'center'
+    alignSelf: 'center',
+    borderRadius: 12,
+    textTransform: 'none',
+    boxShadow: '0 6px 14px rgba(15, 23, 42, 0.12)'
   },
   rateButton: {
     position: 'absolute',

@@ -106,12 +106,15 @@ const useStyles = makeStyles((theme) => ({
   },
 
   messagesList: {
-    backgroundImage: theme.mode === 'light' ? `url(${whatsBackground})` : `url(${whatsBackgroundDark})`,
+    backgroundImage: theme.mode === 'light'
+      ? `linear-gradient(180deg, rgba(248, 250, 252, 0.96), rgba(241, 245, 249, 0.96)), url(${whatsBackground})`
+      : `linear-gradient(180deg, rgba(8, 11, 16, 0.88), rgba(2, 6, 12, 0.92)), url(${whatsBackgroundDark})`,
+    backgroundBlendMode: theme.mode === "light" ? "screen" : "multiply",
     backgroundColor: theme.mode === 'light' ? "transparent" : "#0b0b0d",
     display: "flex",
     flexDirection: "column",
     flexGrow: 1,
-    padding: "20px 20px 30px 20px",
+    padding: "24px 24px 36px 24px",
     overflowY: "scroll",
     ...theme.scrollbarStyles,
   },
@@ -154,31 +157,33 @@ const useStyles = makeStyles((theme) => ({
     },
 
     whiteSpace: "pre-wrap",
-    backgroundColor: theme.mode === 'light' ? "#ffffff" : "#202c33",
-    color: theme.mode === 'light' ? "#303030" : "#ffffff",
+    backgroundColor: theme.mode === 'light' ? "rgba(255, 255, 255, 0.92)" : "#1f2937",
+    color: theme.mode === 'light' ? "#1f2937" : "#f8fafc",
     alignSelf: "flex-start",
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 8,
-    borderBottomLeftRadius: 8,
-    borderBottomRightRadius: 8,
-    paddingLeft: 5,
-    paddingRight: 5,
-    paddingTop: 5,
-    paddingBottom: 0,
-    boxShadow: theme.mode === 'light' ? "0 1px 1px #b3b3b3" : "0 1px 1px #000000"
+    borderTopLeftRadius: 6,
+    borderTopRightRadius: 14,
+    borderBottomLeftRadius: 14,
+    borderBottomRightRadius: 14,
+    paddingLeft: 10,
+    paddingRight: 12,
+    paddingTop: 8,
+    paddingBottom: 6,
+    boxShadow: theme.mode === 'light'
+      ? "0 8px 18px rgba(15, 23, 42, 0.08)"
+      : "0 6px 12px rgba(0, 0, 0, 0.35)"
   },
 
   quotedContainerLeft: {
     margin: "-3px -80px 6px -6px",
     overflow: "hidden",
-    backgroundColor: theme.mode === 'light' ? "#f0f0f0" : "#1d282f",
-    borderRadius: "7.5px",
+    backgroundColor: theme.mode === 'light' ? "rgba(241, 245, 249, 0.9)" : "#111827",
+    borderRadius: 12,
     display: "flex",
     position: "relative",
   },
 
   quotedMsg: {
-    padding: 10,
+    padding: 8,
     maxWidth: 300,
     height: "auto",
     display: "block",
@@ -189,7 +194,7 @@ const useStyles = makeStyles((theme) => ({
   quotedSideColorLeft: {
     flex: "none",
     width: "4px",
-    backgroundColor: "#388aff",
+    backgroundColor: "rgba(59, 130, 246, 0.8)",
   },
 
   messageRight: {
@@ -207,18 +212,20 @@ const useStyles = makeStyles((theme) => ({
       right: 0,
     },
     whiteSpace: "pre-wrap",
-    backgroundColor: theme.mode === 'light' ? "#dcf8c6" : "#005c4b",
-    color: theme.mode === 'light' ? "#303030" : "#ffffff",
+    backgroundColor: theme.mode === 'light' ? "rgba(187, 247, 208, 0.9)" : "#0f766e",
+    color: theme.mode === 'light' ? "#0f172a" : "#ecfeff",
     alignSelf: "flex-end",
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    borderBottomLeftRadius: 8,
-    borderBottomRightRadius: 0,
-    paddingLeft: 5,
-    paddingRight: 5,
-    paddingTop: 5,
-    paddingBottom: 0,
-    boxShadow: theme.mode === 'light' ? "0 1px 1px #b3b3b3" : "0 1px 1px #000000"
+    borderTopLeftRadius: 14,
+    borderTopRightRadius: 14,
+    borderBottomLeftRadius: 14,
+    borderBottomRightRadius: 6,
+    paddingLeft: 10,
+    paddingRight: 12,
+    paddingTop: 8,
+    paddingBottom: 6,
+    boxShadow: theme.mode === 'light'
+      ? "0 8px 18px rgba(15, 23, 42, 0.08)"
+      : "0 6px 12px rgba(0, 0, 0, 0.35)"
   },
 
   messageRightPrivate: {
@@ -236,31 +243,33 @@ const useStyles = makeStyles((theme) => ({
       right: 0,
     },
     whiteSpace: "pre-wrap",
-    backgroundColor: "#F0E68C",
-    color: "#303030",
+    backgroundColor: "rgba(251, 191, 36, 0.2)",
+    color: "#1f2937",
     alignSelf: "flex-end",
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    borderBottomLeftRadius: 8,
-    borderBottomRightRadius: 0,
-    paddingLeft: 5,
-    paddingRight: 5,
-    paddingTop: 5,
-    paddingBottom: 0,
-    boxShadow: theme.mode === 'light' ? "0 1px 1px #b3b3b3" : "0 1px 1px #000000"
+    borderTopLeftRadius: 14,
+    borderTopRightRadius: 14,
+    borderBottomLeftRadius: 14,
+    borderBottomRightRadius: 6,
+    paddingLeft: 10,
+    paddingRight: 12,
+    paddingTop: 8,
+    paddingBottom: 6,
+    boxShadow: theme.mode === 'light'
+      ? "0 8px 18px rgba(15, 23, 42, 0.08)"
+      : "0 6px 12px rgba(0, 0, 0, 0.35)"
   },
 
   quotedContainerRight: {
     margin: "-3px -80px 6px -6px",
     overflowY: "hidden",
-    backgroundColor: theme.mode === 'light' ? "#cfe9ba" : "#025144",
-    borderRadius: "7.5px",
+    backgroundColor: theme.mode === 'light' ? "rgba(187, 247, 208, 0.6)" : "#0f766e",
+    borderRadius: 12,
     display: "flex",
     position: "relative",
   },
 
   quotedMsgRight: {
-    padding: 10,
+    padding: 8,
     maxWidth: 300,
     height: "auto",
     whiteSpace: "pre-wrap",
@@ -269,13 +278,13 @@ const useStyles = makeStyles((theme) => ({
   quotedSideColorRight: {
     flex: "none",
     width: "4px",
-    backgroundColor: "#35cd96",
+    backgroundColor: "rgba(16, 185, 129, 0.75)",
   },
 
   messageActionsButton: {
     display: "none",
     position: "relative",
-    color: "#999",
+    color: "rgba(100, 116, 139, 0.9)",
     zIndex: 1,
     backgroundColor: "inherit",
     opacity: "90%",
@@ -290,7 +299,7 @@ const useStyles = makeStyles((theme) => ({
 
   textContentItem: {
     overflowWrap: "break-word",
-    padding: "3px 80px 6px 6px",
+    padding: "2px 80px 6px 4px",
   },
 
   textContentItemDeleted: {
@@ -302,29 +311,32 @@ const useStyles = makeStyles((theme) => ({
 
   messageMedia: {
     objectFit: "cover",
-    width: 400,
+    width: 420,
     height: "auto",
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    borderBottomLeftRadius: 8,
-    borderBottomRightRadius: 8,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
+    boxShadow: theme.mode === "light"
+      ? "0 12px 24px rgba(15, 23, 42, 0.12)"
+      : "0 10px 20px rgba(0, 0, 0, 0.35)",
   },
 
   timestamp: {
-    fontSize: 11,
+    fontSize: 10,
     position: "absolute",
     bottom: 0,
     right: 5,
-    color: "#999",
+    color: "rgba(100, 116, 139, 0.85)",
   },
 
   forwardMessage: {
-    fontSize: 12,
+    fontSize: 11,
     fontStyle: "italic",
     position: "absolute",
     top: 0,
     left: 5,
-    color: "#999",
+    color: "rgba(100, 116, 139, 0.85)",
     display: "flex",
     alignItems: "center"
   },
@@ -333,42 +345,45 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     textAlign: "center",
     alignSelf: "center",
-    width: "110px",
-    backgroundColor: "#e1f3fb",
+    width: "120px",
+    backgroundColor: "rgba(241, 245, 249, 0.9)",
     margin: "10px",
-    borderRadius: "10px",
-    boxShadow: "0 1px 1px #b3b3b3",
+    borderRadius: 999,
+    border: "1px solid rgba(148, 163, 184, 0.35)",
+    boxShadow: "0 6px 14px rgba(15, 23, 42, 0.08)",
   },
 
   dailyTimestampText: {
-    color: "#808888",
-    padding: 8,
+    color: "rgba(71, 85, 105, 0.9)",
+    padding: "6px 10px",
     alignSelf: "center",
     marginLeft: "0px",
   },
 
   ackIcons: {
-    fontSize: 18,
+    fontSize: 16,
     verticalAlign: "middle",
     marginLeft: 4,
+    color: "rgba(100, 116, 139, 0.8)",
   },
 
   deletedIcon: {
-    fontSize: 18,
+    fontSize: 16,
     verticalAlign: "middle",
     marginRight: 4,
+    color: "rgba(239, 68, 68, 0.9)",
   },
 
   ackDoneAllIcon: {
     color: blue[500],
-    fontSize: 18,
+    fontSize: 16,
     verticalAlign: "middle",
     marginLeft: 4,
   },
 
   ackPlayedIcon: {
     color: green[500],
-    fontSize: 18,
+    fontSize: 16,
     verticalAlign: "middle",
     marginLeft: 4,
   },
@@ -386,20 +401,21 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     verticalAlign: "center",
     alignContent: "center",
-    backgroundColor: "#E1F5FEEB",
+    backgroundColor: "rgba(226, 232, 240, 0.9)",
     fontSize: "12px",
     minWidth: 100,
     maxWidth: 270,
-    color: "#272727",
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 8,
-    borderBottomLeftRadius: 8,
-    borderBottomRightRadius: 8,
-    paddingLeft: 5,
-    paddingRight: 5,
-    paddingTop: 5,
-    paddingBottom: 0,
-    boxShadow: "0 1px 1px #b3b3b3",
+    color: "#0f172a",
+    borderTopLeftRadius: 6,
+    borderTopRightRadius: 12,
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
+    paddingLeft: 8,
+    paddingRight: 8,
+    paddingTop: 6,
+    paddingBottom: 4,
+    border: "1px solid rgba(148, 163, 184, 0.35)",
+    boxShadow: "0 6px 14px rgba(15, 23, 42, 0.08)",
   },
 
   deletedMessage: {

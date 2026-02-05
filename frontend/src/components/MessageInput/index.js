@@ -194,11 +194,26 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 500,
   },
   sendMessageIcons: {
-    color: grey[700],
+    color: "rgba(71, 85, 105, 0.85)",
+    transition: "color 0.15s ease",
   },
   ForwardMessageIcons: {
-    color: grey[700],
+    color: "rgba(71, 85, 105, 0.85)",
     transform: "scaleX(-1)",
+  },
+  actionIconButton: {
+    height: 36,
+    width: 36,
+    borderRadius: 12,
+    border: "1px solid rgba(148, 163, 184, 0.45)",
+    background: "rgba(255, 255, 255, 0.75)",
+    boxShadow: "0 6px 14px rgba(15, 23, 42, 0.08)",
+    transition: "transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease",
+    "&:hover": {
+      transform: "translateY(-1px)",
+      boxShadow: "0 10px 18px rgba(15, 23, 42, 0.12)",
+      borderColor: "rgba(59, 130, 246, 0.5)",
+    },
   },
   uploadInput: {
     display: "none",
@@ -461,6 +476,32 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: "transparent",
     },
+  },
+  attachmentsMenuPaper: {
+    borderRadius: 16,
+    border: "1px solid rgba(148, 163, 184, 0.35)",
+    boxShadow: "0 16px 40px rgba(15, 23, 42, 0.12)",
+    padding: theme.spacing(0.5),
+    background: "rgba(255, 255, 255, 0.96)",
+    backdropFilter: "blur(10px)",
+  },
+  attachmentsMenuItem: {
+    borderRadius: 12,
+    padding: theme.spacing(0.75, 1.5),
+    margin: theme.spacing(0.25, 0.5),
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(1.25),
+    transition: "background-color 0.15s ease, transform 0.15s ease",
+    "&:hover": {
+      backgroundColor: "rgba(226, 232, 240, 0.6)",
+      transform: "translateX(2px)",
+    },
+  },
+  attachmentsMenuLabel: {
+    fontSize: "0.9rem",
+    fontWeight: 600,
+    color: "rgba(15, 23, 42, 0.85)",
   },
   flexContainer: {
     display: "flex",
@@ -1839,6 +1880,7 @@ const MessageInput = ({
                   component="span"
                   disabled={disableOption()}
                   onClick={(e) => setShowEmoji((prevState) => !prevState)}
+                  className={classes.actionIconButton}
                 >
                   <Mood className={classes.sendMessageIcons} />
                 </IconButton>
@@ -1871,8 +1913,10 @@ const MessageInput = ({
                   open={Boolean(anchorEl)}
                   onClose={handleMenuItemClick}
                   id="simple-menu"
+                  PaperProps={{ className: classes.attachmentsMenuPaper }}
+                  MenuListProps={{ className: classes.attachmentsMenuList }}
                 >
-                  <MenuItem onClick={handleMenuItemClick}>
+                  <MenuItem onClick={handleMenuItemClick} className={classes.attachmentsMenuItem}>
                     <input
                       multiple
                       type="file"
@@ -1889,16 +1933,20 @@ const MessageInput = ({
                       >
                         <PermMedia />
                       </Fab>
-                      {i18n.t("messageInput.type.imageVideo")}
+                      <span className={classes.attachmentsMenuLabel}>
+                        {i18n.t("messageInput.type.imageVideo")}
+                      </span>
                     </label>
                   </MenuItem>
-                  <MenuItem onClick={handleCameraModalOpen}>
+                  <MenuItem onClick={handleCameraModalOpen} className={classes.attachmentsMenuItem}>
                     <Fab className={classes.invertedFabMenuCamera}>
                       <CameraAlt />
                     </Fab>
-                    {i18n.t("messageInput.type.cam")}
+                    <span className={classes.attachmentsMenuLabel}>
+                      {i18n.t("messageInput.type.cam")}
+                    </span>
                   </MenuItem>
-                  <MenuItem onClick={handleMenuItemClick}>
+                  <MenuItem onClick={handleMenuItemClick} className={classes.attachmentsMenuItem}>
                     <input
                       multiple
                       type="file"
@@ -1915,28 +1963,34 @@ const MessageInput = ({
                       >
                         <Description />
                       </Fab>
-                      Documento
+                      <span className={classes.attachmentsMenuLabel}>Documento</span>
                     </label>
                   </MenuItem>
-                  <MenuItem onClick={handleSendContactModalOpen}>
+                  <MenuItem onClick={handleSendContactModalOpen} className={classes.attachmentsMenuItem}>
                     <Fab className={classes.invertedFabMenuCont}>
                       <Person />
                     </Fab>
-                    {i18n.t("messageInput.type.contact")}
+                    <span className={classes.attachmentsMenuLabel}>
+                      {i18n.t("messageInput.type.contact")}
+                    </span>
                   </MenuItem>
-                  <MenuItem onClick={handleSendLinkVideo}>
+                  <MenuItem onClick={handleSendLinkVideo} className={classes.attachmentsMenuItem}>
                     <Fab className={classes.invertedFabMenuMeet}>
                       <Duo />
                     </Fab>
-                    {i18n.t("messageInput.type.meet")}
+                    <span className={classes.attachmentsMenuLabel}>
+                      {i18n.t("messageInput.type.meet")}
+                    </span>
                   </MenuItem>
                   {useWhatsappOfficial &&
                     ticketChannel === "whatsapp_oficial" && (
-                      <MenuItem onClick={handleSendTemplate}>
+                      <MenuItem onClick={handleSendTemplate} className={classes.attachmentsMenuItem}>
                         <Fab className={classes.invertedFabMenuMeet}>
                           <WhatsApp />
                         </Fab>
-                        {i18n.t("messageInput.type.template")}
+                        <span className={classes.attachmentsMenuLabel}>
+                          {i18n.t("messageInput.type.template")}
+                        </span>
                       </MenuItem>
                     )}
                 </Menu>
@@ -2053,8 +2107,9 @@ const MessageInput = ({
                   anchorEl={anchorEl}
                   open={Boolean(anchorEl)}
                   onClose={handleMenuItemClick}
+                  PaperProps={{ className: classes.attachmentsMenuPaper }}
                 >
-                  <MenuItem onClick={handleMenuItemClick}>
+                  <MenuItem onClick={handleMenuItemClick} className={classes.attachmentsMenuItem}>
                     <IconButton
                       aria-label="emojiPicker"
                       component="span"
@@ -2064,7 +2119,7 @@ const MessageInput = ({
                       <Mood className={classes.sendMessageIcons} />
                     </IconButton>
                   </MenuItem>
-                  <MenuItem onClick={handleMenuItemClick}>
+                  <MenuItem onClick={handleMenuItemClick} className={classes.attachmentsMenuItem}>
                     <input
                       multiple
                       type="file"
@@ -2338,6 +2393,7 @@ const MessageInput = ({
                       component="span"
                       onClick={() => setAppointmentModalOpen(true)}
                       disabled={loading}
+                      className={classes.actionIconButton}
                     >
                       <Timer className={classes.sendMessageIcons} />
                     </IconButton>
@@ -2354,6 +2410,7 @@ const MessageInput = ({
                           : handleSendMessage
                       }
                       disabled={loading}
+                      className={classes.actionIconButton}
                     >
                       {showSelectMessageCheckbox ? (
                         <Reply className={classes.ForwardMessageIcons} />
@@ -2396,6 +2453,7 @@ const MessageInput = ({
                     component="span"
                     disabled={disableOptionForPending()}
                     onClick={handleStartRecording}
+                    className={classes.actionIconButton}
                   >
                     <Mic className={classes.sendMessageIcons} />
                   </IconButton>
@@ -2414,6 +2472,7 @@ const MessageInput = ({
                       : handleSendMessage
                   }
                   disabled={loading}
+                  className={classes.actionIconButton}
                 >
                   {showSelectMessageCheckbox ? (
                     <Reply className={classes.ForwardMessageIcons} />
