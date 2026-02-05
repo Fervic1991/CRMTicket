@@ -74,10 +74,12 @@ const TranscribeAudioMessageToText = async (wid: string, companyId: string, lang
     // Faz a requisição para o endpoint
     const res = await axios.request(config);
 
-    await msg.update({
-      body: res.data,
-      transcrito: true,
-    });
+    if (!language) {
+      await msg.update({
+        body: res.data,
+        transcrito: true,
+      });
+    }
 
     return res.data;
   } catch (error) {

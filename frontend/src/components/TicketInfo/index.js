@@ -34,6 +34,33 @@ const useStyles = makeStyles((theme) => ({
             opacity: 0.8,
         },
     },
+    headerWrap: {
+        display: "flex",
+        flexDirection: "column",
+        gap: theme.spacing(0.5),
+    },
+    metaRow: {
+        display: "flex",
+        alignItems: "center",
+        gap: theme.spacing(1),
+        flexWrap: "wrap",
+    },
+    metaPill: {
+        padding: "4px 10px",
+        borderRadius: 999,
+        fontSize: "0.7rem",
+        fontWeight: 600,
+        background: "rgba(248, 250, 252, 0.9)",
+        border: "1px solid rgba(148, 163, 184, 0.4)",
+        color: "rgba(71, 85, 105, 0.9)",
+    },
+    metaLabel: {
+        fontSize: "0.75rem",
+        fontWeight: 600,
+        color: "rgba(100, 116, 139, 0.9)",
+        textTransform: "uppercase",
+        letterSpacing: "0.04em",
+    },
     statusPill: {
         padding: "6px 14px",
         borderRadius: 999,
@@ -122,12 +149,22 @@ const TicketInfo = ({ contact, ticket, onClick }) => {
                     />
                 }
                 title={`${contact?.name || '(sem contato)'} #${ticket?.id}`}
-                subheader={[
-                    ticket?.user && `${i18n.t("messagesList.header.assignedTo")} ${ticket?.user?.name}`,
-                    contact?.contactWallets && contact.contactWallets.length > 0
-                        ? `• ${i18n.t("wallets.wallet")}: ${contact.contactWallets[0].wallet?.name || 'N/A'}`
-                        : null
-                ].filter(Boolean).join(' ')}
+                subheader={
+                    <div className={classes.headerWrap}>
+                        <div className={classes.metaRow}>
+                            {ticket?.user && (
+                                <span className={classes.metaPill}>
+                                    {i18n.t("messagesList.header.assignedTo")} {ticket?.user?.name}
+                                </span>
+                            )}
+                            {contact?.contactWallets && contact.contactWallets.length > 0 && (
+                                <span className={classes.metaPill}>
+                                    {i18n.t("wallets.wallet")}: {contact.contactWallets[0].wallet?.name || 'N/A'}
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                }
                 action={
                     <div
                         className={classes.statusPill}

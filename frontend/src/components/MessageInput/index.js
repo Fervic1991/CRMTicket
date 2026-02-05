@@ -99,11 +99,11 @@ const isMobileDevice = () => {
 
 const useStyles = makeStyles((theme) => ({
   mainWrapper: {
-    background: "#eee",
+    background: "linear-gradient(180deg, rgba(248, 250, 252, 0.92), rgba(241, 245, 249, 0.92))",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    borderTop: "1px solid rgba(0, 0, 0, 0.12)",
+    borderTop: "1px solid rgba(148, 163, 184, 0.35)",
     [theme.breakpoints.down("sm")]: {
       position: "fixed",
       bottom: 0,
@@ -133,21 +133,23 @@ const useStyles = makeStyles((theme) => ({
     overflow: "scroll",
   },
   newMessageBox: {
-    background: theme.palette.background.default,
+    background: "rgba(248, 250, 252, 0.9)",
     width: "100%",
     display: "flex",
-    padding: "7px",
+    padding: "10px 12px",
     alignItems: "center",
   },
   messageInputWrapper: {
-    padding: 6,
-    marginRight: 7,
-    background: theme.palette.background.paper,
+    padding: 8,
+    marginRight: 10,
+    background: "rgba(255, 255, 255, 0.9)",
     display: "flex",
-    borderRadius: 20,
+    borderRadius: 18,
     flex: 1,
     position: "relative", // ✅ Essencial para o position absolute funcionar
     zIndex: 1, // ✅ Z-index base
+    border: "1px solid rgba(148, 163, 184, 0.35)",
+    boxShadow: "0 8px 18px rgba(15, 23, 42, 0.06)",
   },
 
   messageInputWrapperPrivate: {
@@ -176,6 +178,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 10,
     flex: 1,
     border: "none",
+    fontSize: "0.95rem",
   },
   messageInputPrivate: {
     paddingLeft: 10,
