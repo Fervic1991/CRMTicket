@@ -1008,6 +1008,12 @@ const messages = {
           ascending: "Crescente",
           descending: "Decrescente"
         },
+        status: {
+          open: "Aperto",
+          pending: "In attesa",
+          group: "Gruppo",
+          closed: "Risolto",
+        },
         toasts: {
           deleted: "L'assistenza che stavi gestendo è stata eliminata.",
         },
@@ -1041,9 +1047,7 @@ const messages = {
           closedMessage: "Chiudi Ticket con Messaggio di Addio",
           closedNotMessage: "Chiudi Ticket senza Messaggio di Addio",
         },
-        status: {
-          pending: "Ticket Pendente"
-        }
+        
       },
       transferTicketModal: {
         title: "Trasferisci Ticket",

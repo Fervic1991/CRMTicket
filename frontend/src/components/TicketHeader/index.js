@@ -9,14 +9,40 @@ import { useHistory } from "react-router-dom";
 const useStyles = makeStyles(theme => ({
 	ticketHeader: {
 		display: "flex",
-		// backgroundColor: "#eee",
-		background: theme.palette.total,
+		background: "linear-gradient(135deg, rgba(59, 130, 246, 0.18) 0%, rgba(14, 116, 144, 0.16) 45%, rgba(16, 185, 129, 0.16) 100%)",
 		flex: "none",
-		borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
-		height: "65px",
+		borderBottom: "1px solid rgba(148, 163, 184, 0.35)",
+		height: "70px",
+		backdropFilter: "blur(8px)",
+		boxShadow: "0 8px 20px rgba(15, 23, 42, 0.06)",
+		alignItems: "center",
+		padding: theme.spacing(0, 1),
 		[theme.breakpoints.down("sm")]: {
 			flexWrap: "wrap",
-			height: 'max-content'
+			height: "max-content",
+			paddingBottom: theme.spacing(0.5),
+		},
+	},
+	backButton: {
+		minWidth: 40,
+		height: 40,
+		borderRadius: 12,
+		border: "1px solid rgba(148, 163, 184, 0.5)",
+		background: "rgba(255, 255, 255, 0.65)",
+		boxShadow: "0 6px 14px rgba(15, 23, 42, 0.08)",
+		marginRight: theme.spacing(1),
+		"&:hover": {
+			background: "rgba(248, 250, 252, 0.95)",
+			borderColor: "rgba(59, 130, 246, 0.5)",
+		},
+	},
+	headerDivider: {
+		width: 1,
+		height: 32,
+		background: "rgba(148, 163, 184, 0.5)",
+		marginRight: theme.spacing(1.5),
+		[theme.breakpoints.down("sm")]: {
+			display: "none",
 		},
 	},
 }));
@@ -51,9 +77,10 @@ const TicketHeader = ({ loading, children }) => {
 					square
 					className={classes.ticketHeader}
 				>
-					<Button color="primary" onClick={handleBack}>
+					<Button className={classes.backButton} onClick={handleBack}>
 						<ArrowBackIos />
 					</Button>
+					<div className={classes.headerDivider} />
 					{children}
 				</Card>
 			)}

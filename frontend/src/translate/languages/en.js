@@ -1006,6 +1006,12 @@ const messages = {
           ascending: "Ascending",
           descending: "Descending"
         },
+        status: {
+          open: "Open",
+          pending: "Pending",
+          group: "Group",
+          closed: "Resolved",
+        },
         toasts: {
           deleted: "The attendance you were handling has been deleted.",
         },

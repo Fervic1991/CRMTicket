@@ -1008,6 +1008,12 @@ const messages = {
           ascending: "Ascendente",
           descending: "Descendente"
         },
+        status: {
+          open: "Abierto",
+          pending: "Pendiente",
+          group: "Grupo",
+          closed: "Resuelto",
+        },
         toasts: {
           deleted: "La atención que estabas manejando ha sido eliminada.",
         },

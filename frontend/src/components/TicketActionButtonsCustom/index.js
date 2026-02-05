@@ -63,13 +63,40 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "auto",
     // flexBasis: "50%",
     display: "flex",
-    "& > *": {
-      margin: theme.spacing(1),
-    },
+    alignItems: "center",
+    gap: theme.spacing(1),
+    paddingRight: theme.spacing(1),
   },
   bottomButtonVisibilityIcon: {
     padding: 1,
     color: theme.mode === "light" ? theme.palette.primary.main : "#FFF",
+  },
+  actionIconButton: {
+    height: 36,
+    width: 36,
+    borderRadius: 12,
+    border: "1px solid rgba(148, 163, 184, 0.55)",
+    background: "rgba(255, 255, 255, 0.7)",
+    boxShadow: "0 6px 14px rgba(15, 23, 42, 0.08)",
+    transition: "transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease",
+    "&:hover": {
+      transform: "translateY(-1px)",
+      boxShadow: "0 10px 18px rgba(15, 23, 42, 0.12)",
+      borderColor: "rgba(59, 130, 246, 0.5)",
+      background: "rgba(248, 250, 252, 0.95)",
+    },
+  },
+  actionIcon: {
+    color: "rgba(30, 41, 59, 0.8)",
+    fontSize: 18,
+  },
+  actionMenuButton: {
+    height: 32,
+    width: 32,
+    borderRadius: 10,
+    border: "1px solid rgba(148, 163, 184, 0.45)",
+    background: "rgba(255, 255, 255, 0.6)",
+    marginLeft: theme.spacing(0.5),
   },
   botoes: {
     display: "flex",
@@ -774,47 +801,49 @@ const TicketActionButtonsCustom = ({
 
               {/* Ícone para copiar telefone */}
               <IconButton 
-                className={classes.bottomButtonVisibilityIcon}
+                className={classes.actionIconButton}
                 onClick={handleCopyPhone}
                 disabled={!contact?.number}
               >
                 <Tooltip title={getCopyPhoneTooltip()}>
-                  <FileCopyIcon />
+                  <FileCopyIcon className={classes.actionIcon} />
                 </Tooltip>
               </IconButton>
 
               {/* Ícone para respostas rápidas */}
               <IconButton 
-                className={classes.bottomButtonVisibilityIcon}
+                className={classes.actionIconButton}
                 onClick={handleOpenQuickMessageModal}
               >
                 <Tooltip title={i18n.t("ticketInfo.quickMessages")}>
-                  <FlashOn />
+                  <FlashOn className={classes.actionIcon} />
                 </Tooltip>
               </IconButton>
 
-              <IconButton className={classes.bottomButtonVisibilityIcon}>
+              <IconButton className={classes.actionIconButton}>
                 <Tooltip title={i18n.t("messagesList.header.buttons.resolve")}>
-                  <HighlightOffIcon onClick={handleClickResolver} />
+                  <HighlightOffIcon className={classes.actionIcon} onClick={handleClickResolver} />
                 </Tooltip>
               </IconButton>
 
-              <IconButton className={classes.bottomButtonVisibilityIcon}>
+              <IconButton className={classes.actionIconButton}>
                 <Tooltip title={i18n.t("tickets.buttons.returnQueue")}>
                   <UndoIcon
                     // color="primary"
                     onClick={(e) =>
                       handleUpdateTicketStatus(e, "pending", null)
                     }
+                    className={classes.actionIcon}
                   />
                 </Tooltip>
               </IconButton>
 
-              <IconButton className={classes.bottomButtonVisibilityIcon}>
+              <IconButton className={classes.actionIconButton}>
                 <Tooltip title="Transferir Ticket">
                   <SwapHorizOutlined
                     // color="primary"
                     onClick={handleOpenTransferModal}
+                    className={classes.actionIcon}
                   />
                 </Tooltip>
               </IconButton>
@@ -825,7 +854,7 @@ const TicketActionButtonsCustom = ({
                 ticket.contact.contactWallets.length > 0
               ) && (
                 <IconButton
-                  className={classes.bottomButtonVisibilityIcon}
+                  className={classes.actionIconButton}
                   onClick={handleLinkToWallet}
                   disabled={linkingWallet}
                 >
@@ -833,7 +862,7 @@ const TicketActionButtonsCustom = ({
                     {linkingWallet ? (
                       <CircularProgress size={20} />
                     ) : (
-                      <AccountBalanceWallet />
+                      <AccountBalanceWallet className={classes.actionIcon} />
                     )}
                   </Tooltip>
                 </IconButton>
@@ -914,9 +943,9 @@ const TicketActionButtonsCustom = ({
           aria-haspopup="true"
           onClick={handleMenu}
           color="inherit"
-          style={{ paddingHorizontal: 3, paddingTop: 10 }}
+          className={classes.actionMenuButton}
         >
-          <MoreVert style={{ fontSize: 16, padding: 0 }} />
+          <MoreVert className={classes.actionIcon} />
         </IconButton>
         <Menu
           id="menu-appbar"

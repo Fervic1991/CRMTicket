@@ -33,6 +33,27 @@ const useStyles = makeStyles((theme) => ({
         "&:hover": {
             opacity: 0.8,
         },
+    },
+    statusPill: {
+        padding: "6px 14px",
+        borderRadius: 999,
+        fontSize: "0.75rem",
+        fontWeight: 700,
+        letterSpacing: "0.03em",
+        textTransform: "uppercase",
+        border: "1px solid rgba(148, 163, 184, 0.5)",
+        background: "rgba(255, 255, 255, 0.7)",
+        color: "rgba(15, 23, 42, 0.8)",
+        boxShadow: "0 6px 14px rgba(15, 23, 42, 0.08)",
+        marginRight: theme.spacing(1),
+        marginTop: theme.spacing(0.5),
+    },
+    headerTitle: {
+        fontWeight: 700,
+        color: "rgba(15, 23, 42, 0.9)",
+    },
+    headerSub: {
+        color: "rgba(71, 85, 105, 0.85)",
     }
 }));
 
@@ -56,12 +77,42 @@ const TicketInfo = ({ contact, ticket, onClick }) => {
     };
 
     const renderCardReader = () => {
+        const statusConfig = {
+            open: {
+                label: i18n.t("tickets.status.open"),
+                color: "#1d4ed8",
+                background: "rgba(59, 130, 246, 0.16)",
+                border: "rgba(59, 130, 246, 0.45)",
+            },
+            pending: {
+                label: i18n.t("tickets.status.pending"),
+                color: "#b45309",
+                background: "rgba(245, 158, 11, 0.18)",
+                border: "rgba(245, 158, 11, 0.45)",
+            },
+            group: {
+                label: i18n.t("tickets.status.group"),
+                color: "#7c3aed",
+                background: "rgba(139, 92, 246, 0.16)",
+                border: "rgba(139, 92, 246, 0.45)",
+            },
+            closed: {
+                label: i18n.t("tickets.status.closed"),
+                color: "#0f766e",
+                background: "rgba(20, 184, 166, 0.16)",
+                border: "rgba(20, 184, 166, 0.45)",
+            },
+        };
+
+        const statusKey = ticket?.status || "open";
+        const statusStyle = statusConfig[statusKey] || statusConfig.open;
+
         return (
             <CardHeader
                 onClick={onClick}
                 style={{ cursor: "pointer" }}
-                titleTypographyProps={{ noWrap: true }}
-                subheaderTypographyProps={{ noWrap: true }}
+                titleTypographyProps={{ noWrap: true, className: classes.headerTitle }}
+                subheaderTypographyProps={{ noWrap: true, className: classes.headerSub }}
                 avatar={
                     <Avatar 
                         src={contact?.urlPicture} 
@@ -77,6 +128,18 @@ const TicketInfo = ({ contact, ticket, onClick }) => {
                         ? `• ${i18n.t("wallets.wallet")}: ${contact.contactWallets[0].wallet?.name || 'N/A'}`
                         : null
                 ].filter(Boolean).join(' ')}
+                action={
+                    <div
+                        className={classes.statusPill}
+                        style={{
+                            color: statusStyle.color,
+                            background: statusStyle.background,
+                            borderColor: statusStyle.border,
+                        }}
+                    >
+                        {statusStyle.label}
+                    </div>
+                }
             />
         );
     }

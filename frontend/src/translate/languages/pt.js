@@ -1028,6 +1028,12 @@ const messages = {
           ascending: "Crescente",
           descending: "Decrescente"
         },
+        status: {
+          open: "Aberto",
+          pending: "Pendente",
+          group: "Grupo",
+          closed: "Resolvido",
+        },
         toasts: {
           deleted: "O atendimento que você estava foi deletado.",
         },
