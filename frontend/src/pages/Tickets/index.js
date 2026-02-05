@@ -12,17 +12,27 @@ import { i18n } from "../../translate/i18n";
 const useStyles = makeStyles(theme => ({
 	chatContainer: {
 		flex: 1,
-		// backgroundColor: "#eee",
-		// padding: theme.spacing(4),
+		background: "radial-gradient(1200px 600px at 10% -10%, rgba(30, 136, 229, 0.18), transparent 55%), radial-gradient(900px 500px at 110% 10%, rgba(67, 160, 71, 0.16), transparent 60%), linear-gradient(180deg, rgba(248, 250, 252, 0.98), rgba(241, 245, 249, 0.98))",
+		fontFamily: "'Poppins', sans-serif",
 		padding: theme.padding,
 		height: `calc(100% - 48px)`,
 		overflowY: "hidden",
+		"--tickets-panel-bg": "rgba(255, 255, 255, 0.78)",
+		"--tickets-panel-border": "rgba(148, 163, 184, 0.35)",
+		"--tickets-panel-shadow": "0 12px 30px rgba(15, 23, 42, 0.08)",
+		"--tickets-accent": theme.palette.primary.main,
+		"--tickets-muted": "rgba(71, 85, 105, 0.7)",
 	},
 
 	chatPapper: {
-		// backgroundColor: "red",
 		display: "flex",
 		height: "100%",
+		background: "var(--tickets-panel-bg)",
+		border: "1px solid var(--tickets-panel-border)",
+		boxShadow: "var(--tickets-panel-shadow)",
+		borderRadius: 18,
+		backdropFilter: "blur(10px)",
+		overflow: "hidden",
 	},
 
 	contactsWrapper: {
@@ -30,6 +40,7 @@ const useStyles = makeStyles(theme => ({
 		height: "100%",
 		flexDirection: "column",
 		overflowY: "hidden",
+		borderRight: "1px solid var(--tickets-panel-border)",
 	},
 	messagessWrapper: {
 		display: "flex",
@@ -37,13 +48,14 @@ const useStyles = makeStyles(theme => ({
 		flexDirection: "column",
 	},
 	welcomeMsg: {
-		// backgroundColor: "#eee",
-		background: theme.palette.tabHeaderBackground,
+		background: "linear-gradient(135deg, rgba(248, 250, 252, 0.9), rgba(226, 232, 240, 0.9))",
 		display: "flex",
 		justifyContent: "space-evenly",
 		alignItems: "center",
 		height: "100%",
 		textAlign: "center",
+		color: "var(--tickets-muted)",
+		fontSize: "1.05rem",
 	},
 	logo: {
 		logo: theme.logo,
