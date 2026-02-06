@@ -93,10 +93,60 @@ const reducer = (state, action) => {
 };
 
 const useStyles = makeStyles((theme) => ({
+  pageShell: {
+    display: "flex",
+    flexDirection: "column",
+    gap: theme.spacing(2),
+  },
+  headerCard: {
+    width: "100%",
+    borderRadius: 18,
+    padding: theme.spacing(2),
+    background: "linear-gradient(135deg, rgba(255,255,255,0.85), rgba(245,248,255,0.9))",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 18px 45px rgba(31, 45, 61, 0.08)",
+  },
+  headerTitle: {
+    fontWeight: 700,
+    letterSpacing: 0.2,
+  },
+  headerActions: {
+    alignItems: "center",
+  },
+  searchField: {
+    "& .MuiOutlinedInput-root": {
+      borderRadius: 14,
+      backgroundColor: "rgba(255,255,255,0.85)",
+      border: "1px solid rgba(120,130,160,0.25)",
+      transition: "box-shadow 0.2s ease, border-color 0.2s ease",
+      "&:hover": {
+        borderColor: "rgba(120,130,160,0.45)",
+      },
+      "&.Mui-focused": {
+        boxShadow: "0 0 0 3px rgba(63,81,181,0.12)",
+        borderColor: theme.palette.primary.main,
+      },
+    },
+    "& .MuiOutlinedInput-input": {
+      padding: "10px 12px",
+    },
+  },
+  addButton: {
+    height: 44,
+    borderRadius: 14,
+    fontWeight: 600,
+    textTransform: "none",
+    background: "linear-gradient(135deg, rgba(63,81,181,0.9), rgba(25,118,210,0.95))",
+    boxShadow: "0 12px 28px rgba(63,81,181,0.3)",
+  },
   mainPaper: {
     flex: 1,
-    padding: theme.padding,
-    overflowY: "scroll",
+    padding: theme.spacing(1.5),
+    borderRadius: 18,
+    background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(248,250,255,0.95) 100%)",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 20px 55px rgba(31, 45, 61, 0.08)",
+    overflowY: "auto",
     ...theme.scrollbarStyles,
   },
   recurringChip: {
@@ -105,18 +155,114 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '0.75rem',
   },
   statusChip: {
+    borderRadius: 999,
     fontSize: '0.75rem',
+    fontWeight: 600,
+  },
+  statusInactive: {
+    background: "linear-gradient(135deg, rgba(120,130,160,0.2), rgba(200,205,220,0.35))",
+    color: theme.palette.text.primary,
+  },
+  statusScheduled: {
+    background: "linear-gradient(135deg, rgba(63,81,181,0.2), rgba(98,125,240,0.35))",
+    color: theme.palette.primary.dark,
+  },
+  statusRunning: {
+    background: "linear-gradient(135deg, rgba(233,30,99,0.18), rgba(255,128,171,0.35))",
+    color: theme.palette.secondary.dark,
+  },
+  statusCanceled: {
+    background: "linear-gradient(135deg, rgba(244,67,54,0.18), rgba(255,171,145,0.35))",
+    color: "#b71c1c",
+  },
+  statusFinished: {
+    background: "linear-gradient(135deg, rgba(76,175,80,0.18), rgba(165,214,167,0.35))",
+    color: "#1b5e20",
   },
   nextExecutionCell: {
     fontWeight: 500,
     color: theme.palette.text.secondary,
   },
   filterContainer: {
-    marginBottom: theme.spacing(2),
+    borderRadius: 16,
+    padding: theme.spacing(2),
+    background: "rgba(255,255,255,0.85)",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 12px 30px rgba(31, 45, 61, 0.06)",
+  },
+  filterSelect: {
+    "& .MuiOutlinedInput-root": {
+      borderRadius: 12,
+      backgroundColor: "rgba(255,255,255,0.9)",
+    },
+  },
+  summaryBar: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: theme.spacing(1),
+    alignItems: "center",
+    padding: theme.spacing(1.5),
+    borderRadius: 16,
+    background: "rgba(255,255,255,0.85)",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 12px 30px rgba(31, 45, 61, 0.06)",
+  },
+  summaryChip: {
+    borderRadius: 999,
+    padding: "2px 6px",
+    background: "rgba(63,81,181,0.08)",
+    border: "1px solid rgba(63,81,181,0.2)",
+    fontWeight: 600,
+  },
+  summaryCount: {
+    marginLeft: 6,
+    fontWeight: 700,
   },
   tableHeader: {
     fontWeight: 'bold',
-    backgroundColor: theme.palette.grey[100],
+    backgroundColor: "rgba(243,246,252,0.9)",
+    color: theme.palette.text.secondary,
+    borderBottom: "1px solid rgba(120,130,160,0.2)",
+  },
+  table: {
+    borderCollapse: "separate",
+    borderSpacing: "0 10px",
+  },
+  tableRow: {
+    backgroundColor: "rgba(255,255,255,0.85)",
+    boxShadow: "0 8px 18px rgba(31,45,61,0.06)",
+    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    "&:hover": {
+      transform: "translateY(-2px)",
+      boxShadow: "0 16px 30px rgba(31,45,61,0.12)",
+    },
+    "& > td": {
+      borderBottom: "none",
+    },
+    "& td:first-child": {
+      borderTopLeftRadius: 14,
+      borderBottomLeftRadius: 14,
+    },
+    "& td:last-child": {
+      borderTopRightRadius: 14,
+      borderBottomRightRadius: 14,
+    },
+  },
+  actionButton: {
+    borderRadius: 10,
+    padding: 6,
+    border: "1px solid rgba(120,130,160,0.2)",
+    backgroundColor: "rgba(255,255,255,0.8)",
+    transition: "all 0.2s ease",
+    "&:hover": {
+      backgroundColor: "rgba(63,81,181,0.08)",
+      borderColor: "rgba(63,81,181,0.35)",
+    },
+  },
+  emptyState: {
+    padding: theme.spacing(3),
+    textAlign: "center",
+    color: theme.palette.text.secondary,
   },
 }));
 
@@ -321,6 +467,57 @@ const Campaigns = () => {
     }
   };
 
+  const campaignStats = campaigns.reduce(
+    (acc, campaign) => {
+      acc.total += 1;
+      switch (campaign.status) {
+        case "INATIVA":
+          acc.inactive += 1;
+          break;
+        case "PROGRAMADA":
+          acc.scheduled += 1;
+          break;
+        case "EM_ANDAMENTO":
+          acc.inProgress += 1;
+          break;
+        case "CANCELADA":
+          acc.canceled += 1;
+          break;
+        case "FINALIZADA":
+          acc.finished += 1;
+          break;
+        default:
+          break;
+      }
+      return acc;
+    },
+    {
+      total: 0,
+      inactive: 0,
+      scheduled: 0,
+      inProgress: 0,
+      canceled: 0,
+      finished: 0,
+    }
+  );
+
+  const getStatusClass = (status) => {
+    switch (status) {
+      case "INATIVA":
+        return classes.statusInactive;
+      case "PROGRAMADA":
+        return classes.statusScheduled;
+      case "EM_ANDAMENTO":
+        return classes.statusRunning;
+      case "CANCELADA":
+        return classes.statusCanceled;
+      case "FINALIZADA":
+        return classes.statusFinished;
+      default:
+        return classes.statusInactive;
+    }
+  };
+
   const cancelCampaign = async (campaign) => {
     try {
       await api.post(`/campaigns/${campaign.id}/cancel`);
@@ -384,19 +581,22 @@ const Campaigns = () => {
           :
           <>
             <MainHeader>
-              <Grid style={{ width: "99.6%" }} container>
+              <Grid style={{ width: "100%" }} container className={classes.headerCard} spacing={2}>
                 <Grid xs={12} sm={8} item>
-                  <Title>{i18n.t("campaigns.title")}</Title>
+                  <Title className={classes.headerTitle}>{i18n.t("campaigns.title")}</Title>
                 </Grid>
                 <Grid xs={12} sm={4} item>
-                  <Grid spacing={2} container>
-                    <Grid xs={6} sm={6} item>
+                  <Grid spacing={2} container className={classes.headerActions}>
+                    <Grid xs={12} sm={6} item>
                       <TextField
                         fullWidth
+                        variant="outlined"
+                        size="small"
                         placeholder={i18n.t("campaigns.searchPlaceholder")}
                         type="search"
                         value={searchParam}
                         onChange={handleSearch}
+                        className={classes.searchField}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -406,12 +606,13 @@ const Campaigns = () => {
                         }}
                       />
                     </Grid>
-                    <Grid xs={6} sm={6} item>
+                    <Grid xs={12} sm={6} item>
                       <Button
                         fullWidth
                         variant="contained"
                         onClick={handleOpenCampaignModal}
                         color="primary"
+                        className={classes.addButton}
                       >
                         {i18n.t("campaigns.buttons.add")}
                       </Button>
@@ -421,11 +622,38 @@ const Campaigns = () => {
               </Grid>
             </MainHeader>
 
+            <Paper className={classes.summaryBar}>
+              <span className={classes.summaryChip}>
+                {i18n.t("campaigns.summary.total")}
+                <span className={classes.summaryCount}>{campaignStats.total}</span>
+              </span>
+              <span className={classes.summaryChip}>
+                {i18n.t("campaigns.summary.scheduled")}
+                <span className={classes.summaryCount}>{campaignStats.scheduled}</span>
+              </span>
+              <span className={classes.summaryChip}>
+                {i18n.t("campaigns.summary.inProgress")}
+                <span className={classes.summaryCount}>{campaignStats.inProgress}</span>
+              </span>
+              <span className={classes.summaryChip}>
+                {i18n.t("campaigns.summary.finished")}
+                <span className={classes.summaryCount}>{campaignStats.finished}</span>
+              </span>
+              <span className={classes.summaryChip}>
+                {i18n.t("campaigns.summary.canceled")}
+                <span className={classes.summaryCount}>{campaignStats.canceled}</span>
+              </span>
+              <span className={classes.summaryChip}>
+                {i18n.t("campaigns.summary.inactive")}
+                <span className={classes.summaryCount}>{campaignStats.inactive}</span>
+              </span>
+            </Paper>
+
             {/* Filtros */}
-            <Paper className={classes.filterContainer} style={{ padding: 16, marginBottom: 16 }}>
+            <Paper className={classes.filterContainer} style={{ marginBottom: 8 }}>
               <Grid spacing={2} container>
                 <Grid xs={12} sm={4} item>
-                  <FormControl fullWidth variant="outlined" size="small">
+                  <FormControl fullWidth variant="outlined" size="small" className={classes.filterSelect}>
                     <InputLabel>{i18n.t("campaigns.filters.statusFilter")}</InputLabel>
                     <Select
                       value={statusFilter}
@@ -442,7 +670,7 @@ const Campaigns = () => {
                   </FormControl>
                 </Grid>
                 <Grid xs={12} sm={4} item>
-                  <FormControl fullWidth variant="outlined" size="small">
+                  <FormControl fullWidth variant="outlined" size="small" className={classes.filterSelect}>
                     <InputLabel>{i18n.t("campaigns.filters.recurrenceFilter")}</InputLabel>
                     <Select
                       value={recurrenceFilter}
@@ -463,7 +691,7 @@ const Campaigns = () => {
               variant="outlined"
               onScroll={handleScroll}
             >
-              <Table size="small">
+              <Table size="small" className={classes.table}>
                 <TableHead>
                   <TableRow>
                     <TableCell align="center" className={classes.tableHeader}>
@@ -501,7 +729,7 @@ const Campaigns = () => {
                 <TableBody>
                   <>
                     {campaigns.map((campaign) => (
-                      <TableRow key={campaign.id}>
+                      <TableRow key={campaign.id} className={classes.tableRow}>
                         <TableCell align="center">
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
                             {campaign.isRecurring && (
@@ -517,7 +745,7 @@ const Campaigns = () => {
                             label={formatStatus(campaign.status)}
                             color={getStatusColor(campaign.status)}
                             size="small"
-                            className={classes.statusChip}
+                            className={`${classes.statusChip} ${getStatusClass(campaign.status)}`}
                           />
                         </TableCell>
                         <TableCell align="center">
@@ -587,6 +815,7 @@ const Campaigns = () => {
                                 <IconButton
                                   onClick={() => cancelCampaign(campaign)}
                                   size="small"
+                                  className={classes.actionButton}
                                 >
                                   <PauseCircleOutlineIcon />
                                 </IconButton>
@@ -597,6 +826,7 @@ const Campaigns = () => {
                                 <IconButton
                                   onClick={() => restartCampaign(campaign)}
                                   size="small"
+                                  className={classes.actionButton}
                                 >
                                   <PlayCircleOutlineIcon />
                                 </IconButton>
@@ -611,6 +841,7 @@ const Campaigns = () => {
                                   }}
                                   size="small"
                                   color="secondary"
+                                  className={classes.actionButton}
                                 >
                                   <StopIcon />
                                 </IconButton>
@@ -622,6 +853,7 @@ const Campaigns = () => {
                                   history.push(`/campaign/${campaign.id}/report`)
                                 }
                                 size="small"
+                                className={classes.actionButton}
                               >
                                 <DescriptionIcon />
                               </IconButton>
@@ -631,6 +863,7 @@ const Campaigns = () => {
                                     size="small"
                                     onClick={() => handleEditCampaign(campaign)}
                                     disabled={campaign.status === "EM_ANDAMENTO"}  // ✅ DISABILITA SE IN CORSO
+                                    className={classes.actionButton}
                                   >
                                 <EditIcon />
                               </IconButton>
@@ -642,6 +875,7 @@ const Campaigns = () => {
                                   setConfirmModalOpen(true);
                                   setDeletingCampaign(campaign);
                                 }}
+                                className={classes.actionButton}
                               >
                                 <DeleteOutlineIcon />
                               </IconButton>
@@ -651,6 +885,16 @@ const Campaigns = () => {
                       </TableRow>
                     ))}
                     {loading && <TableRowSkeleton columns={10} />}
+                    {!loading && campaigns.length === 0 && (
+                      <TableRow>
+                        <TableCell align="center" colSpan={10} className={classes.emptyState}>
+                          <div style={{ fontWeight: 600, marginBottom: 6 }}>
+                            {i18n.t("campaigns.emptyState.title")}
+                          </div>
+                          <div>{i18n.t("campaigns.emptyState.description")}</div>
+                        </TableCell>
+                      </TableRow>
+                    )}
                   </>
                 </TableBody>
               </Table>

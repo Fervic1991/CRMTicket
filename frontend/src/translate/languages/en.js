@@ -1483,6 +1483,18 @@ const messages = {
           recurring: "Recurring",
           single: "Single",
         },
+        summary: {
+          total: "Total",
+          scheduled: "Scheduled",
+          inProgress: "In progress",
+          finished: "Finished",
+          canceled: "Canceled",
+          inactive: "Inactive",
+        },
+        emptyState: {
+          title: "No campaigns found",
+          description: "Try adjusting the filters or create a new campaign.",
+        },
         recurrence: {
           title: "Recurrence",
           type: {

@@ -1532,6 +1532,18 @@ const messages = {
           recurring: "Recorrentes",
           single: "Únicas",
         },
+        summary: {
+          total: "Total",
+          scheduled: "Programadas",
+          inProgress: "Em andamento",
+          finished: "Finalizadas",
+          canceled: "Canceladas",
+          inactive: "Inativas",
+        },
+        emptyState: {
+          title: "Nenhuma campanha encontrada",
+          description: "Ajuste os filtros ou crie uma nova campanha.",
+        },
         recurrence: {
           title: "Recorrência",
           type: {

@@ -93,12 +93,9 @@ const useStyles = makeStyles((theme) => ({
   inputArea: {
     position: "relative",
     height: "auto",
-    background: "rgba(248, 250, 252, 0.92)",
-    borderTop: "1px solid rgba(148, 163, 184, 0.35)",
-    backdropFilter: "blur(8px)",
-  },
-  input: {
-    padding: "16px",
+    background: "rgba(255, 255, 255, 0.7)",
+    borderTop: "1px solid rgba(148, 163, 184, 0.28)",
+    backdropFilter: "blur(10px)",
   },
   buttonSend: {
     margin: theme.spacing(1),
@@ -171,23 +168,23 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     gap: theme.spacing(1),
-    padding: theme.spacing(1, 1.5),
+    padding: theme.spacing(1, 1.25),
   },
   inputBox: {
     flex: 1,
-    background: "rgba(255, 255, 255, 0.9)",
-    borderRadius: 16,
-    border: "1px solid rgba(148, 163, 184, 0.35)",
-    padding: theme.spacing(0.5, 1),
-    boxShadow: "0 8px 18px rgba(15, 23, 42, 0.06)",
+    background: "rgba(255, 255, 255, 0.85)",
+    borderRadius: 14,
+    border: "1px solid rgba(148, 163, 184, 0.3)",
+    padding: theme.spacing(0.25, 0.75),
+    boxShadow: "0 6px 14px rgba(15, 23, 42, 0.05)",
   },
   actionIconButton: {
-    height: 36,
-    width: 36,
-    borderRadius: 12,
-    border: "1px solid rgba(148, 163, 184, 0.45)",
-    background: "rgba(255, 255, 255, 0.75)",
-    boxShadow: "0 6px 14px rgba(15, 23, 42, 0.08)",
+    height: 34,
+    width: 34,
+    borderRadius: 10,
+    border: "1px solid rgba(148, 163, 184, 0.35)",
+    background: "rgba(255, 255, 255, 0.7)",
+    boxShadow: "0 4px 10px rgba(15, 23, 42, 0.06)",
   },
   sendMessageIcons: {
     color: "rgba(71, 85, 105, 0.85)",
@@ -1158,7 +1155,6 @@ function ChatMessages({
                           {contentMessage ? (
                             <IconButton
                               onClick={handleSendClick}
-                              className={classes.buttonSend}
                               size="large"
                               className={classes.actionIconButton}
                             >
