@@ -8,21 +8,23 @@ import { i18n } from '../../translate/i18n';
 
 const useStyles = makeStyles(theme => ({
   column: props => ({
-    backgroundColor: props.color || '#ebecf0',
-    borderRadius: 8,
-    minWidth: 272,
-    maxWidth: 272,
-    padding: theme.spacing(1),
-    marginRight: theme.spacing(1),
+    backgroundColor: "rgba(255, 255, 255, 0.78)",
+    borderRadius: 16,
+    minWidth: 280,
+    maxWidth: 280,
+    padding: theme.spacing(1.2),
     display: 'flex',
     flexDirection: 'column',
     flexShrink: 0,
+    border: "1px solid rgba(148, 163, 184, 0.35)",
+    boxShadow: "0 12px 24px rgba(15, 23, 42, 0.08)",
+    backdropFilter: "blur(10px)",
   }),
   columnTitle: {
     marginBottom: theme.spacing(1),
     fontWeight: 'bold',
     fontSize: '1rem',
-    color: "#D6D6D6",
+    color: "rgba(15, 23, 42, 0.9)",
   },
   cardList: {
     flexGrow: 1,
@@ -32,11 +34,16 @@ const useStyles = makeStyles(theme => ({
   },
   totalValue: {
     fontSize: '1rem',
-    color: "#D6D6D6",
-    fontWeight: 'bold',
+    color: "rgba(71, 85, 105, 0.9)",
+    fontWeight: 600,
   },
   columnHeader: {
     marginBottom: theme.spacing(1),
+    padding: theme.spacing(0.75, 1),
+    borderRadius: 12,
+    background: (props) =>
+      `linear-gradient(135deg, ${props.color || "#94a3b8"}22, ${props.color || "#94a3b8"}08)`,
+    border: "1px solid rgba(148, 163, 184, 0.35)",
   },
 }));
 
@@ -71,6 +78,7 @@ const KanbanColumn = ({ id, title, tickets, color, updateTicket }) => {
                 key={ticket.id}
                 ticket={ticket}
                 index={index}
+                color={color}
                 updateTicket={updateTicket}
               />
             ))}

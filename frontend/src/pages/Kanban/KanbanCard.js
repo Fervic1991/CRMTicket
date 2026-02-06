@@ -13,6 +13,7 @@ import {
   TextField,
   IconButton,
 } from '@material-ui/core';
+import { WhatsApp, Instagram, Facebook } from "@material-ui/icons";
 import CloseIcon from '@material-ui/icons/Close';
 import { format, parseISO, isSameDay } from 'date-fns';
 import { useHistory } from 'react-router-dom';
@@ -22,23 +23,45 @@ import { useCurrency } from '../../utils/currencyUtils';
 import { i18n } from '../../translate/i18n';
 
 const useStyles = makeStyles(theme => ({
-  card: {
-    padding: theme.spacing(0.8),
-    background: '#fff',
-    borderRadius: 8,
-    boxShadow: '0px 10px 17px -10px rgba(0, 0, 0, 0.59)',
-    marginBottom: theme.spacing(1),
+  card: (props) => ({
+    padding: theme.spacing(1),
+    background: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: 14,
+    border: "1px solid rgba(148, 163, 184, 0.3)",
+    boxShadow: '0 10px 20px rgba(15, 23, 42, 0.10)',
+    marginBottom: theme.spacing(1.2),
     cursor: 'grab',
     display: 'flex',
     flexDirection: 'column',
     position: 'relative',
-    marginRight: theme.spacing(0.5),
-  },
+    paddingLeft: theme.spacing(1.5),
+    overflow: "hidden",
+    transition: "transform 0.15s ease, box-shadow 0.15s ease",
+    "&:hover": {
+      transform: "translateY(-2px)",
+      boxShadow: "0 16px 28px rgba(15, 23, 42, 0.16)",
+    },
+    "&::before": {
+      content: '""',
+      position: "absolute",
+      left: 0,
+      top: 0,
+      height: "100%",
+      width: 4,
+      background: props?.color || "rgba(148, 163, 184, 0.8)",
+    },
+  }),
   header: {
     display: 'flex',
     alignItems: 'center',
     marginBottom: theme.spacing(0.5),
     justifyContent: 'space-between',
+    gap: theme.spacing(1),
+  },
+  headerMeta: {
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(0.75),
   },
   leftHeader: {
     display: 'flex',
@@ -46,36 +69,56 @@ const useStyles = makeStyles(theme => ({
   },
   avatar: {
     marginRight: theme.spacing(1),
-    width: theme.spacing(3),
-    height: theme.spacing(3),
+    width: theme.spacing(3.5),
+    height: theme.spacing(3.5),
+    border: "2px solid rgba(255, 255, 255, 0.9)",
+    boxShadow: "0 6px 12px rgba(15, 23, 42, 0.12)",
   },
   cardTitle: {
-    fontSize: '1rem',
-    fontWeight: 'bold',
-    color: theme.mode === "light" ? theme.palette.text.primary : "#000",
+    fontSize: '0.95rem',
+    fontWeight: 700,
+    color: "rgba(15, 23, 42, 0.9)",
+    maxWidth: 140,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   },
   ticketNumber: {
-    fontSize: '0.9rem',
-    fontWeight: 'bold',
-    color: "#757575",
+    fontSize: '0.8rem',
+    fontWeight: 700,
+    color: "rgba(100, 116, 139, 0.9)",
   },
   divider: {
-    background: "#e6e6e6",
+    background: "rgba(148, 163, 184, 0.35)",
   },
   lastMessageTime: {
-    fontSize: '0.8rem',
-    color: "#757575",
+    fontSize: '0.75rem',
+    color: "rgba(100, 116, 139, 0.9)",
   },
   lastMessageTimeUnread: {
-    fontSize: '0.8rem',
+    fontSize: '0.75rem',
     color: theme.palette.success.main,
     fontWeight: 'bold',
   },
+  timeChip: {
+    padding: "2px 8px",
+    borderRadius: 999,
+    fontSize: "0.7rem",
+    fontWeight: 600,
+    border: "1px solid rgba(148, 163, 184, 0.35)",
+    background: "rgba(248, 250, 252, 0.9)",
+  },
+  timeChipUnread: {
+    color: "rgba(22, 163, 74, 0.95)",
+    borderColor: "rgba(22, 163, 74, 0.3)",
+    background: "rgba(34, 197, 94, 0.12)",
+  },
   cardDescription: {
-    fontSize: '0.9rem',
-    color: "#757575",
+    fontSize: '0.85rem',
+    color: "rgba(71, 85, 105, 0.9)",
     flexGrow: 1,
     marginRight: theme.spacing(1),
+    lineHeight: 1.35,
   },
   valueRow: {
     display: 'flex',
@@ -95,28 +138,34 @@ const useStyles = makeStyles(theme => ({
     marginTop: 'auto',
   },
   cardButton: {
-    fontSize: '0.5rem',
-    padding: '2px 6px',
+    fontSize: '0.7rem',
+    padding: '4px 8px',
     color: '#fff',
     backgroundColor: theme.palette.primary.main,
-    borderRadius: '10px',
+    borderRadius: 10,
+    textTransform: "none",
     '&:hover': {
       backgroundColor: theme.palette.primary.dark,
     },
   },
   connectionTag: {
-    background: "#000",
+    background: "rgba(15, 23, 42, 0.85)",
     color: '#FFF',
-    padding: '2px 6px',
-    fontWeight: 'bold',
-    borderRadius: '10px',
-    fontSize: '0.5rem',
+    padding: '3px 8px',
+    fontWeight: 700,
+    borderRadius: 999,
+    fontSize: '0.65rem',
     marginLeft: 'auto',
   },
+  channelIcon: {
+    fontSize: 16,
+    marginLeft: theme.spacing(0.5),
+    color: "rgba(71, 85, 105, 0.9)",
+  },
   opportunityValue: {
-    fontSize: '0.9rem',
+    fontSize: '0.85rem',
     color: theme.palette.primary.main,
-    fontWeight: 'bold',
+    fontWeight: 700,
     cursor: 'pointer',
   },
   removeValueButton: {
@@ -126,19 +175,20 @@ const useStyles = makeStyles(theme => ({
   },
   textField: {
     '& .MuiOutlinedInput-root': {
-      borderRadius: '10px',
+      borderRadius: 12,
     },
   },
   dialogPaper: {
-    borderRadius: '10px',
+    borderRadius: 14,
   },
   dialogButton: {
-    borderRadius: '10px',
+    borderRadius: 12,
+    textTransform: "none",
   },
 }));
 
-const KanbanCard = ({ ticket, index, updateTicket }) => {
-  const classes = useStyles();
+const KanbanCard = ({ ticket, index, updateTicket, color }) => {
+  const classes = useStyles({ color });
   const history = useHistory();
   const { formatCurrency } = useCurrency();
 
@@ -212,11 +262,22 @@ const KanbanCard = ({ ticket, index, updateTicket }) => {
     setOpen(false);
   };
 
+  const timeChipClass =
+    Number(ticket.unreadMessages) > 0
+      ? `${classes.timeChip} ${classes.timeChipUnread}`
+      : classes.timeChip;
+
   return (
     <Draggable draggableId={ticket.id.toString()} index={index}>
       {(provided, snapshot) => (
         <div
           className={classes.card}
+          style={{
+            boxShadow: snapshot.isDragging
+              ? "0 20px 34px rgba(15, 23, 42, 0.22)"
+              : undefined,
+            transform: snapshot.isDragging ? "rotate(1deg)" : undefined,
+          }}
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
@@ -226,13 +287,18 @@ const KanbanCard = ({ ticket, index, updateTicket }) => {
               <Avatar src={ticket.contact.urlPicture} className={classes.avatar} />
               <Tooltip title={ticket.contact.name}>
                 <Typography className={classes.cardTitle}>
-                  {ticket.contact.name?.substring(0, 10) || ' '}
+                  {ticket.contact.name || ' '}
                 </Typography>
               </Tooltip>
             </div>
-            <Typography className={classes.ticketNumber}>
-              {i18n.t('kanban.ticketPrefix')} {ticket.id}
-            </Typography>
+            <div className={classes.headerMeta}>
+              {ticket.channel === "whatsapp" && <WhatsApp className={classes.channelIcon} />}
+              {ticket.channel === "instagram" && <Instagram className={classes.channelIcon} />}
+              {ticket.channel === "facebook" && <Facebook className={classes.channelIcon} />}
+              <Typography className={classes.ticketNumber}>
+                {i18n.t('kanban.ticketPrefix')} {ticket.id}
+              </Typography>
+            </div>
           </div>
           <Divider className={classes.divider} />
           <div className={classes.valueRow}>
@@ -264,7 +330,7 @@ const KanbanCard = ({ ticket, index, updateTicket }) => {
                 {ticket.lastMessage?.substring(0, 20) || ' '}
               </Typography>
             </Tooltip>
-            <Typography className={lastMessageTimeClass}>
+            <Typography className={`${lastMessageTimeClass} ${timeChipClass}`}>
               {isSameDay(parseISO(ticket.updatedAt), new Date())
                 ? format(parseISO(ticket.updatedAt), 'HH:mm')
                 : format(parseISO(ticket.updatedAt), 'dd/MM/yyyy')}
@@ -299,7 +365,7 @@ const KanbanCard = ({ ticket, index, updateTicket }) => {
                 onChange={(e) => setNewValue(e.target.value)}
                 variant="outlined"
                 size="small"
-                className={classes.textField} personalizados
+                className={classes.textField}
               />
             </DialogContent>
             <DialogActions>

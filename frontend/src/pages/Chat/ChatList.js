@@ -48,8 +48,11 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     height: "calc(100% - 58px)",
     overflow: "hidden",
-    borderRadius: 0,
-    backgroundColor: theme.mode === "light" ? "#f2f2f2" : "#7f7f7f",
+    borderRadius: 16,
+    background: "rgba(255, 255, 255, 0.78)",
+    border: "1px solid rgba(148, 163, 184, 0.35)",
+    boxShadow: "0 14px 28px rgba(15, 23, 42, 0.08)",
+    backdropFilter: "blur(10px)",
   },
   chatList: {
     display: "flex",
@@ -61,16 +64,18 @@ const useStyles = makeStyles((theme) => ({
   },
   listItemActive: {
     cursor: "pointer",
-    backgroundColor: theme.palette.background.paper,
-    borderLeft: "6px solid #002d6e",
+    backgroundColor: "rgba(226, 232, 240, 0.6)",
+    borderLeft: "4px solid rgba(59, 130, 246, 0.8)",
+    borderRadius: 12,
   },
   listItem: {
     cursor: "pointer",
-    backgroundColor: theme.palette.background.color,
-    borderBottom: "1px solid #eee",
+    backgroundColor: "transparent",
+    borderBottom: "1px solid rgba(148, 163, 184, 0.25)",
     "&:hover": {
-      backgroundColor: "#f5f5f5",
+      backgroundColor: "rgba(226, 232, 240, 0.45)",
     },
+    borderRadius: 12,
   },
   avatar: {
     width: 40,
@@ -99,11 +104,11 @@ const useStyles = makeStyles((theme) => ({
   },
   lastSeen: {
     fontSize: "0.75rem",
-    color: "#999",
+    color: "rgba(100, 116, 139, 0.85)",
   },
   lastMessage: {
     fontSize: "0.875rem",
-    color: "#666",
+    color: "rgba(71, 85, 105, 0.9)",
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
@@ -122,17 +127,82 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     gap: "6px",
+    maxWidth: 180,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   },
 
   messageCount: {
     marginLeft: "auto",
     fontSize: "0.75rem",
-    backgroundColor: "#1976d2",
+    backgroundColor: "rgba(59, 130, 246, 0.9)",
     color: "#fff",
     borderRadius: "12px",
     padding: "2px 8px",
     minWidth: "20px",
     textAlign: "center",
+    boxShadow: "0 6px 14px rgba(15, 23, 42, 0.12)",
+  },
+  unreadDot: {
+    width: 18,
+    height: 18,
+    borderRadius: "50%",
+    background: "rgba(239, 68, 68, 0.95)",
+    color: "white",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: 11,
+    marginLeft: 8,
+    boxShadow: "0 6px 14px rgba(15, 23, 42, 0.16)",
+  },
+  secondaryText: {
+    color: "rgba(100, 116, 139, 0.9)",
+  },
+  modalPaper: {
+    borderRadius: 16,
+    boxShadow: "0 20px 40px rgba(15, 23, 42, 0.18)",
+  },
+  modalHeader: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+  },
+  modalSearch: {
+    marginBottom: "20px",
+    marginTop: "10px",
+    background: "rgba(248, 250, 252, 0.9)",
+    borderRadius: 12,
+  },
+  userListItem: {
+    borderRadius: 12,
+    marginBottom: 6,
+    transition: "background-color 0.15s ease, transform 0.15s ease",
+    "&:hover": {
+      backgroundColor: "rgba(226, 232, 240, 0.6)",
+      transform: "translateX(2px)",
+    },
+  },
+  searchBar: {
+    flex: 1,
+    padding: "8px 12px",
+    borderRadius: 999,
+    border: "1px solid rgba(148, 163, 184, 0.35)",
+    outline: "none",
+    background: "rgba(255, 255, 255, 0.9)",
+    boxShadow: "0 8px 18px rgba(15, 23, 42, 0.06)",
+  },
+  addChatButton: {
+    backgroundColor: "rgba(59, 130, 246, 0.95)",
+    color: "white",
+    width: "40px",
+    height: "40px",
+    borderRadius: 12,
+    boxShadow: "0 10px 20px rgba(15, 23, 42, 0.12)",
+    "&:hover": {
+      backgroundColor: "rgba(37, 99, 235, 1)",
+    },
   },
 }));
 
@@ -474,23 +544,12 @@ function ChatList({
             placeholder={i18n.t("chatList.searchChat")}
             defaultValue={searchTerm}
             onChange={(e) => handleSearchChange(e.target.value)}
-            style={{
-              flex: 1,
-              padding: "8px 12px",
-              borderRadius: "20px",
-              border: "1px solid #ccc",
-              outline: "none",
-            }}
+            className={classes.searchBar}
           />
           {!isShowingOnlyGroups && (
             <IconButton
               onClick={handleOpenCreateChat}
-              style={{
-                backgroundColor: "#1976d2",
-                color: "white",
-                width: "40px",
-                height: "40px",
-              }}
+              className={classes.addChatButton}
               title={i18n.t("chatList.createNewChat")}
             >
               <AddIcon />
@@ -588,20 +647,7 @@ function ChatList({
                           )}
                         </div>
                         {unreadMessages(chat) > 0 && (
-                          <div
-                            style={{
-                              width: 16,
-                              height: 16,
-                              borderRadius: "50%",
-                              background: "red",
-                              color: "white",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              fontSize: 12,
-                              marginLeft: 8,
-                            }}
-                          >
+                          <div className={classes.unreadDot}>
                             {unreadMessages(chat)}
                           </div>
                         )}
@@ -611,7 +657,7 @@ function ChatList({
                       <Typography
                         component="div"
                         variant="body2"
-                        style={{ color: "gray" }}
+                        className={classes.secondaryText}
                       >
                         {getSecondaryText(chat)}
                       </Typography>
@@ -640,9 +686,10 @@ function ChatList({
         onClose={handleCloseCreateChat}
         maxWidth="sm"
         fullWidth
+        classes={{ paper: classes.modalPaper }}
       >
         <DialogTitle>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <div className={classes.modalHeader}>
             <AddIcon style={{ color: "#1976d2" }} />
             <Typography variant="h6">
               {i18n.t("chatList.createNewChat")}
@@ -655,7 +702,7 @@ function ChatList({
             placeholder={i18n.t("chatList.searchUser")}
             value={userSearchTerm}
             onChange={(e) => setUserSearchTerm(e.target.value)}
-            style={{ marginBottom: "20px", marginTop: "10px" }}
+            className={classes.modalSearch}
             InputProps={{
               startAdornment: (
                 <SearchIcon style={{ marginRight: "8px", color: "#666" }} />
@@ -680,7 +727,7 @@ function ChatList({
                   key={user.userId}
                   button
                   onClick={() => handleCreateChatWithUser(user)}
-                  style={{ borderRadius: "8px", marginBottom: "4px" }}
+                  className={classes.userListItem}
                 >
                   <ListItemAvatar>
                     <Avatar

@@ -18,17 +18,26 @@ const useStyles = makeStyles(theme => ({
   mainPaper: {
     flex: 1,
     display: 'flex',
-    padding: theme.spacing(1),
+    padding: theme.spacing(1.5),
     overflowX: 'auto',
     ...theme.scrollbarStyles,
-    borderRadius: '10px',
+    borderRadius: 16,
+    background: "rgba(255, 255, 255, 0.78)",
+    border: "1px solid rgba(148, 163, 184, 0.35)",
+    boxShadow: "0 14px 28px rgba(15, 23, 42, 0.08)",
+    backdropFilter: "blur(10px)",
   },
   button: {
-    borderRadius: '10px',
+    borderRadius: 12,
+    textTransform: "none",
+    fontWeight: 600,
+    boxShadow: "0 10px 20px rgba(15, 23, 42, 0.10)",
   },
   dateInput: {
     '& .MuiOutlinedInput-root': {
-      borderRadius: '10px',
+      borderRadius: 12,
+      background: "rgba(255, 255, 255, 0.9)",
+      boxShadow: "0 8px 18px rgba(15, 23, 42, 0.06)",
     },
     marginRight: theme.spacing(1),
   },
@@ -36,7 +45,9 @@ const useStyles = makeStyles(theme => ({
     minWidth: 150,
     marginRight: theme.spacing(1),
     '& .MuiOutlinedInput-root': {
-      borderRadius: '10px',
+      borderRadius: 12,
+      background: "rgba(255, 255, 255, 0.9)",
+      boxShadow: "0 8px 18px rgba(15, 23, 42, 0.06)",
     },
   },
 }));

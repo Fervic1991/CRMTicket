@@ -72,9 +72,11 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     flex: 1,
     overflow: "hidden",
-    borderRadius: 0,
+    borderRadius: 16,
     height: "100%",
-    borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+    borderLeft: "1px solid rgba(148, 163, 184, 0.35)",
+    background: "rgba(255, 255, 255, 0.78)",
+    backdropFilter: "blur(8px)",
   },
   messageList: {
     position: "relative",
@@ -83,34 +85,38 @@ const useStyles = makeStyles((theme) => ({
     ...theme.scrollbarStyles,
     backgroundImage:
       theme.mode === "light"
-        ? `url(${whatsBackground})`
-        : `url(${whatsBackgroundDark})`,
+        ? `linear-gradient(180deg, rgba(248, 250, 252, 0.96), rgba(241, 245, 249, 0.96)), url(${whatsBackground})`
+        : `linear-gradient(180deg, rgba(8, 11, 16, 0.88), rgba(2, 6, 12, 0.92)), url(${whatsBackgroundDark})`,
+    backgroundBlendMode: theme.mode === "light" ? "screen" : "multiply",
     backgroundColor: theme.mode === "light" ? "transparent" : "#0b0b0d",
   },
   inputArea: {
     position: "relative",
     height: "auto",
+    background: "rgba(248, 250, 252, 0.92)",
+    borderTop: "1px solid rgba(148, 163, 184, 0.35)",
+    backdropFilter: "blur(8px)",
   },
   input: {
-    padding: "20px",
+    padding: "16px",
   },
   buttonSend: {
     margin: theme.spacing(1),
   },
   messageContainer: {
     display: "flex",
-    margin: "10px",
+    margin: "12px 14px",
     alignItems: "center",
   },
   messageContainerSelf: {
     display: "flex",
-    margin: "10px",
+    margin: "12px 14px",
     alignItems: "center",
     justifyContent: "flex-end",
   },
   messageContainerWithAvatar: {
     display: "flex",
-    margin: "10px",
+    margin: "12px 14px",
     alignItems: "flex-start",
   },
   avatarContainer: {
@@ -118,26 +124,32 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     alignSelf: "center",
+    background: "rgba(255, 255, 255, 0.8)",
+    borderRadius: 12,
+    padding: 4,
+    boxShadow: "0 6px 14px rgba(15, 23, 42, 0.08)",
   },
   messageBubble: {
     padding: "15px",
     position: "relative",
-    backgroundColor: "#ffffff",
-    color: "#303030",
+    backgroundColor: "rgba(255, 255, 255, 0.92)",
+    color: "#1f2937",
     maxWidth: 350,
     width: "100%",
-    borderRadius: 20,
-    border: "1px solid rgba(0, 0, 0, 0.12)",
+    borderRadius: 18,
+    border: "1px solid rgba(148, 163, 184, 0.35)",
+    boxShadow: "0 10px 20px rgba(15, 23, 42, 0.10)",
   },
   messageBubbleSelf: {
     padding: "15px",
     position: "relative",
-    backgroundColor: "#dcf8c6",
-    color: "#303030",
+    backgroundColor: "rgba(187, 247, 208, 0.9)",
+    color: "#0f172a",
     maxWidth: 350,
     width: "100%",
-    borderRadius: 20,
-    border: "1px solid rgba(0, 0, 0, 0.12)",
+    borderRadius: 18,
+    border: "1px solid rgba(148, 163, 184, 0.35)",
+    boxShadow: "0 10px 20px rgba(15, 23, 42, 0.10)",
   },
   bubbleContent: {
     marginTop: 5,
@@ -153,9 +165,32 @@ const useStyles = makeStyles((theme) => ({
   },
   senderName: {
     fontWeight: "bold",
+    color: "rgba(15, 23, 42, 0.9)",
+  },
+  inputToolbar: {
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(1),
+    padding: theme.spacing(1, 1.5),
+  },
+  inputBox: {
+    flex: 1,
+    background: "rgba(255, 255, 255, 0.9)",
+    borderRadius: 16,
+    border: "1px solid rgba(148, 163, 184, 0.35)",
+    padding: theme.spacing(0.5, 1),
+    boxShadow: "0 8px 18px rgba(15, 23, 42, 0.06)",
+  },
+  actionIconButton: {
+    height: 36,
+    width: 36,
+    borderRadius: 12,
+    border: "1px solid rgba(148, 163, 184, 0.45)",
+    background: "rgba(255, 255, 255, 0.75)",
+    boxShadow: "0 6px 14px rgba(15, 23, 42, 0.08)",
   },
   sendMessageIcons: {
-    color: "grey",
+    color: "rgba(71, 85, 105, 0.85)",
   },
   uploadInput: {
     display: "none",
@@ -174,8 +209,8 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#eee",
-    borderTop: "1px solid rgba(0, 0, 0, 0.12)",
+    backgroundColor: "rgba(248, 250, 252, 0.92)",
+    borderTop: "1px solid rgba(148, 163, 184, 0.35)",
   },
   downloadMedia: {
     display: "flex",
@@ -188,10 +223,11 @@ const useStyles = makeStyles((theme) => ({
     objectFit: "cover",
     width: 250,
     height: 200,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    borderBottomLeftRadius: 8,
-    borderBottomRightRadius: 8,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
+    boxShadow: "0 10px 20px rgba(15, 23, 42, 0.12)",
   },
   recorderWrapper: {
     display: "flex",
@@ -211,8 +247,15 @@ const useStyles = makeStyles((theme) => ({
   },
   messageDate: {
     fontSize: "0.75rem",
-    color: "#666",
+    color: "rgba(100, 116, 139, 0.9)",
     marginTop: 5,
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 6,
+    padding: "2px 8px",
+    borderRadius: 999,
+    background: "rgba(248, 250, 252, 0.9)",
+    border: "1px solid rgba(148, 163, 184, 0.35)",
   },
   emojiBox: {
     position: "absolute",
@@ -1067,14 +1110,15 @@ function ChatMessages({
                   </>
                 ) : (
                   <Fragment>
-                    <Input
+                    <div className={classes.inputToolbar}>
+                      <Input
                       inputRef={inputRef}
                       multiline
                       value={contentMessage}
                       onKeyUp={handleKeyPress}
                       onChange={(e) => setContentMessage(e.target.value)}
                       onPaste={handlePaste}
-                      className={classes.input}
+                      className={classes.inputBox}
                       startAdornment={
                         <InputAdornment position="start">
                           <IconButton
@@ -1084,6 +1128,7 @@ function ChatMessages({
                             onClick={(e) =>
                               setShowEmoji((prevState) => !prevState)
                             }
+                            className={classes.actionIconButton}
                           >
                             <MoodIcon className={classes.sendMessageIcons} />
                           </IconButton>
@@ -1115,6 +1160,7 @@ function ChatMessages({
                               onClick={handleSendClick}
                               className={classes.buttonSend}
                               size="large"
+                              className={classes.actionIconButton}
                             >
                               <SendIcon />
                             </IconButton>
@@ -1125,13 +1171,15 @@ function ChatMessages({
                               disabled={loading}
                               onClick={handleStartRecording}
                               size="large"
+                              className={classes.actionIconButton}
                             >
                               <MicIcon className={classes.sendMessageIcons} />
                             </IconButton>
                           )}
                         </InputAdornment>
                       }
-                    />
+                      />
+                    </div>
                   </Fragment>
                 )}
               </>
