@@ -107,10 +107,10 @@ const useStyles = makeStyles((theme) => ({
 
   messagesList: {
     backgroundImage: theme.mode === 'light'
-      ? `linear-gradient(180deg, rgba(248, 250, 252, 0.96), rgba(241, 245, 249, 0.96)), url(${whatsBackground})`
+      ? `linear-gradient(180deg, rgba(241, 245, 249, 0.96), rgba(226, 232, 240, 0.92)), url(${whatsBackground})`
       : `linear-gradient(180deg, rgba(8, 11, 16, 0.88), rgba(2, 6, 12, 0.92)), url(${whatsBackgroundDark})`,
-    backgroundBlendMode: theme.mode === "light" ? "screen" : "multiply",
-    backgroundColor: theme.mode === 'light' ? "transparent" : "#0b0b0d",
+    backgroundBlendMode: theme.mode === "light" ? "multiply" : "multiply",
+    backgroundColor: theme.mode === 'light' ? "#eef2f7" : "#0b0b0d",
     display: "flex",
     flexDirection: "column",
     flexGrow: 1,
@@ -157,8 +157,9 @@ const useStyles = makeStyles((theme) => ({
     },
 
     whiteSpace: "pre-wrap",
-    backgroundColor: theme.mode === 'light' ? "rgba(255, 255, 255, 0.92)" : "#1f2937",
+    backgroundColor: theme.mode === 'light' ? "rgba(255, 255, 255, 0.96)" : "#1f2937",
     color: theme.mode === 'light' ? "#1f2937" : "#f8fafc",
+    border: theme.mode === 'light' ? "1px solid rgba(148, 163, 184, 0.25)" : "1px solid rgba(15, 23, 42, 0.6)",
     alignSelf: "flex-start",
     borderTopLeftRadius: 6,
     borderTopRightRadius: 14,
@@ -212,8 +213,9 @@ const useStyles = makeStyles((theme) => ({
       right: 0,
     },
     whiteSpace: "pre-wrap",
-    backgroundColor: theme.mode === 'light' ? "rgba(187, 247, 208, 0.9)" : "#0f766e",
+    backgroundColor: theme.mode === 'light' ? "rgba(134, 239, 172, 0.92)" : "#0f766e",
     color: theme.mode === 'light' ? "#0f172a" : "#ecfeff",
+    border: theme.mode === 'light' ? "1px solid rgba(34, 197, 94, 0.3)" : "1px solid rgba(15, 118, 110, 0.6)",
     alignSelf: "flex-end",
     borderTopLeftRadius: 14,
     borderTopRightRadius: 14,

@@ -2017,6 +2017,14 @@ const messages = {
         buttons: {
           add: "Nueva Etiqueta",
         },
+        summary: {
+          total: "Total",
+          contacts: "Contactos",
+        },
+        emptyState: {
+          title: "No se encontraron etiquetas",
+          description: "Crea tu primera etiqueta.",
+        },
         toasts: {
           deleted: "Etiqueta eliminada exitosamente.",
         },

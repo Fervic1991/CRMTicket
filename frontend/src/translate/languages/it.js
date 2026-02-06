@@ -2015,6 +2015,14 @@ const messages = {
         buttons: {
           add: "Nuova Etichetta",
         },
+        summary: {
+          total: "Totale",
+          contacts: "Contatti",
+        },
+        emptyState: {
+          title: "Nessuna etichetta trovata",
+          description: "Crea la tua prima etichetta.",
+        },
         toasts: {
           deleted: "Etichetta eliminata con successo.",
         },

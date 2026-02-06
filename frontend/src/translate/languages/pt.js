@@ -2074,6 +2074,14 @@ const messages = {
         buttons: {
           add: "Nova Tag",
         },
+        summary: {
+          total: "Total",
+          contacts: "Contatos",
+        },
+        emptyState: {
+          title: "Nenhuma tag encontrada",
+          description: "Crie sua primeira tag.",
+        },
         toasts: {
           deleted: "Tag excluído com sucesso.",
         },

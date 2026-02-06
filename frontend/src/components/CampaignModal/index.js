@@ -59,6 +59,76 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexWrap: "wrap",
   },
+  dialogPaper: {
+    borderRadius: 18,
+    background: "linear-gradient(135deg, rgba(255,255,255,0.96), rgba(246,248,255,0.98))",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 24px 60px rgba(31, 45, 61, 0.18)",
+  },
+  dialogTitle: {
+    fontWeight: 700,
+    letterSpacing: 0.2,
+  },
+  dialogContent: {
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+  },
+  actions: {
+    padding: theme.spacing(2, 3),
+    gap: theme.spacing(1.5),
+  },
+  cancelButton: {
+    borderRadius: 12,
+    textTransform: "none",
+    fontWeight: 600,
+    background: "rgba(255,255,255,0.9)",
+    border: "1px solid rgba(120,130,160,0.2)",
+  },
+  primaryButton: {
+    borderRadius: 12,
+    textTransform: "none",
+    fontWeight: 600,
+    boxShadow: "0 14px 28px rgba(63,81,181,0.28)",
+  },
+  field: {
+    marginTop: theme.spacing(1.5),
+    "& .MuiOutlinedInput-root": {
+      borderRadius: 14,
+      backgroundColor: "rgba(255,255,255,0.9)",
+      border: "1px solid rgba(120,130,160,0.2)",
+      transition: "box-shadow 0.2s ease, border-color 0.2s ease",
+      "&:hover": {
+        borderColor: "rgba(120,130,160,0.45)",
+      },
+      "&.Mui-focused": {
+        boxShadow: "0 0 0 3px rgba(63,81,181,0.12)",
+        borderColor: theme.palette.primary.main,
+      },
+      "&.Mui-error": {
+        borderColor: "rgba(244,67,54,0.7)",
+        boxShadow: "0 0 0 3px rgba(244,67,54,0.12)",
+      },
+    },
+    "& .MuiOutlinedInput-notchedOutline": {
+      border: "none",
+    },
+    "& .MuiFormHelperText-root.Mui-error": {
+      color: theme.palette.error.main,
+    },
+  },
+  tab: {
+    "& .MuiTab-root": {
+      textTransform: "none",
+      fontWeight: 600,
+    },
+  },
+  sectionCard: {
+    borderRadius: 14,
+    background: "rgba(255,255,255,0.9)",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 10px 24px rgba(31,45,61,0.08)",
+    padding: theme.spacing(2),
+  },
   textField: {
     marginRight: theme.spacing(1),
     flex: 1,
@@ -533,6 +603,7 @@ const handleSaveCampaign = async (values) => {
         multiline={true}
         variant="outlined"
         helperText="Utilize variáveis como {nome}, {numero}, {email} ou defina variáveis personalizadas."
+        className={classes.field}
         disabled={!campaignEditable && campaign.status !== "CANCELADA"}
       />
     );
@@ -550,6 +621,7 @@ const handleSaveCampaign = async (values) => {
         placeholder={i18n.t("campaigns.dialog.form.messagePlaceholder")}
         multiline={true}
         variant="outlined"
+        className={classes.field}
         disabled={!campaignEditable && campaign.status !== "CANCELADA"}
       />
     );
@@ -597,8 +669,9 @@ const handleSaveCampaign = async (values) => {
         fullWidth
         maxWidth="lg"
         scroll="paper"
+        classes={{ paper: classes.dialogPaper }}
       >
-        <DialogTitle id="form-dialog-title">
+        <DialogTitle id="form-dialog-title" className={classes.dialogTitle}>
           {campaignEditable ? (
             <>
               {campaignId
@@ -629,7 +702,7 @@ const handleSaveCampaign = async (values) => {
         >
           {({ values, errors, touched, isSubmitting, setFieldValue }) => (
             <Form>
-              <DialogContent dividers>
+              <DialogContent dividers className={classes.dialogContent}>
                 <Grid spacing={2} container>
                   <Grid xs={12} md={4} item>
                     <Field
@@ -641,7 +714,7 @@ const handleSaveCampaign = async (values) => {
                       variant="outlined"
                       margin="dense"
                       fullWidth
-                      className={classes.textField}
+                      className={classes.field}
                       disabled={!campaignEditable}
                     />
                   </Grid>
@@ -651,7 +724,7 @@ const handleSaveCampaign = async (values) => {
                       variant="outlined"
                       margin="dense"
                       fullWidth
-                      className={classes.formControl}
+                      className={classes.field}
                     >
                       <InputLabel id="confirmation-selection-label">
                         {i18n.t("campaigns.dialog.form.confirmation")}
@@ -677,7 +750,7 @@ const handleSaveCampaign = async (values) => {
                       variant="outlined"
                       margin="dense"
                       fullWidth
-                      className={classes.formControl}
+                      className={classes.field}
                     >
                       <InputLabel id="contactList-selection-label">
                         {i18n.t("campaigns.dialog.form.contactList")}
@@ -1161,11 +1234,8 @@ const handleSaveCampaign = async (values) => {
                       onChange={(e, v) => setMessageTab(v)}
                       variant="fullWidth"
                       centered
-                      style={{
-                        background: "#f2f2f2",
-                        border: "1px solid #e6e6e6",
-                        borderRadius: 2,
-                      }}
+                      className={classes.tab}
+                      style={{}}
                     >
                       <Tab label="Msg. 1" index={0} />
                       <Tab label="Msg. 2" index={1} />
@@ -1274,12 +1344,13 @@ const handleSaveCampaign = async (values) => {
                   )}
                 </Grid>
               </DialogContent>
-              <DialogActions>
+              <DialogActions className={classes.actions}>
                 {campaign.status === "CANCELADA" && (
                   <Button
                     color="primary"
                     onClick={() => restartCampaign()}
                     variant="outlined"
+                    className={classes.cancelButton}
                   >
                     {i18n.t("campaigns.dialog.buttons.restart")}
                   </Button>
@@ -1289,6 +1360,7 @@ const handleSaveCampaign = async (values) => {
                     color="primary"
                     onClick={() => cancelCampaign()}
                     variant="outlined"
+                    className={classes.cancelButton}
                   >
                     {i18n.t("campaigns.dialog.buttons.cancel")}
                   </Button>
@@ -1299,6 +1371,7 @@ const handleSaveCampaign = async (values) => {
                     onClick={() => attachmentFile.current.click()}
                     disabled={isSubmitting}
                     variant="outlined"
+                    className={classes.cancelButton}
                   >
                     {i18n.t("campaigns.dialog.buttons.attach")}
                   </Button>
@@ -1308,6 +1381,7 @@ const handleSaveCampaign = async (values) => {
                   color="primary"
                   disabled={isSubmitting}
                   variant="outlined"
+                  className={classes.cancelButton}
                 >
                   {i18n.t("campaigns.dialog.buttons.close")}
                 </Button>
@@ -1318,6 +1392,7 @@ const handleSaveCampaign = async (values) => {
                     disabled={isSubmitting}
                     variant="contained"
                     className={classes.btnWrapper}
+                    classes={{ root: classes.primaryButton }}
                   >
                     {campaignId
                       ? `${i18n.t("campaigns.dialog.buttons.edit")}`

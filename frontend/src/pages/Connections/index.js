@@ -69,12 +69,84 @@ import ForbiddenPage from "../../components/ForbiddenPage";
 import { Can } from "../../components/Can";
 
 const useStyles = makeStyles((theme) => ({
+  headerCard: {
+    width: "100%",
+    borderRadius: 18,
+    padding: theme.spacing(2),
+    background: "linear-gradient(135deg, rgba(255,255,255,0.85), rgba(245,248,255,0.9))",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 18px 45px rgba(31, 45, 61, 0.08)",
+  },
+  headerTitle: {
+    fontWeight: 700,
+    letterSpacing: 0.2,
+  },
   mainPaper: {
     flex: 1,
-    // padding: theme.spacing(1),
-    padding: theme.padding,
-    overflowY: "scroll",
+    padding: theme.spacing(1.5),
+    overflowY: "auto",
+    borderRadius: 18,
+    background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(248,250,255,0.95) 100%)",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 20px 55px rgba(31, 45, 61, 0.08)",
     ...theme.scrollbarStyles,
+  },
+  table: {
+    borderCollapse: "separate",
+    borderSpacing: "0 10px",
+  },
+  tableHeader: {
+    fontWeight: 700,
+    backgroundColor: "rgba(243,246,252,0.9)",
+    color: theme.palette.text.secondary,
+    borderBottom: "1px solid rgba(120,130,160,0.2)",
+  },
+  tableRow: {
+    backgroundColor: "rgba(255,255,255,0.85)",
+    boxShadow: "0 8px 18px rgba(31,45,61,0.06)",
+    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    "&:hover": {
+      transform: "translateY(-2px)",
+      boxShadow: "0 16px 30px rgba(31,45,61,0.12)",
+    },
+    "& > td": {
+      borderBottom: "none",
+    },
+    "& td:first-child": {
+      borderTopLeftRadius: 14,
+      borderBottomLeftRadius: 14,
+    },
+    "& td:last-child": {
+      borderTopRightRadius: 14,
+      borderBottomRightRadius: 14,
+    },
+  },
+  actionButton: {
+    borderRadius: 10,
+    padding: 6,
+    border: "1px solid rgba(120,130,160,0.2)",
+    backgroundColor: "rgba(255,255,255,0.8)",
+    transition: "all 0.2s ease",
+    "&:hover": {
+      backgroundColor: "rgba(63,81,181,0.08)",
+      borderColor: "rgba(63,81,181,0.35)",
+    },
+  },
+  primaryButton: {
+    height: 42,
+    borderRadius: 12,
+    fontWeight: 600,
+    textTransform: "none",
+    background: "linear-gradient(135deg, rgba(63,81,181,0.9), rgba(25,118,210,0.95))",
+    boxShadow: "0 12px 28px rgba(63,81,181,0.3)",
+  },
+  secondaryButton: {
+    height: 42,
+    borderRadius: 12,
+    fontWeight: 600,
+    textTransform: "none",
+    background: "rgba(255,255,255,0.9)",
+    border: "1px solid rgba(120,130,160,0.2)",
   },
   customTableCell: {
     display: "flex",
@@ -793,12 +865,15 @@ const Connections = () => {
         :
         <>
           <MainHeader>
-            <Title>{i18n.t("connections.title")} ({whatsApps.length})</Title>
+            <div className={classes.headerCard}>
+              <Title className={classes.headerTitle}>{i18n.t("connections.title")} ({whatsApps.length})</Title>
+            </div>
             <MainHeaderButtonsWrapper>
               <Button
                 variant="contained"
                 color="primary"
                 onClick={handleOpenTransferModal}
+                className={classes.primaryButton}
               >
                 {i18n.t("connections.transferTickets")}
               </Button>
@@ -807,6 +882,7 @@ const Connections = () => {
                 variant="contained"
                 color="primary"
                 onClick={restartWhatsapps}
+                className={classes.secondaryButton}
               >
                 {i18n.t("connections.restartConnections")}
               </Button>
@@ -815,6 +891,7 @@ const Connections = () => {
                 variant="contained"
                 color="primary"
                 onClick={() => openInNewTab(`https://wa.me/${process.env.REACT_APP_NUMBER_SUPPORT}`)}
+                className={classes.secondaryButton}
               >
                 {i18n.t("connections.callSupport")}
               </Button>
@@ -830,6 +907,7 @@ const Connections = () => {
                             variant="contained"
                             color="primary"
                             {...bindTrigger(popupState)}
+                            className={classes.primaryButton}
                           >
                             {i18n.t("connections.newConnection")}
                           </Button>
@@ -970,22 +1048,22 @@ const Connections = () => {
           }
 
           <Paper className={classes.mainPaper} variant="outlined">
-            <Table size="small">
+            <Table size="small" className={classes.table}>
               <TableHead>
                 <TableRow>
-                  <TableCell align="center">{i18n.t("connections.table.channel")}</TableCell>
-                  <TableCell align="center">{i18n.t("connections.table.color")}</TableCell>
-                  <TableCell align="center">{i18n.t("connections.table.name")}</TableCell>
-                  <TableCell align="center">{i18n.t("connections.table.number")}</TableCell>
-                  <TableCell align="center">{i18n.t("connections.table.status")}</TableCell>
-                  <TableCell align="center">{i18n.t("connections.table.session")}</TableCell>
-                  <TableCell align="center">{i18n.t("connections.table.lastUpdate")}</TableCell>
-                  <TableCell align="center">{i18n.t("connections.table.default")}</TableCell>
+                  <TableCell align="center" className={classes.tableHeader}>{i18n.t("connections.table.channel")}</TableCell>
+                  <TableCell align="center" className={classes.tableHeader}>{i18n.t("connections.table.color")}</TableCell>
+                  <TableCell align="center" className={classes.tableHeader}>{i18n.t("connections.table.name")}</TableCell>
+                  <TableCell align="center" className={classes.tableHeader}>{i18n.t("connections.table.number")}</TableCell>
+                  <TableCell align="center" className={classes.tableHeader}>{i18n.t("connections.table.status")}</TableCell>
+                  <TableCell align="center" className={classes.tableHeader}>{i18n.t("connections.table.session")}</TableCell>
+                  <TableCell align="center" className={classes.tableHeader}>{i18n.t("connections.table.lastUpdate")}</TableCell>
+                  <TableCell align="center" className={classes.tableHeader}>{i18n.t("connections.table.default")}</TableCell>
                   <Can
                     role={user.profile === "user" && user.allowConnections === "enabled" ? "admin" : user.profile}
                     perform="connections-page:addConnection"
                     yes={() => (
-                      <TableCell align="center">{i18n.t("connections.table.actions")}</TableCell>
+                      <TableCell align="center" className={classes.tableHeader}>{i18n.t("connections.table.actions")}</TableCell>
                     )}
                   />
                 </TableRow>
@@ -997,7 +1075,7 @@ const Connections = () => {
                   <>
                     {whatsApps?.length > 0 &&
                       whatsApps.map((whatsApp) => (
-                        <TableRow key={whatsApp.id}>
+                        <TableRow key={whatsApp.id} className={classes.tableRow}>
                           <TableCell align="center">{IconChannel(whatsApp.channel)}</TableCell>
                           <TableCell align="center">
                             <div className={classes.customTableCell}>
@@ -1031,6 +1109,7 @@ const Connections = () => {
                                 <IconButton
                                   size="small"
                                   onClick={() => handleEditWhatsApp(whatsApp)}
+                                  className={classes.actionButton}
                                 >
                                   <Edit />
                                 </IconButton>
@@ -1040,6 +1119,7 @@ const Connections = () => {
                                   onClick={(e) => {
                                     handleOpenPreDeleteModal(whatsApp.id);
                                   }}
+                                  className={classes.actionButton}
                                 >
                                   <DeleteOutline />
                                 </IconButton>
@@ -1052,6 +1132,7 @@ const Connections = () => {
                                         onClick={(e) => {
                                           handleSyncTemplates(whatsApp.id);
                                         }}
+                                        className={classes.actionButton}
                                       >
                                         <Sync />
                                       </IconButton>
@@ -1063,6 +1144,7 @@ const Connections = () => {
                                         onClick={(e) => {
                                           handleCopyWebhook(whatsApp.waba_webhook);
                                         }}
+                                        className={classes.actionButton}
                                       >
                                         <WebhookIcon />
                                       </IconButton>

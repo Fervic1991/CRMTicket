@@ -22,10 +22,26 @@ const ListCompaniesService = async ({
   const offset = limit * (+pageNumber - 1);
 
   const { count, rows: companies } = await Company.findAndCountAll({
+    attributes: [
+      "id",
+      "name",
+      "email",
+      "phone",
+      "planId",
+      "status",
+      "dueDate",
+      "recurrence",
+      "document",
+      "paymentMethod",
+      "generateInvoice",
+      "currency",
+      "createdAt",
+      "lastLogin"
+    ],
     include: [{
       model: Plan,
       as: "plan",
-      attributes: ["name"]
+      attributes: ["name", "amount"]
     }],
     limit,
     offset,

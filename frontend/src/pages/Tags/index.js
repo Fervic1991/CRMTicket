@@ -64,11 +64,138 @@ const reducer = (state, action) => {
 };
 
 const useStyles = makeStyles((theme) => ({
+  headerCard: {
+    width: "100%",
+    borderRadius: 18,
+    padding: theme.spacing(2),
+    background: "linear-gradient(135deg, rgba(255,255,255,0.85), rgba(245,248,255,0.9))",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 18px 45px rgba(31, 45, 61, 0.08)",
+  },
+  headerTitle: {
+    fontWeight: 700,
+    letterSpacing: 0.2,
+  },
+  searchField: {
+    "& .MuiOutlinedInput-root": {
+      borderRadius: 14,
+      backgroundColor: "rgba(255,255,255,0.85)",
+      border: "1px solid rgba(120,130,160,0.25)",
+      transition: "box-shadow 0.2s ease, border-color 0.2s ease",
+      "&:hover": {
+        borderColor: "rgba(120,130,160,0.45)",
+      },
+      "&.Mui-focused": {
+        boxShadow: "0 0 0 3px rgba(63,81,181,0.12)",
+        borderColor: theme.palette.primary.main,
+      },
+    },
+    "& .MuiOutlinedInput-input": {
+      padding: "10px 12px",
+    },
+  },
+  addButton: {
+    height: 44,
+    borderRadius: 14,
+    fontWeight: 600,
+    textTransform: "none",
+    background: "linear-gradient(135deg, rgba(63,81,181,0.9), rgba(25,118,210,0.95))",
+    boxShadow: "0 12px 28px rgba(63,81,181,0.3)",
+  },
+  summaryBar: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: theme.spacing(1),
+    alignItems: "center",
+    padding: theme.spacing(1.5),
+    borderRadius: 16,
+    background: "rgba(255,255,255,0.85)",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 12px 30px rgba(31, 45, 61, 0.06)",
+  },
+  summaryChip: {
+    borderRadius: 999,
+    padding: "2px 6px",
+    background: "rgba(63,81,181,0.08)",
+    border: "1px solid rgba(63,81,181,0.2)",
+    fontWeight: 600,
+  },
+  summaryCount: {
+    marginLeft: 6,
+    fontWeight: 700,
+  },
   mainPaper: {
     flex: 1,
-    padding: theme.spacing(1),
-    overflowY: "scroll",
+    padding: theme.spacing(1.5),
+    borderRadius: 18,
+    background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(248,250,255,0.95) 100%)",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 20px 55px rgba(31, 45, 61, 0.08)",
+    overflowY: "auto",
     ...theme.scrollbarStyles,
+  },
+  table: {
+    borderCollapse: "separate",
+    borderSpacing: "0 10px",
+  },
+  tableHeader: {
+    fontWeight: 700,
+    backgroundColor: "rgba(243,246,252,0.9)",
+    color: theme.palette.text.secondary,
+    borderBottom: "1px solid rgba(120,130,160,0.2)",
+  },
+  tableRow: {
+    backgroundColor: "rgba(255,255,255,0.85)",
+    boxShadow: "0 8px 18px rgba(31,45,61,0.06)",
+    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    "&:hover": {
+      transform: "translateY(-2px)",
+      boxShadow: "0 16px 30px rgba(31,45,61,0.12)",
+    },
+    "& > td": {
+      borderBottom: "none",
+    },
+    "& td:first-child": {
+      borderTopLeftRadius: 14,
+      borderBottomLeftRadius: 14,
+    },
+    "& td:last-child": {
+      borderTopRightRadius: 14,
+      borderBottomRightRadius: 14,
+    },
+  },
+  tagChip: {
+    fontWeight: 700,
+    color: "#fff",
+    textShadow: "0 1px 2px rgba(0,0,0,0.25)",
+    border: "none",
+  },
+  actionButton: {
+    borderRadius: 10,
+    padding: 6,
+    border: "1px solid rgba(120,130,160,0.2)",
+    backgroundColor: "rgba(255,255,255,0.8)",
+    transition: "all 0.2s ease",
+    "&:hover": {
+      backgroundColor: "rgba(63,81,181,0.08)",
+      borderColor: "rgba(63,81,181,0.35)",
+    },
+  },
+  emptyState: {
+    padding: theme.spacing(3),
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+  },
+  emptyStateButton: {
+    marginTop: theme.spacing(2),
+    borderRadius: 12,
+    textTransform: "none",
+    fontWeight: 600,
+    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    "&:hover": {
+      transform: "translateY(-1px)",
+      boxShadow: "0 14px 28px rgba(63,81,181,0.28)",
+    },
   },
 }));
 
@@ -188,6 +315,15 @@ const Tags = () => {
     }
   };
 
+  const summary = tags.reduce(
+    (acc, tag) => {
+      acc.total += 1;
+      acc.contacts += tag?.contacts?.length || 0;
+      return acc;
+    },
+    { total: 0, contacts: 0 }
+  );
+
   return (
     <MainContainer className={classes.mainContainer}>
       {contactModalOpen && (
@@ -213,44 +349,60 @@ const Tags = () => {
         kanban={0}
       />
       <MainHeader>
-        <Title>{i18n.t("tags.title")} ({tags.length})</Title>
-        <MainHeaderButtonsWrapper>
-          <TextField
-            placeholder={i18n.t("contacts.searchPlaceholder")}
-            type="search"
-            value={searchParam}
-            onChange={handleSearch}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon style={{ color: "gray" }} />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleOpenTagModal}
-          >
-            {i18n.t("tags.buttons.add")}
-          </Button>
-        </MainHeaderButtonsWrapper>
+        <div className={classes.headerCard}>
+          <Title className={classes.headerTitle}>{i18n.t("tags.title")} ({tags.length})</Title>
+          <MainHeaderButtonsWrapper>
+            <TextField
+              placeholder={i18n.t("contacts.searchPlaceholder")}
+              type="search"
+              variant="outlined"
+              size="small"
+              value={searchParam}
+              onChange={handleSearch}
+              className={classes.searchField}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon style={{ color: "gray" }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleOpenTagModal}
+              className={classes.addButton}
+            >
+              {i18n.t("tags.buttons.add")}
+            </Button>
+          </MainHeaderButtonsWrapper>
+        </div>
       </MainHeader>
+      <Paper className={classes.summaryBar}>
+        <span className={classes.summaryChip}>
+          {i18n.t("tags.summary.total")}
+          <span className={classes.summaryCount}>{summary.total}</span>
+        </span>
+        <span className={classes.summaryChip}>
+          {i18n.t("tags.summary.contacts")}
+          <span className={classes.summaryCount}>{summary.contacts}</span>
+        </span>
+      </Paper>
       <Paper
         className={classes.mainPaper}
         variant="outlined"
         onScroll={handleScroll}
       >
-        <Table size="small">
+        <Table size="small" className={classes.table}>
           <TableHead>
             <TableRow>
-              <TableCell align="center">{i18n.t("tags.table.id")}</TableCell>
-              <TableCell align="center">{i18n.t("tags.table.name")}</TableCell>
-              <TableCell align="center">
+              <TableCell align="center" className={classes.tableHeader}>{i18n.t("tags.table.id")}</TableCell>
+              <TableCell align="center" className={classes.tableHeader}>{i18n.t("tags.table.name")}</TableCell>
+              <TableCell align="center" className={classes.tableHeader}>
                 {i18n.t("tags.table.contacts")}
               </TableCell>
-              <TableCell align="center">
+              <TableCell align="center" className={classes.tableHeader}>
                 {i18n.t("tags.table.actions")}
               </TableCell>
             </TableRow>
@@ -258,16 +410,14 @@ const Tags = () => {
           <TableBody>
             <>
               {tags.map((tag) => (
-                <TableRow key={tag.id}>
+                <TableRow key={tag.id} className={classes.tableRow}>
                   <TableCell align="center">{tag.id}</TableCell>
                   <TableCell align="center">
                     <Chip
-                      variant="outlined"
                       style={{
                         backgroundColor: tag.color,
-                        textShadow: "1px 1px #000",
-                        color: "white",
                       }}
+                      className={classes.tagChip}
                       label={tag.name}
                       size="small"
                     />
@@ -278,13 +428,14 @@ const Tags = () => {
                       size="small"
                       onClick={() => handleShowContacts(tag?.contacts, tag)}
                       disabled={tag?.contacts?.length === 0}
+                      className={classes.actionButton}
                     >
                       <MoreHoriz />
                     </IconButton>
                   </TableCell>
 
                   <TableCell align="center">
-                    <IconButton size="small" onClick={() => handleEditTag(tag)}>
+                    <IconButton size="small" onClick={() => handleEditTag(tag)} className={classes.actionButton}>
                       <EditIcon />
                     </IconButton>
 
@@ -294,6 +445,7 @@ const Tags = () => {
                         setConfirmModalOpen(true);
                         setDeletingTag(tag);
                       }}
+                      className={classes.actionButton}
                     >
                       <DeleteOutlineIcon />
                     </IconButton>
@@ -302,6 +454,24 @@ const Tags = () => {
               ))}
 
               {loading && <TableRowSkeleton key="skeleton" columns={4} />}
+              {!loading && tags.length === 0 && (
+                <TableRow>
+                  <TableCell align="center" colSpan={4} className={classes.emptyState}>
+                    <div style={{ fontWeight: 600, marginBottom: 6 }}>
+                      {i18n.t("tags.emptyState.title")}
+                    </div>
+                    <div>{i18n.t("tags.emptyState.description")}</div>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleOpenTagModal}
+                      className={classes.emptyStateButton}
+                    >
+                      {i18n.t("tags.buttons.add")}
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              )}
             </>
           </TableBody>
         </Table>

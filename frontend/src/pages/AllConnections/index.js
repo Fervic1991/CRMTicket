@@ -56,13 +56,87 @@ import toastError from "../../errors/toastError";
 import ForbiddenPage from "../../components/ForbiddenPage";
 
 const useStyles = makeStyles((theme) => ({
+  headerCard: {
+    width: "100%",
+    borderRadius: 18,
+    padding: theme.spacing(2),
+    background: "linear-gradient(135deg, rgba(255,255,255,0.85), rgba(245,248,255,0.9))",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 18px 45px rgba(31, 45, 61, 0.08)",
+  },
+  headerTitle: {
+    fontWeight: 700,
+    letterSpacing: 0.2,
+  },
+  headerSubtitle: {
+    marginTop: theme.spacing(0.5),
+    color: theme.palette.text.secondary,
+  },
   mainPaper: {
     flex: 1,
-    padding: theme.spacing(1),
-    overflowY: "scroll",
-    borderRadius: "10px",
-    boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px",
+    padding: theme.spacing(1.5),
+    overflowY: "auto",
+    borderRadius: 18,
+    background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(248,250,255,0.95) 100%)",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 20px 55px rgba(31, 45, 61, 0.08)",
     ...theme.scrollbarStyles,
+  },
+  tableWrapper: {
+    padding: theme.spacing(2),
+    borderRadius: 16,
+    background: "rgba(255,255,255,0.85)",
+    border: "1px solid rgba(120,130,160,0.16)",
+    boxShadow: "0 12px 30px rgba(31, 45, 61, 0.06)",
+  },
+  table: {
+    borderCollapse: "separate",
+    borderSpacing: "0 10px",
+  },
+  tableHeader: {
+    fontWeight: 700,
+    backgroundColor: "rgba(243,246,252,0.9)",
+    color: theme.palette.text.secondary,
+    borderBottom: "1px solid rgba(120,130,160,0.2)",
+  },
+  tableRow: {
+    backgroundColor: "rgba(255,255,255,0.9)",
+    boxShadow: "0 8px 18px rgba(31,45,61,0.06)",
+    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    "&:hover": {
+      transform: "translateY(-2px)",
+      boxShadow: "0 16px 30px rgba(31,45,61,0.12)",
+    },
+    "& > td": {
+      borderBottom: "none",
+    },
+    "& td:first-child": {
+      borderTopLeftRadius: 14,
+      borderBottomLeftRadius: 14,
+    },
+    "& td:last-child": {
+      borderTopRightRadius: 14,
+      borderBottomRightRadius: 14,
+    },
+  },
+  totalRow: {
+    background: "linear-gradient(135deg, rgba(63,81,181,0.14), rgba(25,118,210,0.18))",
+    "& td": {
+      color: theme.palette.primary.dark,
+      fontWeight: 700,
+      borderBottom: "none",
+    },
+  },
+  actionButton: {
+    borderRadius: 10,
+    padding: 6,
+    border: "1px solid rgba(120,130,160,0.2)",
+    backgroundColor: "rgba(255,255,255,0.8)",
+    transition: "all 0.2s ease",
+    "&:hover": {
+      backgroundColor: "rgba(63,81,181,0.08)",
+      borderColor: "rgba(63,81,181,0.35)",
+    },
   },
   customTableCell: {
     display: "flex",
@@ -81,11 +155,6 @@ const useStyles = makeStyles((theme) => ({
   },
   buttonProgress: {
     color: green[500],
-  },
-  TableHead: {
-    backgroundColor: theme.palette.barraSuperior, //"#3d3d3d",
-    color: "textSecondary",
-    borderRadius: "5px",
   },
 }));
 
@@ -431,35 +500,16 @@ const AllConnections = () => {
         <ForbiddenPage />
       ) : (
         <>
-          <Paper
-            className={classes.mainPaper}
-            style={{ overflow: "hidden" }}
-            variant="outlined"
-          >
+          <Paper className={classes.mainPaper} style={{ overflow: "hidden" }} variant="outlined">
             <MainHeader>
-              <Stack>
-                <Typography
-                  variant="h5"
-                  color="black"
-                  style={{
-                    fontWeight: "bold",
-                    marginLeft: "10px",
-                    marginTop: "10px",
-                  }}
-                  gutterBottom
-                >
-                  {i18n.t("connections.title")}
-                </Typography>
-                <Typography
-                  style={{ marginTop: "-10px", marginLeft: "10px" }}
-                  variant="caption"
-                  color="textSecondary"
-                >
+              <div className={classes.headerCard}>
+                <Title className={classes.headerTitle}>{i18n.t("connections.title")}</Title>
+                <Typography variant="body2" className={classes.headerSubtitle}>
                   {i18n.t(
                     "connections.connectYourServiceChannelsToReceiveMessagesAndStartConversationsWithYourCustomers"
                   )}
                 </Typography>
-              </Stack>
+              </div>
 
               <MainHeaderButtonsWrapper>
                 <PopupState variant="popover" popupId="demo-popup-menu">
@@ -525,33 +575,25 @@ const AllConnections = () => {
                 </PopupState>
               </MainHeaderButtonsWrapper>
             </MainHeader>
-            <Stack
-              style={{
-                overflowY: "auto",
-                padding: "20px",
-                backgroundColor: "rgb(244 244 244 / 53%)",
-                borderRadius: "5px",
-                height: "93%",
-              }}
-            >
-              <Paper>
-                <Table size="small">
-                  <TableHead className={classes.TableHead}>
-                    <TableRow style={{ color: "#fff" }}>
-                      <TableCell style={{ color: "#fff" }} align="center">
+            <Stack style={{ overflowY: "auto", height: "93%" }}>
+              <Paper className={classes.tableWrapper}>
+                <Table size="small" className={classes.table}>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell className={classes.tableHeader} align="center">
                         {i18n.t("connections.client")}
                       </TableCell>
-                      <TableCell style={{ color: "#fff" }} align="center">
+                      <TableCell className={classes.tableHeader} align="center">
                         {i18n.t("connections.connectedConnections")}
                       </TableCell>
-                      <TableCell style={{ color: "#fff" }} align="center">
+                      <TableCell className={classes.tableHeader} align="center">
                         {i18n.t("connections.disconnectedConnections")}
                       </TableCell>
-                      <TableCell style={{ color: "#fff" }} align="center">
+                      <TableCell className={classes.tableHeader} align="center">
                         {i18n.t("connections.totalConnections")}
                       </TableCell>
                       {user.profile === "admin" && (
-                        <TableCell style={{ color: "#fff" }} align="center">
+                        <TableCell className={classes.tableHeader} align="center">
                           {i18n.t("connections.table.actions")}
                         </TableCell>
                       )}
@@ -562,10 +604,9 @@ const AllConnections = () => {
                       <TableRowSkeleton />
                     ) : (
                       <>
-                        {console.log(companies, whats)}
                         {companies?.length > 0 &&
                           companies.map((company) => (
-                            <TableRow key={company.id}>
+                            <TableRow key={company.id} className={classes.tableRow}>
                               <TableCell align="center">
                                 {company?.name}
                               </TableCell>
@@ -595,6 +636,7 @@ const AllConnections = () => {
                                 <TableCell align="center">
                                   <IconButton
                                     size="small"
+                                    className={classes.actionButton}
                                     onClick={() =>
                                       handleOpenWhatsAppModal(
                                         whats.filter(
@@ -611,30 +653,27 @@ const AllConnections = () => {
                               )}
                             </TableRow>
                           ))}
-                        <TableRow className={classes.TableHead}>
-                          <TableCell style={{ color: "#fff" }} align="center">
+                        <TableRow className={classes.totalRow}>
+                          <TableCell align="center">
                             {i18n.t("connections.total")}
                           </TableCell>
-                          <TableCell style={{ color: "#fff" }} align="center">
+                          <TableCell align="center">
                             {whats?.length &&
                               whats.filter(
                                 (item) => item?.status === "CONNECTED"
                               ).length}
                           </TableCell>
-                          <TableCell style={{ color: "#fff" }} align="center">
+                          <TableCell align="center">
                             {whats?.length &&
                               whats.filter(
                                 (item) => item?.status !== "CONNECTED"
                               ).length}
                           </TableCell>
-                          <TableCell style={{ color: "#fff" }} align="center">
+                          <TableCell align="center">
                             {whats?.length && whats.length}
                           </TableCell>
                           {user.profile === "admin" && (
-                            <TableCell
-                              style={{ color: "#fff" }}
-                              align="center"
-                            ></TableCell>
+                            <TableCell align="center"></TableCell>
                           )}
                         </TableRow>
                       </>

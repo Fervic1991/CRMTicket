@@ -2027,6 +2027,14 @@ const messages = {
         buttons: {
           add: "New Tag",
         },
+        summary: {
+          total: "Total",
+          contacts: "Contacts",
+        },
+        emptyState: {
+          title: "No tags found",
+          description: "Create your first tag.",
+        },
         toasts: {
           deleted: "Tag deleted successfully.",
         },
