@@ -9,10 +9,13 @@ import Title from "../../components/Title";
 const useStyles = makeStyles(theme => ({
     mainPaper: {
         flex: 1,
-        padding: 1,
-        borderRadius: 0,
+        padding: theme.spacing(2),
+        borderRadius: 16,
         overflowY: "scroll",
-        padding: 1,
+        background: "rgba(255, 255, 255, 0.78)",
+        border: "1px solid rgba(148, 163, 184, 0.35)",
+        boxShadow: "0 14px 28px rgba(15, 23, 42, 0.08)",
+        backdropFilter: "blur(10px)",
         ...theme.scrollbarStylesSoftBig
     },
 }));

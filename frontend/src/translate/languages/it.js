@@ -498,6 +498,10 @@ const messages = {
       },
       contacts: {
         title: "Contatti",
+        status: {
+          active: "Attivo",
+          inactive: "Inattivo",
+        },
         toasts: {
           deleted: "Contatto eliminato con successo!",
         },

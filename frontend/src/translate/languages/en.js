@@ -499,6 +499,10 @@ const messages = {
       },
       contacts: {
         title: "Contacts",
+        status: {
+          active: "Active",
+          inactive: "Inactive",
+        },
         toasts: {
           deleted: "Contact successfully deleted!",
         },

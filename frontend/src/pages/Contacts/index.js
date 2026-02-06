@@ -126,9 +126,14 @@ const reducer = (state, action) => {
 const useStyles = makeStyles((theme) => ({
   mainPaper: {
     flex: 1,
-    padding: theme.spacing(1),
+    padding: theme.spacing(1.5),
     overflowY: "scroll",
     ...theme.scrollbarStyles,
+    background: "rgba(255, 255, 255, 0.78)",
+    border: "1px solid rgba(148, 163, 184, 0.35)",
+    borderRadius: 16,
+    boxShadow: "0 14px 28px rgba(15, 23, 42, 0.08)",
+    backdropFilter: "blur(10px)",
   },
   avatarCell: {
     width: '60px',
@@ -150,8 +155,12 @@ const useStyles = makeStyles((theme) => ({
   },
   imageDialog: {
     '& .MuiDialog-paper': {
-      maxWidth: '500px',
-      maxHeight: '500px',
+      maxWidth: '520px',
+      maxHeight: '520px',
+      borderRadius: 16,
+      background: "rgba(255, 255, 255, 0.9)",
+      boxShadow: "0 20px 40px rgba(15, 23, 42, 0.18)",
+      backdropFilter: "blur(12px)",
     },
   },
   dialogTitle: {
@@ -159,6 +168,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingBottom: theme.spacing(1),
+    fontWeight: 600,
   },
   profileImage: {
     width: '100%',
@@ -166,15 +176,19 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '400px',
     maxHeight: '400px',
     objectFit: 'contain',
+    borderRadius: 12,
+    boxShadow: "0 10px 22px rgba(15, 23, 42, 0.12)",
   },
   toolbar: {
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(1),
-    backgroundColor: alpha(theme.palette.primary.main, 0.12),
+    backgroundColor: "rgba(59, 130, 246, 0.12)",
     minHeight: 48,
+    borderRadius: 12,
+    border: "1px solid rgba(148, 163, 184, 0.3)",
   },
   toolbarHighlight: {
-    backgroundColor: alpha(theme.palette.primary.main, 0.25),
+    backgroundColor: "rgba(59, 130, 246, 0.22)",
   },
   toolbarTitle: {
     flex: '1 1 100%',
@@ -183,6 +197,127 @@ const useStyles = makeStyles((theme) => ({
   bulkActions: {
     display: 'flex',
     gap: theme.spacing(1),
+  },
+  bulkButton: {
+    borderRadius: 12,
+    textTransform: "none",
+    fontWeight: 600,
+    boxShadow: "0 10px 20px rgba(15, 23, 42, 0.10)",
+  },
+  tableHeadCell: {
+    fontWeight: 700,
+    color: "rgba(15, 23, 42, 0.75)",
+    background: "rgba(248, 250, 252, 0.85)",
+    borderBottom: "1px solid rgba(148, 163, 184, 0.35)",
+    paddingTop: theme.spacing(1.4),
+    paddingBottom: theme.spacing(1.4),
+  },
+  tableRow: {
+    transition: "background-color 0.15s ease",
+    "&:hover": {
+      backgroundColor: "rgba(226, 232, 240, 0.5)",
+    },
+  },
+  tableCell: {
+    borderBottom: "1px solid rgba(148, 163, 184, 0.2)",
+    paddingTop: theme.spacing(1.2),
+    paddingBottom: theme.spacing(1.2),
+  },
+  statusPill: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: theme.spacing(0.5),
+    padding: "4px 10px",
+    borderRadius: 999,
+    fontSize: "0.75rem",
+    fontWeight: 700,
+    border: "1px solid rgba(148, 163, 184, 0.3)",
+    background: "rgba(248, 250, 252, 0.9)",
+  },
+  statusActive: {
+    color: "rgba(22, 163, 74, 0.95)",
+    borderColor: "rgba(22, 163, 74, 0.3)",
+    background: "rgba(34, 197, 94, 0.12)",
+  },
+  statusInactive: {
+    color: "rgba(220, 38, 38, 0.95)",
+    borderColor: "rgba(220, 38, 38, 0.3)",
+    background: "rgba(239, 68, 68, 0.12)",
+  },
+  actionIconButton: {
+    height: 32,
+    width: 32,
+    borderRadius: 10,
+    border: "1px solid rgba(148, 163, 184, 0.45)",
+    background: "rgba(255, 255, 255, 0.85)",
+    boxShadow: "0 6px 14px rgba(15, 23, 42, 0.08)",
+    transition: "transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease",
+    "&:hover": {
+      transform: "translateY(-1px)",
+      boxShadow: "0 10px 18px rgba(15, 23, 42, 0.12)",
+      borderColor: "rgba(59, 130, 246, 0.5)",
+    },
+  },
+  columnDivider: {
+    position: "relative",
+    "&::after": {
+      content: '""',
+      position: "absolute",
+      right: 0,
+      top: "20%",
+      height: "60%",
+      width: 1,
+      background: "rgba(148, 163, 184, 0.25)",
+    },
+  },
+  headerStats: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: theme.spacing(1),
+    marginLeft: theme.spacing(1),
+    padding: "4px 10px",
+    borderRadius: 999,
+    background: "rgba(59, 130, 246, 0.12)",
+    border: "1px solid rgba(59, 130, 246, 0.35)",
+    color: "rgba(15, 23, 42, 0.85)",
+    fontSize: "0.85rem",
+    fontWeight: 600,
+  },
+  searchField: {
+    minWidth: 240,
+    background: "rgba(255, 255, 255, 0.9)",
+    borderRadius: 999,
+    border: "1px solid rgba(148, 163, 184, 0.35)",
+    boxShadow: "0 8px 18px rgba(15, 23, 42, 0.06)",
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+  },
+  headerButton: {
+    borderRadius: 12,
+    textTransform: "none",
+    fontWeight: 600,
+    boxShadow: "0 10px 20px rgba(15, 23, 42, 0.10)",
+  },
+  headerMenuPaper: {
+    borderRadius: 16,
+    border: "1px solid rgba(148, 163, 184, 0.35)",
+    boxShadow: "0 16px 40px rgba(15, 23, 42, 0.12)",
+    background: "rgba(255, 255, 255, 0.96)",
+    backdropFilter: "blur(10px)",
+    padding: theme.spacing(0.5),
+  },
+  headerMenuItem: {
+    borderRadius: 12,
+    margin: theme.spacing(0.25, 0.5),
+    padding: theme.spacing(0.75, 1.5),
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(1.25),
+    transition: "background-color 0.15s ease, transform 0.15s ease",
+    "&:hover": {
+      backgroundColor: "rgba(226, 232, 240, 0.6)",
+      transform: "translateX(2px)",
+    },
   },
 }));
 
@@ -699,6 +834,7 @@ const Contacts = () => {
         <MainHeaderButtonsWrapper>
           <TagsFilter onFiltered={handleSelectedTags} />
           <TextField
+            className={classes.searchField}
             placeholder={i18n.t("contacts.searchPlaceholder")}
             type="search"
             value={searchParam}
@@ -717,6 +853,7 @@ const Contacts = () => {
             <div className={classes.bulkActions}>
               <Tooltip title={selectAllMode ? i18n.t("contacts.bulk.deleteAll") : i18n.t("contacts.bulk.deleteSelected")}>
                 <Button
+                  className={classes.bulkButton}
                   variant="contained"
                   color="secondary"
                   startIcon={<DeleteOutlineIcon />}
@@ -732,6 +869,7 @@ const Contacts = () => {
             {(popupState) => (
               <React.Fragment>
                 <Button
+                  className={classes.headerButton}
                   variant="contained"
                   color="primary"
                   {...bindTrigger(popupState)}
@@ -739,8 +877,12 @@ const Contacts = () => {
                   {i18n.t("contacts.menu.importexport")}
                   <ArrowDropDown />
                 </Button>
-                <Menu {...bindMenu(popupState)}>
+                <Menu
+                  {...bindMenu(popupState)}
+                  PaperProps={{ className: classes.headerMenuPaper }}
+                >
                   <MenuItem
+                    className={classes.headerMenuItem}
                     onClick={() => {
                       setConfirmOpen(true);
                       setImportContacts(true);
@@ -755,6 +897,7 @@ const Contacts = () => {
                     {i18n.t("contacts.menu.importYourPhone")}
                   </MenuItem>
                   <MenuItem
+                    className={classes.headerMenuItem}
                     onClick={() => {
                       setImportContactModalOpen(true);
                     }}
@@ -769,8 +912,9 @@ const Contacts = () => {
                   <Can
                     role={user.profile}
                     perform="contacts-page:deleteAllContacts"
-                    yes={() => (
+                      yes={() => (
                       <MenuItem
+                        className={classes.headerMenuItem}
                         onClick={() => {
                           handleDeleteAllClick();
                           popupState.close();
@@ -791,6 +935,7 @@ const Contacts = () => {
           </PopupState>
           
           <Button
+            className={classes.headerButton}
             variant="contained"
             color="primary"
             onClick={handleOpenContactModal}
@@ -860,8 +1005,8 @@ const Contacts = () => {
 
         <Table size="small">
           <TableHead>
-            <TableRow>
-              <TableCell className={classes.checkboxCell}>
+            <TableRow className={classes.tableRow}>
+              <TableCell className={classes.checkboxCell + " " + classes.tableHeadCell}>
                 <Checkbox
                   indeterminate={checkboxStatus.indeterminate}
                   checked={checkboxStatus.checked}
@@ -870,18 +1015,18 @@ const Contacts = () => {
                   inputProps={{ 'aria-label': i18n.t("contacts.bulk.selectAll") }}
                 />
               </TableCell>
-              <TableCell className={classes.idCell}>{i18n.t("contacts.table.id")}</TableCell>
-              <TableCell className={classes.avatarCell} align="center">{i18n.t("contacts.table.photo")}</TableCell>
-              <TableCell>{i18n.t("contacts.table.name")}</TableCell>
-              <TableCell align="center">
+              <TableCell className={classes.idCell + " " + classes.tableHeadCell + " " + classes.columnDivider}>{i18n.t("contacts.table.id")}</TableCell>
+              <TableCell className={classes.avatarCell + " " + classes.tableHeadCell + " " + classes.columnDivider} align="center">{i18n.t("contacts.table.photo")}</TableCell>
+              <TableCell className={classes.tableHeadCell + " " + classes.columnDivider}>{i18n.t("contacts.table.name")}</TableCell>
+              <TableCell className={classes.tableHeadCell + " " + classes.columnDivider} align="center">
                 {i18n.t("contacts.table.whatsapp")}
               </TableCell>
-              <TableCell align="center">
+              <TableCell className={classes.tableHeadCell + " " + classes.columnDivider} align="center">
                 {i18n.t("contacts.table.email")}
               </TableCell>
-              <TableCell align="center">{i18n.t("contacts.table.status")}</TableCell>
-              <TableCell align="center">{i18n.t("contacts.table.wallet")}</TableCell>
-              <TableCell align="center">
+              <TableCell className={classes.tableHeadCell + " " + classes.columnDivider} align="center">{i18n.t("contacts.table.status")}</TableCell>
+              <TableCell className={classes.tableHeadCell + " " + classes.columnDivider} align="center">{i18n.t("contacts.table.wallet")}</TableCell>
+              <TableCell className={classes.tableHeadCell} align="center">
                 {i18n.t("contacts.table.actions")}
               </TableCell>
             </TableRow>
@@ -895,8 +1040,9 @@ const Contacts = () => {
                   <TableRow 
                     key={contact.id}
                     selected={isSelected}
+                    className={classes.tableRow}
                   >
-                    <TableCell className={classes.checkboxCell}>
+                    <TableCell className={classes.checkboxCell + " " + classes.tableCell}>
                       <Checkbox
                         checked={isSelected}
                         onChange={() => handleSelectContact(contact.id)}
@@ -904,16 +1050,16 @@ const Contacts = () => {
                         inputProps={{ 'aria-label': `${i18n.t("contacts.modal.selectContact")} ${contact.name}` }}
                       />
                     </TableCell>
-                    <TableCell className={classes.idCell}>{contact.id}</TableCell>
-                    <TableCell className={classes.avatarCell} align="center">
+                    <TableCell className={classes.idCell + " " + classes.tableCell + " " + classes.columnDivider}>{contact.id}</TableCell>
+                    <TableCell className={classes.avatarCell + " " + classes.tableCell + " " + classes.columnDivider} align="center">
                       <Avatar 
                         src={`${contact?.urlPicture}`}
                         className={classes.clickableAvatar}
                         onClick={() => handleOpenImageModal(contact?.urlPicture, contact.name)}
                       />
                     </TableCell>
-                    <TableCell>{contact.name}</TableCell>
-                    <TableCell align="center">
+                    <TableCell className={classes.tableCell + " " + classes.columnDivider}>{contact.name}</TableCell>
+                    <TableCell className={classes.tableCell + " " + classes.columnDivider} align="center">
                       {enableLGPD && hideNum && user.profile === "user"
                         ? contact.isGroup
                           ? contact.number
@@ -928,23 +1074,18 @@ const Contacts = () => {
                         ? contact.number
                         : formatSerializedId(contact?.number)}
                     </TableCell>
-                    <TableCell align="center">{contact.email}</TableCell>
-                    <TableCell align="center">
-                      {contact.active ? (
-                        <CheckCircleIcon
-                          style={{ color: "green" }}
-                          fontSize="small"
-                        />
-                      ) : (
-                        <CancelIcon style={{ color: "red" }} fontSize="small" />
-                      )}
+                    <TableCell className={classes.tableCell + " " + classes.columnDivider} align="center">{contact.email}</TableCell>
+                    <TableCell className={classes.tableCell + " " + classes.columnDivider} align="center">
+                      <span className={clsx(classes.statusPill, contact.active ? classes.statusActive : classes.statusInactive)}>
+                        {contact.active ? i18n.t("contacts.status.active") : i18n.t("contacts.status.inactive")}
+                      </span>
                     </TableCell>
-                    <TableCell align="center">
+                    <TableCell className={classes.tableCell + " " + classes.columnDivider} align="center">
                       {contact.contactWallets && contact.contactWallets.length > 0 
                         ? contact.contactWallets[0].wallet?.name || i18n.t("contacts.modal.userNotFound")
                         : i18n.t("contacts.modal.notAssigned")}
                     </TableCell>
-                    <TableCell align="center">
+                    <TableCell className={classes.tableCell} align="center">
                       <IconButton
                         size="small"
                         disabled={!contact.active}
@@ -952,6 +1093,7 @@ const Contacts = () => {
                           setContactTicket(contact);
                           setNewTicketModalOpen(true);
                         }}
+                        className={classes.actionIconButton}
                       >
                         {contact.channel === "whatsapp" && (
                           <WhatsApp style={{ color: "green" }} />
@@ -967,6 +1109,7 @@ const Contacts = () => {
                       <IconButton
                         size="small"
                         onClick={() => hadleEditContact(contact.id)}
+                        className={classes.actionIconButton}
                       >
                         <EditIcon color="secondary" />
                       </IconButton>
@@ -983,6 +1126,7 @@ const Contacts = () => {
                                 setUnBlockingContact(contact);
                               }
                         }
+                        className={classes.actionIconButton}
                       >
                         {contact.active ? (
                           <BlockIcon color="secondary" />
@@ -1000,6 +1144,7 @@ const Contacts = () => {
                               setConfirmOpen(true);
                               setDeletingContact(contact);
                             }}
+                            className={classes.actionIconButton}
                           >
                             <DeleteOutlineIcon color="secondary" />
                           </IconButton>
