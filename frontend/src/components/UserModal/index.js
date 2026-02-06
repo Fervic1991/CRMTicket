@@ -39,6 +39,37 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexWrap: "wrap",
   },
+  dialogPaper: {
+    borderRadius: 18,
+    background: "linear-gradient(135deg, rgba(255,255,255,0.96), rgba(246,248,255,0.98))",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 24px 60px rgba(31, 45, 61, 0.18)",
+  },
+  dialogTitle: {
+    fontWeight: 700,
+    letterSpacing: 0.2,
+  },
+  dialogContent: {
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+  },
+  actions: {
+    padding: theme.spacing(2, 3),
+    gap: theme.spacing(1.5),
+  },
+  cancelButton: {
+    borderRadius: 12,
+    textTransform: "none",
+    fontWeight: 600,
+    background: "rgba(255,255,255,0.9)",
+    border: "1px solid rgba(120,130,160,0.2)",
+  },
+  primaryButton: {
+    borderRadius: 12,
+    textTransform: "none",
+    fontWeight: 600,
+    boxShadow: "0 14px 28px rgba(63,81,181,0.28)",
+  },
   multFieldLine: {
     display: "flex",
     "& > *:not(:last-child)": {
@@ -59,10 +90,71 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
+    "& .MuiOutlinedInput-root": {
+      borderRadius: 14,
+      backgroundColor: "rgba(255,255,255,0.9)",
+      border: "1px solid rgba(120,130,160,0.2)",
+      transition: "box-shadow 0.2s ease, border-color 0.2s ease",
+      "&:hover": {
+        borderColor: "rgba(120,130,160,0.45)",
+      },
+      "&.Mui-focused": {
+        boxShadow: "0 0 0 3px rgba(63,81,181,0.12)",
+        borderColor: theme.palette.primary.main,
+      },
+    },
   },
   textField: {
     marginRight: theme.spacing(1),
     flex: 1,
+    "& .MuiOutlinedInput-root": {
+      borderRadius: 14,
+      backgroundColor: "rgba(255,255,255,0.9)",
+      border: "1px solid rgba(120,130,160,0.2)",
+      transition: "box-shadow 0.2s ease, border-color 0.2s ease",
+      "&:hover": {
+        borderColor: "rgba(120,130,160,0.45)",
+      },
+      "&.Mui-focused": {
+        boxShadow: "0 0 0 3px rgba(63,81,181,0.12)",
+        borderColor: theme.palette.primary.main,
+      },
+      "&.Mui-error": {
+        borderColor: "rgba(244,67,54,0.7)",
+        boxShadow: "0 0 0 3px rgba(244,67,54,0.12)",
+      },
+    },
+    "& .MuiOutlinedInput-notchedOutline": {
+      border: "none",
+    },
+    "& .MuiFormHelperText-root.Mui-error": {
+      color: theme.palette.error.main,
+    },
+  },
+  mainPaper: {
+    borderRadius: 14,
+    background: "rgba(255,255,255,0.9)",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 10px 24px rgba(31,45,61,0.08)",
+    marginBottom: theme.spacing(2),
+  },
+  paper: {
+    borderRadius: 14,
+    background: "rgba(255,255,255,0.9)",
+    border: "1px solid rgba(120,130,160,0.12)",
+  },
+  tab: {
+    "& .MuiTab-root": {
+      textTransform: "none",
+      fontWeight: 600,
+    },
+  },
+  maxWidth: {
+    "& .MuiOutlinedInput-root": {
+      borderRadius: 14,
+      backgroundColor: "rgba(255,255,255,0.9)",
+      border: "1px solid rgba(120,130,160,0.2)",
+    },
   },
   container: {
     display: "flex",
@@ -311,8 +403,9 @@ const handleSaveUser = async (values) => {
         maxWidth="sm"
         fullWidth
         scroll="paper"
+        classes={{ paper: classes.dialogPaper }}
       >
-        <DialogTitle id="form-dialog-title">
+        <DialogTitle id="form-dialog-title" className={classes.dialogTitle}>
           {userId
             ? `${i18n.t("userModal.title.edit")}`
             : `${i18n.t("userModal.title.add")}`}
@@ -351,7 +444,7 @@ const handleSaveUser = async (values) => {
                 </Tabs>
               </Paper>
               <Paper className={classes.paper} elevation={0}>
-                <DialogContent dividers>
+              <DialogContent dividers className={classes.dialogContent}>
                   <TabPanel
                     className={classes.container}
                     value={tab}
@@ -1133,12 +1226,13 @@ const handleSaveUser = async (values) => {
                   </TabPanel>
                 </DialogContent>
               </Paper>
-              <DialogActions>
+              <DialogActions className={classes.actions}>
                 <Button
                   onClick={handleClose}
                   color="secondary"
                   disabled={isSubmitting}
                   variant="outlined"
+                  className={classes.cancelButton}
                 >
                   {i18n.t("userModal.buttons.cancel")}
                 </Button>
@@ -1148,6 +1242,7 @@ const handleSaveUser = async (values) => {
                   disabled={isSubmitting}
                   variant="contained"
                   className={classes.btnWrapper}
+                  classes={{ root: classes.primaryButton }}
                 >
                   {userId
                     ? `${i18n.t("userModal.buttons.okEdit")}`

@@ -1906,6 +1906,13 @@ const messages = {
           add: "Adicionar usuário",
           generateExistingChats: "Gerar Chats Existentes",
         },
+        summary: {
+          total: "Total de usuários",
+        },
+        emptyState: {
+          title: "Nenhum usuário encontrado",
+          description: "Adicione o primeiro usuário para começar.",
+        },
         toasts: {
           deleted: "Usuário excluído com sucesso.",
           chatCreated: "Chat criado com sucesso!",

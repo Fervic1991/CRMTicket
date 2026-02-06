@@ -1858,6 +1858,13 @@ const messages = {
           add: "Add User",
           generateExistingChats: "Generate Existing Chats",
         },
+        summary: {
+          total: "Total users",
+        },
+        emptyState: {
+          title: "No users found",
+          description: "Add your first user to get started.",
+        },
         toasts: {
           deleted: "User deleted successfully.",
           chatCreated: "Chat created successfully!",
