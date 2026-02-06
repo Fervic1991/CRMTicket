@@ -1343,6 +1343,14 @@ const messages = {
         toasts: {
           deleted: "Record deleted successfully.",
         },
+        summary: {
+          totalLists: "Total lists",
+          totalContacts: "Total contacts",
+        },
+        emptyState: {
+          title: "No lists found",
+          description: "Create your first contact list.",
+        },
       },
       contactListItems: {
         title: "Contacts",
@@ -1482,6 +1490,13 @@ const messages = {
           finished: "Finished",
           recurring: "Recurring",
           single: "Single",
+        },
+        quickActions: {
+          title: "Quick actions",
+        },
+        legend: {
+          show: "Show legend",
+          hide: "Hide legend",
         },
         summary: {
           total: "Total",

@@ -28,6 +28,8 @@ import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline";
 import RepeatIcon from "@material-ui/icons/Repeat";
 import StopIcon from "@material-ui/icons/Stop";
 import ScheduleIcon from "@material-ui/icons/Schedule";
+import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
+import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 
 import MainContainer from "../../components/MainContainer";
 import MainHeader from "../../components/MainHeader";
@@ -112,6 +114,27 @@ const useStyles = makeStyles((theme) => ({
   },
   headerActions: {
     alignItems: "center",
+  },
+  quickActions: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: theme.spacing(1),
+    alignItems: "center",
+    padding: theme.spacing(1.25, 1.5),
+    borderRadius: 14,
+    background: "rgba(255,255,255,0.85)",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 12px 30px rgba(31, 45, 61, 0.06)",
+  },
+  quickActionsTitle: {
+    fontWeight: 700,
+    color: theme.palette.text.secondary,
+    marginRight: theme.spacing(1),
+  },
+  quickActionButton: {
+    borderRadius: 12,
+    textTransform: "none",
+    fontWeight: 600,
   },
   searchField: {
     "& .MuiOutlinedInput-root": {
@@ -218,6 +241,71 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 6,
     fontWeight: 700,
   },
+  legend: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: theme.spacing(1),
+    alignItems: "center",
+    padding: theme.spacing(1.25, 1.5),
+    borderRadius: 14,
+    background: "rgba(255,255,255,0.8)",
+    border: "1px solid rgba(120,130,160,0.16)",
+  },
+  legendTitle: {
+    fontWeight: 700,
+    color: theme.palette.text.secondary,
+    marginRight: theme.spacing(1),
+  },
+  legendItem: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 6,
+    padding: "4px 10px",
+    borderRadius: 999,
+    background: "rgba(255,255,255,0.9)",
+    border: "1px solid rgba(120,130,160,0.18)",
+    fontSize: "0.78rem",
+    fontWeight: 600,
+    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    "&:hover": {
+      transform: "translateY(-1px)",
+      boxShadow: "0 10px 18px rgba(31,45,61,0.12)",
+    },
+  },
+  legendItemScheduled: {
+    background: "linear-gradient(135deg, rgba(63,81,181,0.12), rgba(98,125,240,0.2))",
+    borderColor: "rgba(63,81,181,0.25)",
+    color: theme.palette.primary.dark,
+  },
+  legendItemInProgress: {
+    background: "linear-gradient(135deg, rgba(233,30,99,0.12), rgba(255,128,171,0.2))",
+    borderColor: "rgba(233,30,99,0.25)",
+    color: theme.palette.secondary.dark,
+  },
+  legendItemFinished: {
+    background: "linear-gradient(135deg, rgba(76,175,80,0.12), rgba(165,214,167,0.24))",
+    borderColor: "rgba(76,175,80,0.24)",
+    color: "#1b5e20",
+  },
+  legendItemCanceled: {
+    background: "linear-gradient(135deg, rgba(244,67,54,0.12), rgba(255,171,145,0.24))",
+    borderColor: "rgba(244,67,54,0.24)",
+    color: "#b71c1c",
+  },
+  legendItemInactive: {
+    background: "linear-gradient(135deg, rgba(120,130,160,0.14), rgba(200,205,220,0.25))",
+    borderColor: "rgba(120,130,160,0.22)",
+    color: theme.palette.text.primary,
+  },
+  legendToggle: {
+    marginLeft: "auto",
+    borderRadius: 10,
+    padding: "4px 10px",
+    border: "1px solid rgba(120,130,160,0.2)",
+    background: "rgba(255,255,255,0.9)",
+    fontWeight: 600,
+    textTransform: "none",
+  },
   tableHeader: {
     fontWeight: 'bold',
     backgroundColor: "rgba(243,246,252,0.9)",
@@ -263,6 +351,48 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
     textAlign: "center",
     color: theme.palette.text.secondary,
+  },
+  emptyStateIcon: {
+    width: 78,
+    height: 78,
+    borderRadius: "50%",
+    margin: "0 auto 16px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    background: "linear-gradient(135deg, rgba(63,81,181,0.15), rgba(25,118,210,0.25))",
+    border: "1px solid rgba(63,81,181,0.2)",
+    color: theme.palette.primary.main,
+  },
+  emptyStateButton: {
+    marginTop: theme.spacing(2),
+    borderRadius: 12,
+    textTransform: "none",
+    fontWeight: 600,
+    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    "&:hover": {
+      transform: "translateY(-1px)",
+      boxShadow: "0 14px 28px rgba(63,81,181,0.28)",
+    },
+  },
+  skeletonRow: {
+    backgroundColor: "rgba(255,255,255,0.7)",
+    borderRadius: 14,
+    "& > td": {
+      borderBottom: "none",
+      padding: theme.spacing(2, 1.5),
+    },
+  },
+  skeletonBar: {
+    height: 12,
+    borderRadius: 999,
+    background: "linear-gradient(90deg, rgba(210,215,230,0.25), rgba(230,235,245,0.9), rgba(210,215,230,0.25))",
+    backgroundSize: "200% 100%",
+    animation: "$skeletonMove 1.4s ease infinite",
+  },
+  "@keyframes skeletonMove": {
+    "0%": { backgroundPosition: "0% 50%" },
+    "100%": { backgroundPosition: "200% 50%" },
   },
 }));
 
@@ -518,6 +648,13 @@ const Campaigns = () => {
     }
   };
 
+  const [legendExpanded, setLegendExpanded] = useState(true);
+  useEffect(() => {
+    if (window.matchMedia && window.matchMedia("(max-width: 600px)").matches) {
+      setLegendExpanded(false);
+    }
+  }, []);
+
   const cancelCampaign = async (campaign) => {
     try {
       await api.post(`/campaigns/${campaign.id}/cancel`);
@@ -647,6 +784,69 @@ const Campaigns = () => {
                 {i18n.t("campaigns.summary.inactive")}
                 <span className={classes.summaryCount}>{campaignStats.inactive}</span>
               </span>
+            </Paper>
+
+            <Paper className={classes.quickActions}>
+              <span className={classes.quickActionsTitle}>{i18n.t("campaigns.quickActions.title")}</span>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleOpenCampaignModal}
+                className={classes.quickActionButton}
+              >
+                {i18n.t("campaigns.buttons.add")}
+              </Button>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={() => history.push("/contact-lists")}
+                className={classes.quickActionButton}
+              >
+                {i18n.t("campaigns.buttons.contactLists")}
+              </Button>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={() => history.push("/campaigns-config")}
+                className={classes.quickActionButton}
+              >
+                {i18n.t("campaigns.subMenus.settings")}
+              </Button>
+            </Paper>
+
+            <Paper className={classes.legend}>
+              <span className={classes.legendTitle}>{i18n.t("campaigns.table.status")}</span>
+              {legendExpanded && (
+                <>
+                  <span className={`${classes.legendItem} ${classes.legendItemScheduled}`}>
+                    <ScheduleIcon fontSize="small" color="primary" />
+                    {i18n.t("campaigns.status.scheduled")}
+                  </span>
+                  <span className={`${classes.legendItem} ${classes.legendItemInProgress}`}>
+                    <PlayCircleOutlineIcon fontSize="small" color="secondary" />
+                    {i18n.t("campaigns.status.inProgress")}
+                  </span>
+                  <span className={`${classes.legendItem} ${classes.legendItemFinished}`}>
+                    <CheckCircleOutlineIcon fontSize="small" style={{ color: "#2e7d32" }} />
+                    {i18n.t("campaigns.status.finished")}
+                  </span>
+                  <span className={`${classes.legendItem} ${classes.legendItemCanceled}`}>
+                    <StopIcon fontSize="small" style={{ color: "#c62828" }} />
+                    {i18n.t("campaigns.status.canceled")}
+                  </span>
+                  <span className={`${classes.legendItem} ${classes.legendItemInactive}`}>
+                    <RadioButtonUncheckedIcon fontSize="small" style={{ color: "#6b7280" }} />
+                    {i18n.t("campaigns.status.inactive")}
+                  </span>
+                </>
+              )}
+              <Button
+                className={classes.legendToggle}
+                onClick={() => setLegendExpanded((prev) => !prev)}
+                size="small"
+              >
+                {legendExpanded ? i18n.t("campaigns.legend.hide") : i18n.t("campaigns.legend.show")}
+              </Button>
             </Paper>
 
             {/* Filtros */}
@@ -885,13 +1085,35 @@ const Campaigns = () => {
                       </TableRow>
                     ))}
                     {loading && <TableRowSkeleton columns={10} />}
+                    {loading && campaigns.length === 0 && (
+                      <>
+                        {[0, 1, 2, 3].map((key) => (
+                          <TableRow key={`skeleton-${key}`} className={classes.skeletonRow}>
+                            <TableCell colSpan={10}>
+                              <div className={classes.skeletonBar} style={{ width: `${60 + key * 8}%` }} />
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </>
+                    )}
                     {!loading && campaigns.length === 0 && (
                       <TableRow>
                         <TableCell align="center" colSpan={10} className={classes.emptyState}>
+                          <div className={classes.emptyStateIcon}>
+                            <ScheduleIcon fontSize="large" />
+                          </div>
                           <div style={{ fontWeight: 600, marginBottom: 6 }}>
                             {i18n.t("campaigns.emptyState.title")}
                           </div>
                           <div>{i18n.t("campaigns.emptyState.description")}</div>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleOpenCampaignModal}
+                            className={classes.emptyStateButton}
+                          >
+                            {i18n.t("campaigns.buttons.add")}
+                          </Button>
                         </TableCell>
                       </TableRow>
                     )}

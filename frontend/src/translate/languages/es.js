@@ -1334,6 +1334,14 @@ const messages = {
         toasts: {
           deleted: "Registro eliminado exitosamente.",
         },
+        summary: {
+          totalLists: "Total de listas",
+          totalContacts: "Total de contactos",
+        },
+        emptyState: {
+          title: "No se encontraron listas",
+          description: "Crea tu primera lista de contactos.",
+        },
       },
       contactListItems: {
         title: "Contactos",
@@ -1473,6 +1481,13 @@ const messages = {
           finished: "Finalizado",
           recurring: "Recurrente",
           single: "Individual",
+        },
+        quickActions: {
+          title: "Acciones rápidas",
+        },
+        legend: {
+          show: "Mostrar leyenda",
+          hide: "Ocultar leyenda",
         },
         summary: {
           total: "Total",

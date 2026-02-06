@@ -82,11 +82,154 @@ const reducer = (state, action) => {
 };
 
 const useStyles = makeStyles((theme) => ({
+  headerCard: {
+    width: "100%",
+    borderRadius: 18,
+    padding: theme.spacing(2),
+    background: "linear-gradient(135deg, rgba(255,255,255,0.85), rgba(245,248,255,0.9))",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 18px 45px rgba(31, 45, 61, 0.08)",
+  },
+  headerTitle: {
+    fontWeight: 700,
+    letterSpacing: 0.2,
+  },
+  searchField: {
+    "& .MuiOutlinedInput-root": {
+      borderRadius: 14,
+      backgroundColor: "rgba(255,255,255,0.85)",
+      border: "1px solid rgba(120,130,160,0.25)",
+      transition: "box-shadow 0.2s ease, border-color 0.2s ease",
+      "&:hover": {
+        borderColor: "rgba(120,130,160,0.45)",
+      },
+      "&.Mui-focused": {
+        boxShadow: "0 0 0 3px rgba(63,81,181,0.12)",
+        borderColor: theme.palette.primary.main,
+      },
+    },
+    "& .MuiOutlinedInput-input": {
+      padding: "10px 12px",
+    },
+  },
+  addButton: {
+    height: 44,
+    borderRadius: 14,
+    fontWeight: 600,
+    textTransform: "none",
+    background: "linear-gradient(135deg, rgba(63,81,181,0.9), rgba(25,118,210,0.95))",
+    boxShadow: "0 12px 28px rgba(63,81,181,0.3)",
+  },
+  summaryBar: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: theme.spacing(1),
+    alignItems: "center",
+    padding: theme.spacing(1.5),
+    borderRadius: 16,
+    background: "rgba(255,255,255,0.85)",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 12px 30px rgba(31, 45, 61, 0.06)",
+  },
+  summaryChip: {
+    borderRadius: 999,
+    padding: "2px 6px",
+    background: "rgba(63,81,181,0.08)",
+    border: "1px solid rgba(63,81,181,0.2)",
+    fontWeight: 600,
+  },
+  summaryCount: {
+    marginLeft: 6,
+    fontWeight: 700,
+  },
   mainPaper: {
     flex: 1,
-    padding: theme.spacing(1),
-    overflowY: "scroll",
+    padding: theme.spacing(1.5),
+    borderRadius: 18,
+    background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(248,250,255,0.95) 100%)",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 20px 55px rgba(31, 45, 61, 0.08)",
+    overflowY: "auto",
     ...theme.scrollbarStyles,
+  },
+  tableHeader: {
+    fontWeight: 700,
+    backgroundColor: "rgba(243,246,252,0.9)",
+    color: theme.palette.text.secondary,
+    borderBottom: "1px solid rgba(120,130,160,0.2)",
+  },
+  table: {
+    borderCollapse: "separate",
+    borderSpacing: "0 10px",
+  },
+  tableRow: {
+    backgroundColor: "rgba(255,255,255,0.85)",
+    boxShadow: "0 8px 18px rgba(31,45,61,0.06)",
+    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    "&:hover": {
+      transform: "translateY(-2px)",
+      boxShadow: "0 16px 30px rgba(31,45,61,0.12)",
+    },
+    "& > td": {
+      borderBottom: "none",
+    },
+    "& td:first-child": {
+      borderTopLeftRadius: 14,
+      borderBottomLeftRadius: 14,
+    },
+    "& td:last-child": {
+      borderTopRightRadius: 14,
+      borderBottomRightRadius: 14,
+    },
+  },
+  countChip: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 6,
+    padding: "4px 10px",
+    borderRadius: 999,
+    background: "rgba(63,81,181,0.08)",
+    border: "1px solid rgba(63,81,181,0.2)",
+    fontWeight: 600,
+  },
+  actionButton: {
+    borderRadius: 10,
+    padding: 6,
+    border: "1px solid rgba(120,130,160,0.2)",
+    backgroundColor: "rgba(255,255,255,0.8)",
+    transition: "all 0.2s ease",
+    "&:hover": {
+      backgroundColor: "rgba(63,81,181,0.08)",
+      borderColor: "rgba(63,81,181,0.35)",
+    },
+  },
+  emptyState: {
+    padding: theme.spacing(3),
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+  },
+  emptyStateIcon: {
+    width: 78,
+    height: 78,
+    borderRadius: "50%",
+    margin: "0 auto 16px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    background: "linear-gradient(135deg, rgba(63,81,181,0.15), rgba(25,118,210,0.25))",
+    border: "1px solid rgba(63,81,181,0.2)",
+    color: theme.palette.primary.main,
+  },
+  emptyStateButton: {
+    marginTop: theme.spacing(2),
+    borderRadius: 12,
+    textTransform: "none",
+    fontWeight: 600,
+    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    "&:hover": {
+      transform: "translateY(-1px)",
+      boxShadow: "0 14px 28px rgba(63,81,181,0.28)",
+    },
   },
 }));
 
@@ -200,6 +343,15 @@ const ContactLists = () => {
     history.push(`/contact-lists/${id}/contacts`);
   };
 
+  const summary = contactLists.reduce(
+    (acc, list) => {
+      acc.lists += 1;
+      acc.contacts += list.contactsCount || 0;
+      return acc;
+    },
+    { lists: 0, contacts: 0 }
+  );
+
   return (
     <MainContainer>
       <ConfirmationModal
@@ -221,19 +373,22 @@ const ContactLists = () => {
         contactListId={selectedContactList && selectedContactList.id}
       />
       <MainHeader>
-        <Grid style={{ width: "99.6%" }} container>
+        <Grid style={{ width: "100%" }} container className={classes.headerCard} spacing={2}>
           <Grid xs={12} sm={8} item>
-            <Title>{i18n.t("contactLists.title")}</Title>
+            <Title className={classes.headerTitle}>{i18n.t("contactLists.title")}</Title>
           </Grid>
           <Grid xs={12} sm={4} item>
             <Grid spacing={2} container>
-              <Grid xs={7} sm={6} item>
+              <Grid xs={12} sm={6} item>
                 <TextField
                   fullWidth
+                  variant="outlined"
+                  size="small"
                   placeholder={i18n.t("contacts.searchPlaceholder")}
                   type="search"
                   value={searchParam}
                   onChange={handleSearch}
+                  className={classes.searchField}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -243,12 +398,13 @@ const ContactLists = () => {
                   }}
                 />
               </Grid>
-              <Grid xs={5} sm={6} item>
+              <Grid xs={12} sm={6} item>
                 <Button
                   fullWidth
                   variant="contained"
                   color="primary"
                   onClick={handleOpenContactListModal}
+                  className={classes.addButton}
                 >
                   {i18n.t("contactLists.buttons.add")}
                 </Button>
@@ -257,34 +413,56 @@ const ContactLists = () => {
           </Grid>
         </Grid>
       </MainHeader>
+      <Paper className={classes.summaryBar}>
+        <span className={classes.summaryChip}>
+          {i18n.t("contactLists.summary.totalLists")}
+          <span className={classes.summaryCount}>{summary.lists}</span>
+        </span>
+        <span className={classes.summaryChip}>
+          {i18n.t("contactLists.summary.totalContacts")}
+          <span className={classes.summaryCount}>{summary.contacts}</span>
+        </span>
+      </Paper>
       <Paper
         className={classes.mainPaper}
         variant="outlined"
         onScroll={handleScroll}
       >
-        <Table size="small">
+        <Table size="small" className={classes.table}>
           <TableHead>
             <TableRow>
-              <TableCell align="center">{i18n.t("contactLists.table.name")}</TableCell>
-              <TableCell align="center">{i18n.t("contactLists.table.contacts")}</TableCell>
-              <TableCell align="center">{i18n.t("contactLists.table.actions")}</TableCell>
+              <TableCell align="center" className={classes.tableHeader}>
+                {i18n.t("contactLists.table.name")}
+              </TableCell>
+              <TableCell align="center" className={classes.tableHeader}>
+                {i18n.t("contactLists.table.contacts")}
+              </TableCell>
+              <TableCell align="center" className={classes.tableHeader}>
+                {i18n.t("contactLists.table.actions")}
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             <>
               {contactLists.map((contactList) => (
-                <TableRow key={contactList.id}>
+                <TableRow key={contactList.id} className={classes.tableRow}>
                   <TableCell align="center">{contactList.name}</TableCell>
-                  <TableCell align="center">{contactList.contactsCount || 0}</TableCell>
+                  <TableCell align="center">
+                    <span className={classes.countChip}>
+                      <PeopleIcon fontSize="small" color="primary" />
+                      {contactList.contactsCount || 0}
+                    </span>
+                  </TableCell>
                   <TableCell align="center">
                     <a href={planilhaExemplo} download="planilha.xlsx">
-                      <IconButton size="small" title={i18n.t("contactLists.buttons.downloadExample")}>
+                      <IconButton size="small" className={classes.actionButton} title={i18n.t("contactLists.buttons.downloadExample")}>
                         <DownloadIcon />
                       </IconButton>
                     </a>
 
                     <IconButton
                       size="small"
+                      className={classes.actionButton}
                       onClick={() => goToContacts(contactList.id)}
                       title={i18n.t("contactLists.buttons.viewContacts")}
                     >
@@ -293,6 +471,7 @@ const ContactLists = () => {
 
                     <IconButton
                       size="small"
+                      className={classes.actionButton}
                       onClick={() => handleEditContactList(contactList)}
                       title={i18n.t("contactLists.buttons.edit")}
                     >
@@ -301,6 +480,7 @@ const ContactLists = () => {
 
                     <IconButton
                       size="small"
+                      className={classes.actionButton}
                       onClick={(e) => {
                         setConfirmModalOpen(true);
                         setDeletingContactList(contactList);
@@ -313,6 +493,27 @@ const ContactLists = () => {
                 </TableRow>
               ))}
               {loading && <TableRowSkeleton columns={3} />}
+              {!loading && contactLists.length === 0 && (
+                <TableRow>
+                  <TableCell align="center" colSpan={3} className={classes.emptyState}>
+                    <div className={classes.emptyStateIcon}>
+                      <PeopleIcon fontSize="large" />
+                    </div>
+                    <div style={{ fontWeight: 600, marginBottom: 6 }}>
+                      {i18n.t("contactLists.emptyState.title")}
+                    </div>
+                    <div>{i18n.t("contactLists.emptyState.description")}</div>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleOpenContactListModal}
+                      className={classes.emptyStateButton}
+                    >
+                      {i18n.t("contactLists.buttons.add")}
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              )}
             </>
           </TableBody>
         </Table>
