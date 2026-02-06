@@ -9,6 +9,7 @@ import api from "../../services/api";
 import toastError from "../../errors/toastError";
 import { socketConnection } from "../../services/socket";
 import moment from "moment";
+import { setCurrentCurrency } from "../../utils/currencyUtils";
 
 const useAuth = () => {
   const history = useHistory();
@@ -22,6 +23,13 @@ const useAuth = () => {
   const reconnectTimeoutRef = useRef(null);
   const reconnectAttemptsRef = useRef(0);
   const maxReconnectAttempts = 5;
+  
+  const applyCompanyCurrency = (company) => {
+    const currencyCode = company?.currency;
+    if (currencyCode) {
+      setCurrentCurrency(currencyCode);
+    }
+  };
 
   // Interceptors do API (mantém como estava)
   api.interceptors.request.use(
@@ -84,7 +92,9 @@ const useAuth = () => {
           const { data } = await api.post("/auth/refresh_token");
           api.defaults.headers.Authorization = `Bearer ${data.token}`;
           setIsAuth(true);
-          setUser(data.user || data);
+          const refreshedUser = data.user || data;
+          setUser(refreshedUser);
+          applyCompanyCurrency(refreshedUser?.company);
         } catch (err) {
           // Se falhar o refresh_token, limpar o token inválido
           localStorage.removeItem("token");
@@ -199,7 +209,9 @@ const useAuth = () => {
     const fetchCurrentUser = async () => {
       try {
         const { data } = await api.get("/auth/me");
-        setUser(data.user || data);
+        const currentUser = data.user || data;
+        setUser(currentUser);
+        applyCompanyCurrency(currentUser?.company);
       } catch (err) {
         console.log("Erro ao buscar usuário atual:", err);
       }
@@ -269,6 +281,7 @@ const useAuth = () => {
         localStorage.setItem("companyDueDate", vencimento);
         api.defaults.headers.Authorization = `Bearer ${data.token}`;
         setUser(data.user || data);
+        applyCompanyCurrency(company);
         setIsAuth(true);
         toast.success(i18n.t("auth.toasts.success"));
         
@@ -323,7 +336,8 @@ Entre em contato com o Suporte para mais informações! `);
       "redirectAfterLogin",
       "user",
       "companyId",
-      "sendSignMessage"
+      "sendSignMessage",
+      "selectedCurrency"
     ];
     
     keysToRemove.forEach(key => localStorage.removeItem(key));

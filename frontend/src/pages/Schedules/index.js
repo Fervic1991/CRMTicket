@@ -118,16 +118,107 @@ const reducer = (state, action) => {
 const useStyles = makeStyles((theme) => ({
   mainPaper: {
     flex: 1,
-    padding: theme.spacing(1),
+    padding: theme.spacing(2),
     overflowY: "scroll",
     ...theme.scrollbarStyles,
+    background:
+      theme.palette.mode === "dark"
+        ? "linear-gradient(180deg, rgba(20,24,38,0.98) 0%, rgba(12,14,22,0.98) 100%)"
+        : "linear-gradient(180deg, #ffffff 0%, #f5f7ff 100%)",
+    border: theme.palette.mode === "dark"
+      ? "1px solid rgba(255,255,255,0.06)"
+      : "1px solid rgba(99,102,241,0.12)",
+    borderRadius: 18,
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 24px 48px rgba(0,0,0,0.35)"
+        : "0 24px 48px rgba(15,23,42,0.08)",
+  },
+  headerCard: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: theme.spacing(2),
+    padding: theme.spacing(2),
+    borderRadius: 18,
+    background:
+      theme.palette.mode === "dark"
+        ? "linear-gradient(135deg, rgba(76,110,245,0.35) 0%, rgba(15,118,110,0.25) 100%)"
+        : "linear-gradient(135deg, rgba(59,130,246,0.16) 0%, rgba(14,165,233,0.12) 45%, rgba(16,185,129,0.12) 100%)",
+    border: theme.palette.mode === "dark"
+      ? "1px solid rgba(148,163,184,0.18)"
+      : "1px solid rgba(148,163,184,0.3)",
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 18px 36px rgba(0,0,0,0.35)"
+        : "0 18px 36px rgba(15,23,42,0.08)",
+  },
+  headerTitle: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 4,
+    color: theme.palette.mode === "dark" ? "#f8fafc" : "#0f172a",
+  },
+  headerMeta: {
+    fontSize: 12,
+    fontWeight: 500,
+    color: theme.palette.mode === "dark" ? "rgba(248,250,252,0.7)" : "#475569",
+  },
+  headerActions: {
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(1),
+  },
+  searchField: {
+    minWidth: 240,
+    "& .MuiInputBase-root": {
+      borderRadius: 12,
+      background:
+        theme.palette.mode === "dark"
+          ? "rgba(15,23,42,0.7)"
+          : "rgba(255,255,255,0.9)",
+      boxShadow:
+        theme.palette.mode === "dark"
+          ? "0 12px 24px rgba(0,0,0,0.35)"
+          : "0 12px 24px rgba(15,23,42,0.08)",
+    },
+  },
+  addButton: {
+    borderRadius: 12,
+    padding: theme.spacing(1.2, 2.6),
+    fontWeight: 600,
+    textTransform: "none",
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 12px 30px rgba(56,189,248,0.35)"
+        : "0 12px 30px rgba(59,130,246,0.25)",
   },
   calendarToolbar: {
+    "& .rbc-toolbar": {
+      gap: theme.spacing(1),
+      marginBottom: theme.spacing(2),
+    },
     "& .rbc-toolbar-label": {
       color: theme.mode === "light" ? theme.palette.light : "white",
+      fontWeight: 600,
+      letterSpacing: 0.3,
     },
     "& .rbc-btn-group button": {
       color: theme.mode === "light" ? theme.palette.light : "white",
+      borderRadius: 10,
+      border:
+        theme.palette.mode === "dark"
+          ? "1px solid rgba(148,163,184,0.25)"
+          : "1px solid rgba(148,163,184,0.35)",
+      background:
+        theme.palette.mode === "dark"
+          ? "rgba(15,23,42,0.7)"
+          : "rgba(255,255,255,0.9)",
+      boxShadow:
+        theme.palette.mode === "dark"
+          ? "0 8px 16px rgba(0,0,0,0.35)"
+          : "0 8px 16px rgba(15,23,42,0.08)",
       "&:hover": {
         color: theme.palette.mode === "dark" ? "#fff" : "#000",
       },
@@ -139,6 +230,10 @@ const useStyles = makeStyles((theme) => ({
       },
       "&.rbc-active": {
         color: theme.palette.mode === "dark" ? "#fff" : "#000",
+        background:
+          theme.palette.mode === "dark"
+            ? "rgba(56,189,248,0.2)"
+            : "rgba(59,130,246,0.18)",
       },
     },
   },
@@ -324,31 +419,45 @@ const Schedules = () => {
         />
       )}
       <MainHeader>
-        <Title>
-          {i18n.t("schedules.title")} ({schedules.length})
-        </Title>
-        <MainHeaderButtonsWrapper>
-          <TextField
-            placeholder={i18n.t("contacts.searchPlaceholder")}
-            type="search"
-            value={searchParam}
-            onChange={handleSearch}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon style={{ color: "gray" }} />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleOpenScheduleModal}
-          >
-            {i18n.t("schedules.buttons.add")}
-          </Button>
-        </MainHeaderButtonsWrapper>
+        <div className={classes.headerCard}>
+          <div className={classes.headerTitle}>
+            <Title>
+              {i18n.t("schedules.title")} ({schedules.length})
+            </Title>
+            <span className={classes.headerMeta}>
+              {i18n.t("schedules.month")} · {i18n.t("schedules.week")} ·{" "}
+              {i18n.t("schedules.day")}
+            </span>
+          </div>
+          <div className={classes.headerActions}>
+            <MainHeaderButtonsWrapper>
+              <TextField
+                className={classes.searchField}
+                placeholder={i18n.t("contacts.searchPlaceholder")}
+                type="search"
+                value={searchParam}
+                onChange={handleSearch}
+                variant="outlined"
+                size="small"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon style={{ color: "gray" }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <Button
+                className={classes.addButton}
+                variant="contained"
+                color="primary"
+                onClick={handleOpenScheduleModal}
+              >
+                {i18n.t("schedules.buttons.add")}
+              </Button>
+            </MainHeaderButtonsWrapper>
+          </div>
+        </div>
       </MainHeader>
       <Paper
         className={classes.mainPaper}

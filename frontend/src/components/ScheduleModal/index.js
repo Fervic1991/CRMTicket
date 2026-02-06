@@ -53,6 +53,77 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexWrap: "wrap",
   },
+  dialogPaper: {
+    borderRadius: 20,
+    overflow: "hidden",
+    background:
+      theme.palette.mode === "dark"
+        ? "linear-gradient(180deg, rgba(15,23,42,0.98) 0%, rgba(10,14,24,0.98) 100%)"
+        : "linear-gradient(180deg, #ffffff 0%, #f6f8ff 100%)",
+    border:
+      theme.palette.mode === "dark"
+        ? "1px solid rgba(148,163,184,0.18)"
+        : "1px solid rgba(148,163,184,0.35)",
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 30px 70px rgba(0,0,0,0.45)"
+        : "0 30px 70px rgba(15,23,42,0.12)",
+  },
+  dialogTitle: {
+    padding: theme.spacing(2.5, 3),
+    background:
+      theme.palette.mode === "dark"
+        ? "linear-gradient(135deg, rgba(59,130,246,0.35), rgba(14,165,233,0.2))"
+        : "linear-gradient(135deg, rgba(59,130,246,0.18), rgba(16,185,129,0.16))",
+    color: theme.palette.mode === "dark" ? "#f8fafc" : "#0f172a",
+  },
+  dialogContent: {
+    padding: theme.spacing(3),
+  },
+  formControl: {
+    "& .MuiInputBase-root": {
+      borderRadius: 12,
+      background:
+        theme.palette.mode === "dark"
+          ? "rgba(15,23,42,0.7)"
+          : "rgba(255,255,255,0.95)",
+    },
+  },
+  multFieldLine: {
+    marginBottom: theme.spacing(2),
+  },
+  sectionTitle: {
+    marginTop: theme.spacing(2.5),
+    marginBottom: theme.spacing(0.5),
+    fontSize: 16,
+    fontWeight: 600,
+    color: theme.palette.mode === "dark" ? "#e2e8f0" : "#0f172a",
+  },
+  sectionSubtitle: {
+    marginBottom: theme.spacing(2),
+    color: theme.palette.mode === "dark" ? "rgba(226,232,240,0.7)" : "#475569",
+  },
+  dialogActions: {
+    padding: theme.spacing(2.5, 3),
+    background:
+      theme.palette.mode === "dark"
+        ? "rgba(15,23,42,0.6)"
+        : "rgba(248,250,252,0.9)",
+    borderTop:
+      theme.palette.mode === "dark"
+        ? "1px solid rgba(148,163,184,0.15)"
+        : "1px solid rgba(148,163,184,0.2)",
+  },
+  primaryButton: {
+    borderRadius: 12,
+    padding: theme.spacing(1, 2.6),
+    fontWeight: 600,
+    textTransform: "none",
+  },
+  outlineButton: {
+    borderRadius: 12,
+    textTransform: "none",
+  },
   btnWrapper: {
     position: "relative",
   },
@@ -445,8 +516,9 @@ const ScheduleModal = ({
         maxWidth="md"
         fullWidth
         scroll="paper"
+        classes={{ paper: classes.dialogPaper }}
       >
-        <DialogTitle id="form-dialog-title">
+        <DialogTitle id="form-dialog-title" className={classes.dialogTitle}>
           {schedule.status === "ERRO"
             ? i18n.t("scheduleModal.title.sendError")
             : scheduleId
@@ -474,7 +546,7 @@ const ScheduleModal = ({
         >
           {({ touched, errors, isSubmitting, values, setFieldValue }) => (
             <Form>
-              <DialogContent dividers>
+              <DialogContent dividers className={classes.dialogContent}>
                 <div className={classes.multFieldLine}>
                   <FormControl variant="outlined" fullWidth>
                     <Autocomplete
@@ -498,6 +570,7 @@ const ScheduleModal = ({
                         <TextField
                           {...params}
                           variant="outlined"
+                          className={classes.formControl}
                           placeholder={i18n.t("scheduleModal.form.contact")}
                         />
                       )}
@@ -516,6 +589,7 @@ const ScheduleModal = ({
                     helperText={touched.body && errors.body}
                     variant="outlined"
                     margin="dense"
+                    className={classes.formControl}
                     fullWidth
                   />
                 </div>
@@ -722,6 +796,7 @@ const ScheduleModal = ({
                       variant="outlined"
                       fullWidth
                       size="small"
+                      className={classes.formControl}
                       style={{ marginTop: "8px" }}
                     />
                   </Grid>
@@ -741,12 +816,12 @@ const ScheduleModal = ({
                   </Grid>
                 </Grid>
 
-                <h3>{i18n.t("recurrenceSection.title")}</h3>
-                <p>{i18n.t("recurrenceSection.description")}</p>
+                <h3 className={classes.sectionTitle}>{i18n.t("recurrenceSection.title")}</h3>
+                <p className={classes.sectionSubtitle}>{i18n.t("recurrenceSection.description")}</p>
                 <br />
                 <Grid container spacing={1}>
                   <Grid item xs={12} md={4} xl={4}>
-                    <FormControl size="small" fullWidth variant="outlined">
+                    <FormControl size="small" fullWidth variant="outlined" className={classes.formControl}>
                       <InputLabel id="demo-simple-select-label">
                         {i18n.t("recurrenceSection.labelInterval")}
                       </InputLabel>
@@ -784,6 +859,7 @@ const ScheduleModal = ({
                       }
                       InputLabelProps={{ shrink: true }}
                       variant="outlined"
+                      className={classes.formControl}
                       fullWidth
                     />
                   </Grid>
@@ -798,11 +874,12 @@ const ScheduleModal = ({
                         Boolean(errors.enviarQuantasVezes)
                       }
                       variant="outlined"
+                      className={classes.formControl}
                       fullWidth
                     />
                   </Grid>
                   <Grid item xs={12} md={12} xl={12}>
-                    <FormControl size="small" fullWidth variant="outlined">
+                    <FormControl size="small" fullWidth variant="outlined" className={classes.formControl}>
                       <InputLabel id="demo-simple-select-label">
                         {i18n.t("recurrenceSection.sendAsManyTimes")}
                       </InputLabel>
@@ -843,13 +920,14 @@ const ScheduleModal = ({
                   </Grid>
                 )}
               </DialogContent>
-              <DialogActions>
+              <DialogActions className={classes.dialogActions}>
                 {!attachment && !schedule.mediaPath && (
                   <Button
                     color="primary"
                     onClick={() => attachmentFile.current.click()}
                     disabled={isSubmitting}
                     variant="outlined"
+                    className={classes.outlineButton}
                   >
                     {i18n.t("quickMessages.buttons.attach")}
                   </Button>
@@ -859,6 +937,7 @@ const ScheduleModal = ({
                   color="secondary"
                   disabled={isSubmitting}
                   variant="outlined"
+                  className={classes.outlineButton}
                 >
                   {i18n.t("scheduleModal.buttons.cancel")}
                 </Button>
@@ -868,7 +947,7 @@ const ScheduleModal = ({
                     color="primary"
                     disabled={isSubmitting}
                     variant="contained"
-                    className={classes.btnWrapper}
+                    className={`${classes.btnWrapper} ${classes.primaryButton}`}
                   >
                     {scheduleId
                       ? `${i18n.t("scheduleModal.buttons.okEdit")}`
