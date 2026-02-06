@@ -1086,7 +1086,7 @@ const messages = {
           transfer: "Trasferisci",
           ignore: "Ignora",
           exportAsPDF: "Esporta in PDF",
-          kanbanActions: "Opzioni Kanban",
+          kanbanActions: "Opzioni Workflow",
         },
         acceptModal: {
           title: "Accetta Chat",
@@ -1136,7 +1136,7 @@ const messages = {
           financeiro: "Finanziario",
           queueIntegration: "Integrazioni",
           version: "Versione",
-          kanban: "Kanban",
+          kanban: "Workflow",
           prompts: "Talk.AI",
           allConnections: "Gestisci Connessioni",
           reports: "Report",
@@ -1242,6 +1242,8 @@ const messages = {
       },
       notifications: {
         noTickets: "Nessuna notifica.",
+        openChat: "Apri chat",
+        newMessage: "Nuovo messaggio",
       },
       quickMessages: {
         title: "Risposte Rapide",
@@ -1399,7 +1401,7 @@ const messages = {
         },
       },
       kanban: {
-        title: "Kanban",
+        title: "Workflow",
         searchPlaceholder: "Cerca",
         subMenus: {
           list: "Bacheca",
@@ -2004,7 +2006,7 @@ const messages = {
         table: {
           id: "ID",
           name: "Nome",
-          kanban: "Kanban",
+          kanban: "Workflow",
           color: "Colore",
           tickets: "Registri Etichetta",
           contacts: "Contatti",
@@ -2382,6 +2384,16 @@ const messages = {
         open: "Aperto",
         attentionMessage: "Attenzione:",
         expiredWarning: "Il tuo abbonamento è scaduto. Contatta il supporto per regolarizzare la tua situazione.",
+        summary: {
+          total: "Totale",
+          open: "Aperte",
+          paid: "Pagate",
+          expired: "Scadute",
+        },
+        emptyState: {
+          title: "Nessuna fattura trovata",
+          description: "Non ci sono fatture da mostrare.",
+        },
         yes: "Sì",
         no: "No",
       },

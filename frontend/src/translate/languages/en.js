@@ -1097,7 +1097,7 @@ const messages = {
           transfer: "Transfer",
           ignore: "Ignore",
           exportAsPDF: "Export to PDF",
-          kanbanActions: "Kanban Options",
+          kanbanActions: "Workflow Options",
         },
         acceptModal: {
           title: "Accept Chat",
@@ -1147,7 +1147,7 @@ const messages = {
           financeiro: "Financial",
           queueIntegration: "Integrations",
           version: "Version",
-          kanban: "Kanban",
+          kanban: "Workflow",
           prompts: "Talk.AI",
           allConnections: "Manage Connections",
           reports: "Reports",
@@ -1253,6 +1253,8 @@ const messages = {
       },
       notifications: {
         noTickets: "No notifications.",
+        openChat: "Open chat",
+        newMessage: "New message",
       },
       quickMessages: {
         title: "Quick Replies",
@@ -1410,7 +1412,7 @@ const messages = {
         },
       },
       kanban: {
-        title: "Kanban",
+        title: "Workflow",
         searchPlaceholder: "Search",
         subMenus: {
           list: "Board",
@@ -2016,7 +2018,7 @@ const messages = {
         table: {
           id: "ID",
           name: "Name",
-          kanban: "Kanban",
+          kanban: "Workflow",
           color: "Color",
           tickets: "Tag Records",
           contacts: "Contacts",
@@ -2394,6 +2396,16 @@ const messages = {
         open: "Open",
         attentionMessage: "Attention:",
         expiredWarning: "Your subscription has expired. Please contact support to regularize your situation.",
+        summary: {
+          total: "Total",
+          open: "Open",
+          paid: "Paid",
+          expired: "Expired",
+        },
+        emptyState: {
+          title: "No invoices found",
+          description: "There are no invoices to display.",
+        },
         yes: "Yes",
         no: "No",
       },

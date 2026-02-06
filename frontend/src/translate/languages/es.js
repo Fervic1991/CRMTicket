@@ -1088,7 +1088,7 @@ const messages = {
           transfer: "Transferir",
           ignore: "Ignorar",
           exportAsPDF: "Exportar a PDF",
-          kanbanActions: "Opciones de Kanban",
+          kanbanActions: "Opciones de Workflow",
         },
         acceptModal: {
           title: "Aceptar Chat",
@@ -1138,7 +1138,7 @@ const messages = {
           financeiro: "Financiero",
           queueIntegration: "Integraciones",
           version: "Versión",
-          kanban: "Kanban",
+          kanban: "Workflow",
           prompts: "Talk.AI",
           allConnections: "Gestionar Conexiones",
           reports: "Reportes",
@@ -1244,6 +1244,8 @@ const messages = {
       },
       notifications: {
         noTickets: "Sin notificaciones.",
+        openChat: "Abrir chat",
+        newMessage: "Nuevo mensaje",
       },
       quickMessages: {
         title: "Respuestas Rápidas",
@@ -1401,7 +1403,7 @@ const messages = {
         },
       },
       kanban: {
-        title: "Kanban",
+        title: "Workflow",
         searchPlaceholder: "Buscar",
         subMenus: {
           list: "Tablero",
@@ -2006,7 +2008,7 @@ const messages = {
         table: {
           id: "ID",
           name: "Nombre",
-          kanban: "Kanban",
+          kanban: "Workflow",
           color: "Color",
           tickets: "Registros de Etiqueta",
           contacts: "Contactos",
@@ -2384,6 +2386,16 @@ const messages = {
         open: "Abierto",
         attentionMessage: "Atención:",
         expiredWarning: "Tu suscripción ha vencido. Por favor contacta soporte para regularizar tu situación.",
+        summary: {
+          total: "Total",
+          open: "Abiertas",
+          paid: "Pagadas",
+          expired: "Vencidas",
+        },
+        emptyState: {
+          title: "No se encontraron facturas",
+          description: "No hay facturas para mostrar.",
+        },
         yes: "Sí",
         no: "No",
       },

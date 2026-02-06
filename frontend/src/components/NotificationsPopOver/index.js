@@ -15,6 +15,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
 import Badge from "@material-ui/core/Badge";
 import ChatIcon from "@material-ui/icons/Chat";
+import { toast } from "react-toastify";
 
 import TicketListItem from "../TicketListItem";
 import useTickets from "../../hooks/useTickets";
@@ -29,6 +30,70 @@ import defaultLogoFavicon from "../../assets/favicon.ico";
 import { TicketsContext } from "../../context/Tickets/TicketsContext";
 
 const useStyles = makeStyles(theme => ({
+	toastCard: {
+		display: "flex",
+		alignItems: "center",
+		gap: theme.spacing(1.5),
+		padding: theme.spacing(1.5),
+		borderRadius: 14,
+		background: "rgba(255,255,255,0.92)",
+		border: "1px solid rgba(120,130,160,0.18)",
+		boxShadow: "0 16px 40px rgba(31,45,61,0.18)",
+		minWidth: 280,
+		maxWidth: 360,
+	},
+	toastAvatar: {
+		width: 40,
+		height: 40,
+		borderRadius: "50%",
+		background: "linear-gradient(135deg, rgba(63,81,181,0.2), rgba(25,118,210,0.3))",
+		display: "flex",
+		alignItems: "center",
+		justifyContent: "center",
+		fontWeight: 700,
+		color: theme.palette.primary.dark,
+		flexShrink: 0,
+		overflow: "hidden",
+		border: "1px solid rgba(63,81,181,0.25)",
+	},
+	toastContent: {
+		display: "flex",
+		flexDirection: "column",
+		gap: 4,
+		flex: 1,
+		minWidth: 0,
+	},
+	toastTitle: {
+		fontWeight: 700,
+		fontSize: "0.9rem",
+		color: theme.palette.text.primary,
+		whiteSpace: "nowrap",
+		overflow: "hidden",
+		textOverflow: "ellipsis",
+	},
+	toastMessage: {
+		fontSize: "0.82rem",
+		color: theme.palette.text.secondary,
+		whiteSpace: "nowrap",
+		overflow: "hidden",
+		textOverflow: "ellipsis",
+	},
+	toastTime: {
+		fontSize: "0.75rem",
+		color: theme.palette.text.secondary,
+	},
+	toastButton: {
+		marginTop: 4,
+		borderRadius: 10,
+		padding: "4px 10px",
+		textTransform: "none",
+		fontWeight: 600,
+		fontSize: "0.78rem",
+		background: "linear-gradient(135deg, rgba(63,81,181,0.9), rgba(33,150,243,0.95))",
+		color: "#fff",
+		border: "none",
+		cursor: "pointer",
+	},
 	tabContainer: {
 		overflowY: "auto",
 		maxHeight: 350,
@@ -79,6 +144,7 @@ const NotificationsPopOver = (volume) => {
 
 	const [play] = useSound(alertSound, volume);
 	const soundAlertRef = useRef();
+	const toastGuardRef = useRef(new Map());
 
 	const historyRef = useRef(history);
 
@@ -287,6 +353,53 @@ const onCompanyAppMessageNotificationsPopover = (data) => {
 			});
 		}
 		
+		// Toast in-app (glass) notification
+		const now = Date.now();
+		const lastTime = toastGuardRef.current.get(ticket.id) || 0;
+		if (now - lastTime > 4000) {
+			toastGuardRef.current.set(ticket.id, now);
+			const initials = contact?.name
+				? contact.name
+						.trim()
+						.split(/\s+/)
+						.slice(0, 2)
+						.map(part => part.charAt(0).toUpperCase())
+						.join("")
+				: "?";
+
+			toast(
+				<div className={classes.toastCard}>
+					{contact?.urlPicture ? (
+						<img src={contact.urlPicture} alt={contact.name} className={classes.toastAvatar} />
+					) : (
+						<div className={classes.toastAvatar}>{initials}</div>
+					)}
+					<div className={classes.toastContent}>
+						<div className={classes.toastTitle}>{contact?.name || i18n.t("notifications.newMessage")}</div>
+						<div className={classes.toastMessage}>{message.body}</div>
+						<div className={classes.toastTime}>{format(new Date(), "HH:mm")}</div>
+						<button
+							className={classes.toastButton}
+							onClick={() => {
+								setTabOpen(ticket.status)
+								historyRef.current.push(`/tickets/${ticket.uuid}`);
+							}}
+						>
+							{i18n.t("notifications.openChat")}
+						</button>
+					</div>
+				</div>,
+				{
+					position: "bottom-right",
+					autoClose: 6000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+				}
+			);
+		}
+
 		soundAlertRef.current();
 	};
 

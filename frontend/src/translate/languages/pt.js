@@ -1120,7 +1120,7 @@ const messages = {
           transfer: "Transferir",
           ignore: "Ignorar",
           exportAsPDF: "Exportar para PDF",
-          kanbanActions: "Opções de Kanban",
+          kanbanActions: "Opções de Workflow",
         },
         acceptModal: {
           title: "Aceitar Chat",
@@ -1170,7 +1170,7 @@ const messages = {
           financeiro: "Financeiro",
           queueIntegration: "Integrações",
           version: "Versão",
-          kanban: "Kanban",
+          kanban: "Workflow",
           prompts: "Talk.Ai",
           allConnections: "Gerenciar conexões",
           reports: "Relatórios",
@@ -1278,7 +1278,8 @@ const messages = {
       notifications: {
         noTickets: "Nenhuma notificação.",
         messageHidden: "Mensagem oculta",
-        newMessage: "Nova mensagem de",
+        newMessage: "Nova mensagem",
+        openChat: "Abrir chat",
       },
       triggerFlowModal: {
         title: "Disparar Fluxo",
@@ -1458,7 +1459,7 @@ const messages = {
       },
 
       kanban: {
-        title: "Kanban",
+        title: "Workflow",
         searchPlaceholder: "Pesquisa",
         subMenus: {
           list: "Painel",
@@ -2064,7 +2065,7 @@ const messages = {
         table: {
           id: "ID",
           name: "Nome",
-          kanban: "Kanban",
+          kanban: "Workflow",
           color: "Cor",
           tickets: "Registros Tags",
           contacts: "Contatos",
@@ -2448,6 +2449,16 @@ const messages = {
         open: "Em Aberto",
         attentionMessage: "Atenção:",
         expiredWarning: "Sua assinatura está vencida. Entre em contato com o suporte para regularizar sua situação.",
+        summary: {
+          total: "Total",
+          open: "Em aberto",
+          paid: "Pagas",
+          expired: "Vencidas",
+        },
+        emptyState: {
+          title: "Nenhuma fatura encontrada",
+          description: "Não há faturas para exibir.",
+        },
         yes: "Sim",
         no: "Não",
       },
