@@ -473,6 +473,29 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
 
     <script>
+      // Facebook SDK init (required for Facebook/Instagram connect)
+      window.fbAsyncInit = function () {
+        const appId = "%REACT_APP_FACEBOOK_APP_ID%";
+        if (!appId || appId.startsWith("%REACT_APP_FACEBOOK_APP_ID%")) {
+          console.warn("[FB SDK] Missing REACT_APP_FACEBOOK_APP_ID");
+          return;
+        }
+        window.FB.init({
+          appId: appId,
+          cookie: true,
+          xfbml: true,
+          version: "v19.0"
+        });
+      };
+
+      (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) { return; }
+        js = d.createElement(s); js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+
       // Detectar idioma do navegador ou localStorage - usando a mesma chave do i18next
       const userLang = localStorage.getItem('i18nextLng') || localStorage.getItem('language') || navigator.language || 'pt-BR';
       const lang = userLang.startsWith('en') ? 'en' : 

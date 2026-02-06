@@ -91,13 +91,13 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 'auto',
     padding: '1px 6px',
     height: '18px',
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: 'rgba(15, 23, 42, 0.75)',
     color: 'white',
     borderRadius: '9px',
     zIndex: 10,
     lineHeight: 1,
     '&:hover': {
-      backgroundColor: 'rgba(0,0,0,0.8)'
+      backgroundColor: 'rgba(15, 23, 42, 0.9)'
     },
     // ✅ Remover estilos de botão padrão
     border: 'none',

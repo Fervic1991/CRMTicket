@@ -41,11 +41,13 @@ const useStyles = makeStyles(theme => ({
 		flexDirection: "column",
 		overflowY: "hidden",
 		borderRight: "1px solid var(--tickets-panel-border)",
+		paddingRight: 8,
 	},
 	messagessWrapper: {
 		display: "flex",
 		height: "100%",
 		flexDirection: "column",
+		paddingLeft: 8,
 	},
 	welcomeMsg: {
 		background: "linear-gradient(135deg, rgba(248, 250, 252, 0.9), rgba(226, 232, 240, 0.9))",

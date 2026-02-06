@@ -143,7 +143,7 @@ const useStyles = makeStyles((theme) => ({
 
   messageLeft: {
     marginRight: 20,
-    marginTop: 2,
+    marginTop: 8,
     minWidth: 100,
     maxWidth: 600,
     height: "auto",
@@ -199,7 +199,7 @@ const useStyles = makeStyles((theme) => ({
 
   messageRight: {
     marginLeft: 20,
-    marginTop: 2,
+    marginTop: 8,
     minWidth: 100,
     maxWidth: 600,
     height: "auto",
@@ -230,7 +230,7 @@ const useStyles = makeStyles((theme) => ({
 
   messageRightPrivate: {
     marginLeft: 20,
-    marginTop: 2,
+    marginTop: 8,
     minWidth: 100,
     maxWidth: 600,
     height: "auto",
