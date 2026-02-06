@@ -98,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: 24,
     color: theme.palette.dark.main,
     // Usa a cor primária do tema para o fundo do AppBar
-    background: theme.palette.primary.main, // Mudança principal aqui
+    background: "linear-gradient(135deg, rgba(63,81,181,0.95), rgba(33,150,243,0.95))",
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)", // Sombra sutil
     transition: "all 0.3s ease",
   },

@@ -65,24 +65,35 @@ import useCompanySettings from "../hooks/useSettings/companySettings";
 
 const useStyles = makeStyles((theme) => ({
   listItem: {
-    height: "44px",
+    height: "46px",
     width: "auto",
-    // Remove margin personalizada para manter alinhamento original
+    margin: "4px 8px",
+    borderRadius: 12,
+    transition: "all 0.25s ease",
+    "&:hover": {
+      backgroundColor: "rgba(63,81,181,0.08)",
+    },
     "&:hover $iconHoverActive": {
-      backgroundColor: theme.palette.primary.main, // Usa cor do tema
+      background: "linear-gradient(135deg, rgba(63,81,181,0.9), rgba(33,150,243,0.95))",
       color: "#fff",
-      transform: "scale(1.05)",
+      transform: "translateY(-1px)",
+      boxShadow: "0 10px 22px rgba(63,81,181,0.3)",
     },
     "&:hover $listItemText": {
-      color: theme.palette.primary.main, // Usa cor do tema
+      color: theme.palette.primary.main,
       fontWeight: 600,
     },
-    // Transição suave
-    transition: "all 0.3s ease",
+  },
+  listItemActive: {
+    backgroundColor: "rgba(63,81,181,0.12)",
+    "& $listItemText": {
+      color: theme.palette.primary.main,
+      fontWeight: 700,
+    },
   },
 
   listItemText: {
-    fontSize: "14px",
+    fontSize: "13.5px",
     color: theme.mode === "light" ? "#666" : "#FFF",
     transition: "color 0.3s ease", // Só transição de cor
     fontWeight: 500,
@@ -103,22 +114,24 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: "50%", // Mantém circular original
-    height: 36, // Mantém tamanho original
-    width: 36,  // Mantém tamanho original
+    borderRadius: 12,
+    height: 38,
+    width: 38,
     backgroundColor:
       theme.mode === "light"
-        ? "rgba(120,120,120,0.1)"
-        : "rgba(120,120,120,0.5)",
-    color: theme.mode === "light" ? "#666" : "#FFF",
-    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)", // Transição mais suave
-    "&:hover, &.active": {
-      backgroundColor: theme.palette.primary.main, // Usa cor do tema
+        ? "rgba(120,120,120,0.08)"
+        : "rgba(120,120,120,0.35)",
+    border: "1px solid rgba(120,130,160,0.2)",
+    color: theme.mode === "light" ? "#5b6475" : "#FFF",
+    transition: "all 0.25s ease",
+    "&.active": {
+      background: "linear-gradient(135deg, rgba(63,81,181,0.9), rgba(33,150,243,0.95))",
       color: "#fff",
-      boxShadow: `0 4px 12px ${theme.palette.primary.main}30`, // Sombra dinâmica
+      boxShadow: `0 10px 22px ${theme.palette.primary.main}30`,
+      borderColor: "rgba(63,81,181,0.6)",
     },
     "& .MuiSvgIcon-root": {
-      fontSize: "1.4rem", // Mantém tamanho original
+      fontSize: "1.35rem",
       transition: "transform 0.3s ease",
     },
     "&:hover .MuiSvgIcon-root": {
@@ -222,11 +235,11 @@ const useStyles = makeStyles((theme) => ({
   // Estado ativo melhorado mantendo funcionalidade original
   activeItem: {
     "& $iconHoverActive": {
-      backgroundColor: theme.palette.primary.main, // Usa cor do tema
+      background: "linear-gradient(135deg, rgba(63,81,181,0.9), rgba(33,150,243,0.95))",
       color: "#fff",
     },
     "& $listItemText": {
-      color: theme.palette.primary.main, // Usa cor do tema
+      color: theme.palette.primary.main,
       fontWeight: 700,
     }
   }
@@ -259,7 +272,11 @@ function ListItemLink(props) {
   return (
     <ConditionalTooltip tooltipEnabled={!!tooltip}>
       <li>
-        <ListItem button component={renderLink} className={classes.listItem}>
+        <ListItem
+          button
+          component={renderLink}
+          className={`${classes.listItem} ${isActive ? classes.listItemActive : ""}`}
+        >
           {icon ? (
             <ListItemIcon>
               {showBadge ? (
