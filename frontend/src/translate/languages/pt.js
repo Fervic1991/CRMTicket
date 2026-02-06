@@ -1374,7 +1374,13 @@ const messages = {
           viewContacts: "Ver Contatos",
           edit: "Editar",
           delete: "Excluir",
+          selectAll: "Selecionar todos",
+          deselectAll: "Desmarcar todos",
         },
+        modal: {
+          selectContacts: "Selecionar contatos",
+        },
+        emptySelection: "Nenhum contato encontrado.",
         dialog: {
           name: "Nome",
           company: "Empresa",
@@ -1408,6 +1414,19 @@ const messages = {
           lists: "Listas",
           import: "Importar",
         },
+        status: {
+          valid: "WhatsApp válido",
+          invalid: "WhatsApp inválido",
+        },
+        summary: {
+          total: "Total",
+          valid: "Válidos",
+          invalid: "Inválidos",
+        },
+        emptyState: {
+          title: "Nenhum contato encontrado",
+          description: "Adicione ou importe contatos para esta lista.",
+        },
         dialog: {
           name: "Nome",
           number: "Número",
@@ -1431,6 +1450,7 @@ const messages = {
           deleteMessage: "Esta ação não pode ser revertida.",
           importMessage: "Deseja importar os contatos desta planilha? ",
           importTitlte: "Importar",
+          downloadExample: "Baixar planilha de exemplo.",
         },
         toasts: {
           deleted: "Registro excluído",

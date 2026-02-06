@@ -26,6 +26,7 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import BlockIcon from "@material-ui/icons/Block";
+import PeopleIcon from "@material-ui/icons/People";
 
 import api from "../../services/api";
 import TableRowSkeleton from "../../components/TableRowSkeleton";
@@ -92,11 +93,210 @@ const reducer = (state, action) => {
 };
 
 const useStyles = makeStyles((theme) => ({
+  headerCard: {
+    width: "100%",
+    borderRadius: 18,
+    padding: theme.spacing(2),
+    background: "linear-gradient(135deg, rgba(255,255,255,0.85), rgba(245,248,255,0.9))",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 18px 45px rgba(31, 45, 61, 0.08)",
+  },
+  headerTitle: {
+    fontWeight: 700,
+    letterSpacing: 0.2,
+  },
+  searchField: {
+    "& .MuiOutlinedInput-root": {
+      borderRadius: 14,
+      backgroundColor: "rgba(255,255,255,0.85)",
+      border: "1px solid rgba(120,130,160,0.25)",
+      transition: "box-shadow 0.2s ease, border-color 0.2s ease",
+      "&:hover": {
+        borderColor: "rgba(120,130,160,0.45)",
+      },
+      "&.Mui-focused": {
+        boxShadow: "0 0 0 3px rgba(63,81,181,0.12)",
+        borderColor: theme.palette.primary.main,
+      },
+    },
+    "& .MuiOutlinedInput-input": {
+      padding: "10px 12px",
+    },
+  },
+  actionButtonPrimary: {
+    height: 42,
+    borderRadius: 12,
+    fontWeight: 600,
+    textTransform: "none",
+    background: "linear-gradient(135deg, rgba(63,81,181,0.9), rgba(25,118,210,0.95))",
+    boxShadow: "0 12px 28px rgba(63,81,181,0.3)",
+  },
+  actionButton: {
+    height: 42,
+    borderRadius: 12,
+    fontWeight: 600,
+    textTransform: "none",
+    background: "rgba(255,255,255,0.9)",
+    border: "1px solid rgba(120,130,160,0.2)",
+  },
+  summaryBar: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: theme.spacing(1),
+    alignItems: "center",
+    padding: theme.spacing(1.5),
+    borderRadius: 16,
+    background: "rgba(255,255,255,0.85)",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 12px 30px rgba(31, 45, 61, 0.06)",
+  },
+  summaryChip: {
+    borderRadius: 999,
+    padding: "2px 6px",
+    background: "rgba(63,81,181,0.08)",
+    border: "1px solid rgba(63,81,181,0.2)",
+    fontWeight: 600,
+  },
+  summaryCount: {
+    marginLeft: 6,
+    fontWeight: 700,
+  },
   mainPaper: {
     flex: 1,
-    padding: theme.spacing(1),
-    overflowY: "scroll",
+    padding: theme.spacing(1.5),
+    borderRadius: 18,
+    background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(248,250,255,0.95) 100%)",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 20px 55px rgba(31, 45, 61, 0.08)",
+    overflowY: "auto",
     ...theme.scrollbarStyles,
+  },
+  tableHeader: {
+    fontWeight: 700,
+    backgroundColor: "rgba(243,246,252,0.9)",
+    color: theme.palette.text.secondary,
+    borderBottom: "1px solid rgba(120,130,160,0.2)",
+  },
+  table: {
+    borderCollapse: "separate",
+    borderSpacing: "0 10px",
+  },
+  tableRow: {
+    backgroundColor: "rgba(255,255,255,0.85)",
+    boxShadow: "0 8px 18px rgba(31,45,61,0.06)",
+    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    "&:hover": {
+      transform: "translateY(-2px)",
+      boxShadow: "0 16px 30px rgba(31,45,61,0.12)",
+    },
+    "& > td": {
+      borderBottom: "none",
+    },
+    "& td:first-child": {
+      borderTopLeftRadius: 14,
+      borderBottomLeftRadius: 14,
+    },
+    "& td:last-child": {
+      borderTopRightRadius: 14,
+      borderBottomRightRadius: 14,
+    },
+  },
+  nameCell: {
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(1.5),
+  },
+  avatar: {
+    width: 36,
+    height: 36,
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: 700,
+    color: theme.palette.primary.dark,
+    background: "linear-gradient(135deg, rgba(63,81,181,0.2), rgba(25,118,210,0.3))",
+    border: "1px solid rgba(63,81,181,0.3)",
+    flexShrink: 0,
+  },
+  nameStack: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 4,
+  },
+  nameText: {
+    fontWeight: 600,
+  },
+  tagRow: {
+    display: "flex",
+    gap: 6,
+    flexWrap: "wrap",
+  },
+  tagChip: {
+    fontSize: "0.7rem",
+    fontWeight: 600,
+    padding: "2px 6px",
+    borderRadius: 999,
+    border: "1px solid rgba(120,130,160,0.2)",
+    background: "rgba(255,255,255,0.9)",
+  },
+  statusPill: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 6,
+    padding: "4px 10px",
+    borderRadius: 999,
+    fontWeight: 600,
+    fontSize: "0.75rem",
+  },
+  statusValid: {
+    background: "linear-gradient(135deg, rgba(76,175,80,0.18), rgba(165,214,167,0.35))",
+    color: "#1b5e20",
+    border: "1px solid rgba(76,175,80,0.3)",
+  },
+  statusInvalid: {
+    background: "linear-gradient(135deg, rgba(120,130,160,0.18), rgba(200,205,220,0.35))",
+    color: theme.palette.text.secondary,
+    border: "1px solid rgba(120,130,160,0.28)",
+  },
+  iconButton: {
+    borderRadius: 10,
+    padding: 6,
+    border: "1px solid rgba(120,130,160,0.2)",
+    backgroundColor: "rgba(255,255,255,0.8)",
+    transition: "all 0.2s ease",
+    "&:hover": {
+      backgroundColor: "rgba(63,81,181,0.08)",
+      borderColor: "rgba(63,81,181,0.35)",
+    },
+  },
+  emptyState: {
+    padding: theme.spacing(3),
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+  },
+  emptyStateIcon: {
+    width: 78,
+    height: 78,
+    borderRadius: "50%",
+    margin: "0 auto 16px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    background: "linear-gradient(135deg, rgba(63,81,181,0.15), rgba(25,118,210,0.25))",
+    border: "1px solid rgba(63,81,181,0.2)",
+    color: theme.palette.primary.main,
+  },
+  emptyStateButton: {
+    marginTop: theme.spacing(2),
+    borderRadius: 12,
+    textTransform: "none",
+    fontWeight: 600,
+    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    "&:hover": {
+      transform: "translateY(-1px)",
+      boxShadow: "0 14px 28px rgba(63,81,181,0.28)",
+    },
   },
 }));
 
@@ -252,6 +452,25 @@ const ContactListItems = () => {
     setSearchParam("");
     setPageNumber(1);
   };
+  const summary = contacts.reduce(
+    (acc, contact) => {
+      acc.total += 1;
+      if (contact.isWhatsappValid) {
+        acc.valid += 1;
+      } else {
+        acc.invalid += 1;
+      }
+      return acc;
+    },
+    { total: 0, valid: 0, invalid: 0 }
+  );
+
+  const getInitials = (name) => {
+    if (!name) return "?";
+    const parts = name.trim().split(/\s+/).slice(0, 2);
+    const initials = parts.map((part) => part.charAt(0).toUpperCase()).join("");
+    return initials || "?";
+  };
   return (
     <MainContainer className={classes.mainContainer}>
 
@@ -288,7 +507,7 @@ const ContactListItems = () => {
           <>
             {i18n.t("contactListItems.confirmationModal.importMessage")}
             <a href={planilhaExemplo} download="planilha.xlsx">
-              Clique aqui para baixar planilha exemplo.
+              {i18n.t("contactListItems.confirmationModal.downloadExample")}
             </a>
           </>
         )}
@@ -299,19 +518,22 @@ const ContactListItems = () => {
           :
           <>
             <MainHeader>
-              <Grid style={{ width: "99.6%" }} container>
+              <Grid style={{ width: "100%" }} container className={classes.headerCard} spacing={2}>
                 <Grid xs={12} sm={5} item>
-                  <Title>{contactList.name}</Title>
+                  <Title className={classes.headerTitle}>{contactList.name}</Title>
                 </Grid>
                 <Grid xs={12} sm={7} item>
                   <Grid spacing={2} container>
                     <Grid xs={12} sm={6} item>
                       <TextField
                         fullWidth
+                        variant="outlined"
+                        size="small"
                         placeholder={i18n.t("contactListItems.searchPlaceholder")}
                         type="search"
                         value={searchParam}
                         onChange={handleSearch}
+                        className={classes.searchField}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -327,6 +549,7 @@ const ContactListItems = () => {
                         variant="contained"
                         color="primary"
                         onClick={goToContactLists}
+                        className={classes.actionButton}
                       >
                         {i18n.t("contactListItems.buttons.lists")}
                       </Button>
@@ -340,6 +563,7 @@ const ContactListItems = () => {
                           fileUploadRef.current.value = null;
                           fileUploadRef.current.click();
                         }}
+                        className={classes.actionButton}
                       >
                         {i18n.t("contactListItems.buttons.import")}
                       </Button>
@@ -350,6 +574,7 @@ const ContactListItems = () => {
                         variant="contained"
                         color="primary"
                         onClick={handleOpenContactSelectionModal}
+                        className={classes.actionButton}
                       >
                         {i18n.t("contactListItems.buttons.importFromContacts")}
                       </Button>
@@ -360,6 +585,7 @@ const ContactListItems = () => {
                         variant="contained"
                         color="primary"
                         onClick={handleOpenContactListItemModal}
+                        className={classes.actionButtonPrimary}
                       >
                         {i18n.t("contactListItems.buttons.add")}
                       </Button>
@@ -368,6 +594,20 @@ const ContactListItems = () => {
                 </Grid>
               </Grid>
             </MainHeader>
+            <Paper className={classes.summaryBar}>
+              <span className={classes.summaryChip}>
+                {i18n.t("contactListItems.summary.total")}
+                <span className={classes.summaryCount}>{summary.total}</span>
+              </span>
+              <span className={classes.summaryChip}>
+                {i18n.t("contactListItems.summary.valid")}
+                <span className={classes.summaryCount}>{summary.valid}</span>
+              </span>
+              <span className={classes.summaryChip}>
+                {i18n.t("contactListItems.summary.invalid")}
+                <span className={classes.summaryCount}>{summary.invalid}</span>
+              </span>
+            </Paper>
             <Paper
               className={classes.mainPaper}
               variant="outlined"
@@ -386,20 +626,20 @@ const ContactListItems = () => {
                   ref={fileUploadRef}
                 />
               </>
-              <Table size="small">
+              <Table size="small" className={classes.table}>
                 <TableHead>
                   <TableRow>
-                    <TableCell align="center" style={{ width: "0%" }}>
+                    <TableCell align="center" style={{ width: "0%" }} className={classes.tableHeader}>
                       #
                     </TableCell>
-                    <TableCell>{i18n.t("contactListItems.table.name")}</TableCell>
-                    <TableCell align="center">
+                    <TableCell className={classes.tableHeader}>{i18n.t("contactListItems.table.name")}</TableCell>
+                    <TableCell align="center" className={classes.tableHeader}>
                       {i18n.t("contactListItems.table.number")}
                     </TableCell>
-                    <TableCell align="center">
+                    <TableCell align="center" className={classes.tableHeader}>
                       {i18n.t("contactListItems.table.email")}
                     </TableCell>
-                    <TableCell align="center">
+                    <TableCell align="center" className={classes.tableHeader}>
                       {i18n.t("contactListItems.table.actions")}
                     </TableCell>
                   </TableRow>
@@ -407,28 +647,61 @@ const ContactListItems = () => {
                 <TableBody>
                   <>
                     {contacts.map((contact) => (
-                      <TableRow key={contact.id}>
+                      <TableRow key={contact.id} className={classes.tableRow}>
                         <TableCell align="center" style={{ width: "0%" }}>
-                          <IconButton>
+                          <span
+                            className={`${classes.statusPill} ${
+                              contact.isWhatsappValid ? classes.statusValid : classes.statusInvalid
+                            }`}
+                            title={
+                              contact.isWhatsappValid
+                                ? i18n.t("contactListItems.status.valid")
+                                : i18n.t("contactListItems.status.invalid")
+                            }
+                          >
                             {contact.isWhatsappValid ? (
-                              <CheckCircleIcon
-                                titleAccess="Whatsapp Válido"
-                                htmlColor="green"
-                              />
+                              <CheckCircleIcon fontSize="small" />
                             ) : (
-                              <BlockIcon
-                                titleAccess="Whatsapp Inválido"
-                                htmlColor="grey"
-                              />
+                              <BlockIcon fontSize="small" />
                             )}
-                          </IconButton>
+                          </span>
                         </TableCell>
-                        <TableCell>{contact.name}</TableCell>
+                        <TableCell>
+                          <div className={classes.nameCell}>
+                            <div className={classes.avatar}>{getInitials(contact.name)}</div>
+                            <div className={classes.nameStack}>
+                              <span className={classes.nameText}>{contact.name}</span>
+                              {Array.isArray(contact.tags) && contact.tags.length > 0 && (
+                                <div className={classes.tagRow}>
+                                  {contact.tags.slice(0, 3).map((tag) => (
+                                    <span
+                                      key={tag.id || tag.name}
+                                      className={classes.tagChip}
+                                      style={{
+                                        backgroundColor: tag.color || "rgba(63,81,181,0.08)",
+                                        color: "#fff",
+                                        borderColor: "rgba(0,0,0,0.05)",
+                                      }}
+                                    >
+                                      {tag.name}
+                                    </span>
+                                  ))}
+                                  {contact.tags.length > 3 && (
+                                    <span className={classes.tagChip}>
+                                      +{contact.tags.length - 3}
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </TableCell>
                         <TableCell align="center">{contact.number}</TableCell>
                         <TableCell align="center">{contact.email}</TableCell>
                         <TableCell align="center">
                           <IconButton
                             size="small"
+                            className={classes.iconButton}
                             onClick={() => hadleEditContact(contact.id)}
                           >
                             <EditIcon />
@@ -439,6 +712,7 @@ const ContactListItems = () => {
                             yes={() => (
                               <IconButton
                                 size="small"
+                                className={classes.iconButton}
                                 onClick={() => {
                                   setConfirmOpen(true);
                                   setDeletingContact(contact);
@@ -452,6 +726,27 @@ const ContactListItems = () => {
                       </TableRow>
                     ))}
                     {loading && <TableRowSkeleton columns={4} />}
+                    {!loading && contacts.length === 0 && (
+                      <TableRow>
+                        <TableCell align="center" colSpan={5} className={classes.emptyState}>
+                          <div className={classes.emptyStateIcon}>
+                            <PeopleIcon fontSize="large" />
+                          </div>
+                          <div style={{ fontWeight: 600, marginBottom: 6 }}>
+                            {i18n.t("contactListItems.emptyState.title")}
+                          </div>
+                          <div>{i18n.t("contactListItems.emptyState.description")}</div>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleOpenContactListItemModal}
+                            className={classes.emptyStateButton}
+                          >
+                            {i18n.t("contactListItems.buttons.add")}
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    )}
                   </>
                 </TableBody>
               </Table>

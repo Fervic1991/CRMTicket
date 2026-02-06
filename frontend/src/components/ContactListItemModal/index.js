@@ -26,6 +26,73 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexWrap: "wrap",
   },
+  dialogPaper: {
+    borderRadius: 18,
+    background: "linear-gradient(135deg, rgba(255,255,255,0.96), rgba(246,248,255,0.98))",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 24px 60px rgba(31, 45, 61, 0.18)",
+  },
+  dialogTitle: {
+    fontWeight: 700,
+    letterSpacing: 0.2,
+  },
+  dialogSubtitle: {
+    fontWeight: 600,
+    color: theme.palette.text.secondary,
+  },
+  dialogContent: {
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+  },
+  field: {
+    marginTop: theme.spacing(1.5),
+    "& .MuiOutlinedInput-root": {
+      borderRadius: 14,
+      backgroundColor: "rgba(255,255,255,0.9)",
+      border: "1px solid rgba(120,130,160,0.2)",
+      transition: "box-shadow 0.2s ease, border-color 0.2s ease",
+      "&:hover": {
+        borderColor: "rgba(120,130,160,0.45)",
+      },
+      "&.Mui-focused": {
+        boxShadow: "0 0 0 3px rgba(63,81,181,0.12)",
+        borderColor: theme.palette.primary.main,
+      },
+      "&.Mui-error": {
+        borderColor: "rgba(244,67,54,0.7)",
+        boxShadow: "0 0 0 3px rgba(244,67,54,0.12)",
+      },
+    },
+    "& .MuiOutlinedInput-notchedOutline": {
+      border: "none",
+    },
+    "& .MuiFormHelperText-root.Mui-error": {
+      color: theme.palette.error.main,
+    },
+  },
+  fieldStack: {
+    display: "grid",
+    gap: theme.spacing(1.5),
+    marginTop: theme.spacing(1),
+  },
+  helperText: {
+    marginLeft: 2,
+  },
+  actions: {
+    padding: theme.spacing(2, 3),
+    gap: theme.spacing(1.5),
+  },
+  cancelButton: {
+    borderRadius: 12,
+    textTransform: "none",
+    fontWeight: 600,
+  },
+  primaryButton: {
+    borderRadius: 12,
+    textTransform: "none",
+    fontWeight: 600,
+    boxShadow: "0 14px 28px rgba(63,81,181,0.28)",
+  },
   textField: {
     marginRight: theme.spacing(1),
     flex: 1,
@@ -143,8 +210,15 @@ const ContactListItemModal = ({
   };
   return (
     <div className={classes.root}>
-      <Dialog open={open} onClose={handleClose} maxWidth="lg" scroll="paper">
-        <DialogTitle id="form-dialog-title">
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        maxWidth="sm"
+        fullWidth
+        scroll="paper"
+        classes={{ paper: classes.dialogPaper }}
+      >
+        <DialogTitle id="form-dialog-title" className={classes.dialogTitle}>
           {contactId
             ? `${i18n.t("contactModal.title.edit")}`
             : `${i18n.t("contactModal.title.add")}`}
@@ -162,51 +236,55 @@ const ContactListItemModal = ({
         >
           {({ values, errors, touched, isSubmitting }) => (
             <Form>
-              <DialogContent dividers>
-                <Typography variant="subtitle1" gutterBottom>
+              <DialogContent dividers className={classes.dialogContent}>
+                <Typography variant="subtitle1" gutterBottom className={classes.dialogSubtitle}>
                   {i18n.t("contactModal.form.mainInfo")}
                 </Typography>
-                <Field
-                  as={TextField}
-                  label={i18n.t("contactModal.form.name")}
-                  name="name"
-                  autoFocus
-                  error={touched.name && Boolean(errors.name)}
-                  helperText={touched.name && errors.name}
-                  variant="outlined"
-                  margin="dense"
-                  className={classes.textField}
-                />
-                <Field
-                  as={TextField}
-                  label={i18n.t("contactModal.form.number")}
-                  name="number"
-                  error={touched.number && Boolean(errors.number)}
-                  helperText={touched.number && errors.number}
-                  placeholder="5513912344321"
-                  variant="outlined"
-                  margin="dense"
-                />
-                <div>
+                <div className={classes.fieldStack}>
+                  <Field
+                    as={TextField}
+                    label={i18n.t("contactModal.form.name")}
+                    name="name"
+                    autoFocus
+                    required
+                    error={touched.name && Boolean(errors.name)}
+                    helperText={touched.name && errors.name}
+                    FormHelperTextProps={{ className: classes.helperText }}
+                    variant="outlined"
+                    className={classes.field}
+                  />
+                  <Field
+                    as={TextField}
+                    label={i18n.t("contactModal.form.number")}
+                    name="number"
+                    error={touched.number && Boolean(errors.number)}
+                    helperText={touched.number && errors.number}
+                    FormHelperTextProps={{ className: classes.helperText }}
+                    placeholder="5513912344321"
+                    variant="outlined"
+                    className={classes.field}
+                  />
                   <Field
                     as={TextField}
                     label={i18n.t("contactModal.form.email")}
                     name="email"
                     error={touched.email && Boolean(errors.email)}
                     helperText={touched.email && errors.email}
+                    FormHelperTextProps={{ className: classes.helperText }}
                     placeholder="Email address"
                     fullWidth
-                    margin="dense"
                     variant="outlined"
+                    className={classes.field}
                   />
                 </div>
               </DialogContent>
-              <DialogActions>
+              <DialogActions className={classes.actions}>
                 <Button
                   onClick={handleClose}
                   color="secondary"
                   disabled={isSubmitting}
                   variant="outlined"
+                  className={classes.cancelButton}
                 >
                   {i18n.t("contactModal.buttons.cancel")}
                 </Button>
@@ -216,6 +294,7 @@ const ContactListItemModal = ({
                   disabled={isSubmitting}
                   variant="contained"
                   className={classes.btnWrapper}
+                  classes={{ root: classes.primaryButton }}
                 >
                   {contactId
                     ? `${i18n.t("contactModal.buttons.okEdit")}`

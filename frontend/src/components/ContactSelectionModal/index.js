@@ -26,21 +26,79 @@ import { i18n } from "../../translate/i18n";
 import { TagsFilter } from "../TagsFilter";
 import { toast } from "react-toastify";
 const useStyles = makeStyles((theme) => ({
+  dialogPaper: {
+    borderRadius: 18,
+    background: "linear-gradient(135deg, rgba(255,255,255,0.96), rgba(246,248,255,0.98))",
+    border: "1px solid rgba(120,130,160,0.18)",
+    boxShadow: "0 24px 60px rgba(31, 45, 61, 0.18)",
+  },
+  dialogTitle: {
+    fontWeight: 700,
+    letterSpacing: 0.2,
+  },
   dialogContent: {
     minWidth: "600px",
     maxHeight: "600px",
     display: "flex",
     flexDirection: "column",
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+  },
+  searchField: {
+    marginTop: theme.spacing(1.5),
+    "& .MuiOutlinedInput-root": {
+      borderRadius: 14,
+      backgroundColor: "rgba(255,255,255,0.9)",
+      border: "1px solid rgba(120,130,160,0.2)",
+      transition: "box-shadow 0.2s ease, border-color 0.2s ease",
+      "&:hover": {
+        borderColor: "rgba(120,130,160,0.45)",
+      },
+      "&.Mui-focused": {
+        boxShadow: "0 0 0 3px rgba(63,81,181,0.12)",
+        borderColor: theme.palette.primary.main,
+      },
+    },
   },
   tableContainer: {
     flex: 1,
     overflow: "auto",
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
+    borderRadius: 14,
+    border: "1px solid rgba(120,130,160,0.2)",
+    boxShadow: "0 10px 24px rgba(31, 45, 61, 0.08)",
   },
   selectAllContainer: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
+  },
+  actionButton: {
+    height: 42,
+    borderRadius: 12,
+    fontWeight: 600,
+    textTransform: "none",
+    background: "rgba(255,255,255,0.9)",
+    border: "1px solid rgba(120,130,160,0.2)",
+  },
+  primaryButton: {
+    borderRadius: 12,
+    textTransform: "none",
+    fontWeight: 600,
+    boxShadow: "0 14px 28px rgba(63,81,181,0.28)",
+  },
+  tableHeader: {
+    fontWeight: 700,
+    backgroundColor: "rgba(243,246,252,0.9)",
+    color: theme.palette.text.secondary,
+  },
+  rowSelected: {
+    backgroundColor: "rgba(63,81,181,0.08)",
+  },
+  emptyState: {
+    padding: theme.spacing(3),
+    textAlign: "center",
+    color: theme.palette.text.secondary,
   },
 }));
 
@@ -152,8 +210,8 @@ const ContactSelectionModal = ({ open, onClose, contactListId, onAddContacts }) 
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>{i18n.t("contactLists.modal.selectContacts")}</DialogTitle>
+    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth classes={{ paper: classes.dialogPaper }}>
+      <DialogTitle className={classes.dialogTitle}>{i18n.t("contactLists.modal.selectContacts")}</DialogTitle>
       <DialogContent className={classes.dialogContent}>
         <Box className={classes.filterContainer}>
           <TagsFilter onFiltered={handleTagsFilter} />
@@ -161,10 +219,13 @@ const ContactSelectionModal = ({ open, onClose, contactListId, onAddContacts }) 
 
         <TextField
           fullWidth
+          variant="outlined"
+          size="small"
           placeholder={i18n.t("contacts.searchPlaceholder")}
           type="search"
           value={searchParam}
           onChange={handleSearch}
+          className={classes.searchField}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -180,6 +241,7 @@ const ContactSelectionModal = ({ open, onClose, contactListId, onAddContacts }) 
             color="primary"
             onClick={handleSelectAll}
             fullWidth
+            className={classes.actionButton}
           >
             {selectedContacts.length === contacts.length && contacts.length > 0
               ? i18n.t("contactLists.buttons.deselectAll")
@@ -196,7 +258,7 @@ const ContactSelectionModal = ({ open, onClose, contactListId, onAddContacts }) 
             <Table size="small">
               <TableHead>
                 <TableRow>
-                  <TableCell align="center" style={{ width: "50px" }}>
+                  <TableCell align="center" style={{ width: "50px" }} className={classes.tableHeader}>
                     <Checkbox
                       indeterminate={
                         selectedContacts.length > 0 &&
@@ -209,8 +271,8 @@ const ContactSelectionModal = ({ open, onClose, contactListId, onAddContacts }) 
                       onChange={handleSelectAll}
                     />
                   </TableCell>
-                  <TableCell>{i18n.t("contacts.table.name")}</TableCell>
-                  <TableCell>{i18n.t("contacts.table.number")}</TableCell>
+                  <TableCell className={classes.tableHeader}>{i18n.t("contacts.table.name")}</TableCell>
+                  <TableCell className={classes.tableHeader}>{i18n.t("contacts.table.number")}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -223,7 +285,7 @@ const ContactSelectionModal = ({ open, onClose, contactListId, onAddContacts }) 
                       hover
                       style={{
                         cursor: "pointer",
-                        backgroundColor: isSelected ? "rgba(0,0,0,0.03)" : "inherit",
+                        backgroundColor: isSelected ? "rgba(63,81,181,0.08)" : "inherit",
                       }}
                     >
                       <TableCell align="center">
@@ -238,19 +300,26 @@ const ContactSelectionModal = ({ open, onClose, contactListId, onAddContacts }) 
                     </TableRow>
                   );
                 })}
+                {!loading && contacts.length === 0 && (
+                  <TableRow>
+                    <TableCell align="center" colSpan={3} className={classes.emptyState}>
+                      {i18n.t("contactLists.emptySelection")}
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           )}
         </Paper>
 
         {hasMore && (
-          <Button fullWidth onClick={handleLoadMore} style={{ marginTop: "10px" }}>
+          <Button fullWidth onClick={handleLoadMore} style={{ marginTop: "10px" }} className={classes.actionButton}>
             {loading ? <CircularProgress size={24} /> : i18n.t("contacts.loadMore")}
           </Button>
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="default">
+        <Button onClick={onClose} color="default" className={classes.actionButton}>
           {i18n.t("buttons.cancel")}
         </Button>
         <Button
@@ -258,6 +327,7 @@ const ContactSelectionModal = ({ open, onClose, contactListId, onAddContacts }) 
           color="primary"
           variant="contained"
           disabled={loading || selectedContacts.length === 0}
+          className={classes.primaryButton}
         >
           {loading ? <CircularProgress size={24} /> : i18n.t("contactLists.buttons.add")}
         </Button>

@@ -1317,7 +1317,13 @@ const messages = {
           viewContacts: "Ver Contactos",
           edit: "Editar",
           delete: "Eliminar",
+          selectAll: "Seleccionar todo",
+          deselectAll: "Deseleccionar todo",
         },
+        modal: {
+          selectContacts: "Seleccionar contactos",
+        },
+        emptySelection: "No se encontraron contactos.",
         dialog: {
           name: "Nombre",
           company: "Empresa",
@@ -1351,6 +1357,19 @@ const messages = {
           lists: "Listas",
           import: "Importar",
         },
+        status: {
+          valid: "WhatsApp válido",
+          invalid: "WhatsApp no válido",
+        },
+        summary: {
+          total: "Total",
+          valid: "Válidos",
+          invalid: "No válidos",
+        },
+        emptyState: {
+          title: "No se encontraron contactos",
+          description: "Agrega o importa contactos a esta lista.",
+        },
         dialog: {
           name: "Nombre",
           number: "Número",
@@ -1375,6 +1394,7 @@ const messages = {
           importMessage:
             "¿Deseas importar los contactos de esta hoja de cálculo?",
           importTitlte: "Importar",
+          downloadExample: "Descargar la hoja de ejemplo.",
         },
         toasts: {
           deleted: "Registro eliminado exitosamente.",

@@ -1326,7 +1326,13 @@ const messages = {
           viewContacts: "View Contacts",
           edit: "Edit",
           delete: "Delete",
+          selectAll: "Select all",
+          deselectAll: "Deselect all",
         },
+        modal: {
+          selectContacts: "Select contacts",
+        },
+        emptySelection: "No contacts found.",
         dialog: {
           name: "Name",
           company: "Company",
@@ -1360,6 +1366,19 @@ const messages = {
           lists: "Lists",
           import: "Import",
         },
+        status: {
+          valid: "WhatsApp valid",
+          invalid: "WhatsApp invalid",
+        },
+        summary: {
+          total: "Total",
+          valid: "Valid",
+          invalid: "Invalid",
+        },
+        emptyState: {
+          title: "No contacts found",
+          description: "Add or import contacts into this list.",
+        },
         dialog: {
           name: "Name",
           number: "Number",
@@ -1384,6 +1403,7 @@ const messages = {
           importMessage:
             "Do you want to import the contacts from this spreadsheet?",
           importTitlte: "Import",
+          downloadExample: "Download the example spreadsheet.",
         },
         toasts: {
           deleted: "Record deleted successfully.",
