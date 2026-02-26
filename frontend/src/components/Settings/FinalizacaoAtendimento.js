@@ -149,7 +149,7 @@ const FinalizacaoAtendimento = ({ settings, onSettingsChange }) => {
         toast.success("Motivo excluído com sucesso!");
         fetchMotivos();
       } catch (err) {
-        toast.error(err.response?.data?.error || "Erro ao excluir motivo");
+        toast.error(err.response?.data?.error || i18n.t("settings.finalization.toasts.deleteError"));
       }
     }
   };
@@ -168,9 +168,9 @@ const FinalizacaoAtendimento = ({ settings, onSettingsChange }) => {
         onSettingsChange({ ...settings, informarValorVenda: newValue });
       }
 
-      toast.success("Configuração atualizada com sucesso!");
+      toast.success(i18n.t("settings.finalization.toasts.updateSuccess"));
     } catch (err) {
-      toast.error("Erro ao atualizar configuração");
+      toast.error(i18n.t("settings.finalization.toasts.updateError"));
       setInformarValorVenda(!newValue); // Revert on error
     }
   };
@@ -178,13 +178,13 @@ const FinalizacaoAtendimento = ({ settings, onSettingsChange }) => {
   return (
     <div className={classes.root}>
       <Typography variant="h5" className={classes.title}>
-        Finalização de Atendimento
+        {i18n.t("settings.finalization.title")}
       </Typography>
 
       {/* Configuração de Valor da Venda */}
       <Paper className={classes.paper}>
         <Typography variant="h6" gutterBottom>
-          Configurações Gerais
+          {i18n.t("settings.finalization.generalConfig")}
         </Typography>
         <FormControlLabel
           control={
@@ -194,11 +194,10 @@ const FinalizacaoAtendimento = ({ settings, onSettingsChange }) => {
               color="primary"
             />
           }
-          label="Informar valor da venda ao finalizar atendimento"
+          label={i18n.t("settings.finalization.askSaleValue")}
         />
         <Typography variant="body2" color="textSecondary">
-          Quando habilitado, o campo de valor da venda aparecerá no modal de
-          finalização
+          {i18n.t("settings.finalization.askSaleValueHelper")}
         </Typography>
       </Paper>
 
@@ -210,7 +209,7 @@ const FinalizacaoAtendimento = ({ settings, onSettingsChange }) => {
           alignItems="center"
           mb={2}
         >
-          <Typography variant="h6">Motivos de Finalização</Typography>
+          <Typography variant="h6">{i18n.t("settings.finalization.reasonsTitle")}</Typography>
           <Button
             variant="contained"
             color="primary"
@@ -218,7 +217,7 @@ const FinalizacaoAtendimento = ({ settings, onSettingsChange }) => {
             onClick={() => handleOpenModal()}
             className={classes.addButton}
           >
-            Adicionar Motivo
+            {i18n.t("settings.finalization.addReason")}
           </Button>
         </Box>
 
@@ -226,9 +225,9 @@ const FinalizacaoAtendimento = ({ settings, onSettingsChange }) => {
           <Table className={classes.table}>
             <TableHead>
               <TableRow>
-                <TableCell>Nome</TableCell>
-                <TableCell>Descrição</TableCell>
-                <TableCell className={classes.actionCell}>Ações</TableCell>
+                <TableCell>{i18n.t("settings.finalization.table.name")}</TableCell>
+                <TableCell>{i18n.t("settings.finalization.table.description")}</TableCell>
+                <TableCell className={classes.actionCell}>{i18n.t("settings.finalization.table.actions")}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -239,7 +238,7 @@ const FinalizacaoAtendimento = ({ settings, onSettingsChange }) => {
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" color="textSecondary">
-                      {motivo.description || "Sem descrição"}
+                      {motivo.description || i18n.t("settings.finalization.table.noDescription")}
                     </Typography>
                   </TableCell>
                   <TableCell className={classes.actionCell}>
@@ -267,8 +266,7 @@ const FinalizacaoAtendimento = ({ settings, onSettingsChange }) => {
         {motivos.length === 0 && (
           <Box textAlign="center" py={3}>
             <Typography variant="body2" color="textSecondary">
-              Nenhum motivo cadastrado. Clique em "Adicionar Motivo" para
-              começar.
+              {i18n.t("settings.finalization.empty")}
             </Typography>
           </Box>
         )}
@@ -282,14 +280,14 @@ const FinalizacaoAtendimento = ({ settings, onSettingsChange }) => {
         fullWidth
       >
         <DialogTitle>
-          {editingMotivo ? "Editar Motivo" : "Adicionar Motivo"}
+          {editingMotivo ? i18n.t("settings.finalization.editReason") : i18n.t("settings.finalization.addReason")}
         </DialogTitle>
         <DialogContent>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Nome do Motivo"
+                label={i18n.t("settings.finalization.reasonName")}
                 value={formData.name}
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
@@ -302,7 +300,7 @@ const FinalizacaoAtendimento = ({ settings, onSettingsChange }) => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Descrição (opcional)"
+                label={i18n.t("settings.finalization.reasonDescription")}
                 value={formData.description}
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
@@ -317,7 +315,7 @@ const FinalizacaoAtendimento = ({ settings, onSettingsChange }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseModal} disabled={loading}>
-            Cancelar
+            {i18n.t("settings.finalization.cancel")}
           </Button>
           <Button
             onClick={handleSubmit}
@@ -326,10 +324,10 @@ const FinalizacaoAtendimento = ({ settings, onSettingsChange }) => {
             disabled={loading}
           >
             {loading
-              ? "Salvando..."
+              ? i18n.t("settings.finalization.saving")
               : editingMotivo
-              ? "Atualizar"
-              : "Adicionar"}
+              ? i18n.t("settings.finalization.update")
+              : i18n.t("settings.finalization.add")}
           </Button>
         </DialogActions>
       </Dialog>

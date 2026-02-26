@@ -648,7 +648,7 @@ export default function CompaniesManager() {
       console.log("Lista de empresas carregada:", companyList);
       setRecords(companyList);
     } catch (e) {
-      toast.error("Não foi possível carregar a lista de registros");
+      toast.error(i18n.t("companies.toasts.loadError"));
     }
     setLoading(false);
   };
@@ -664,11 +664,9 @@ export default function CompaniesManager() {
       }
       await loadPlans();
       handleCancel();
-      toast.success("Operação realizada com sucesso!");
+      toast.success(i18n.t("companies.toasts.saveSuccess"));
     } catch (e) {
-      toast.error(
-        "Não foi possível realizar a operação. Verifique se já existe uma empresa com o mesmo nome ou se os campos foram preenchidos corretamente"
-      );
+      toast.error(i18n.t("companies.toasts.saveError"));
     }
     setLoading(false);
   };
@@ -679,9 +677,9 @@ export default function CompaniesManager() {
       await remove(record.id);
       await loadPlans();
       handleCancel();
-      toast.success("Operação realizada com sucesso!");
+      toast.success(i18n.t("companies.toasts.deleteSuccess"));
     } catch (e) {
-      toast.error("Não foi possível realizar a operação");
+      toast.error(i18n.t("companies.toasts.deleteError"));
     }
     setLoading(false);
   };

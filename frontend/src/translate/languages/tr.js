@@ -1997,6 +1997,10 @@ const messages = {
           welcomeFlow: "Hoş geldin akışı",
           defaultResponseFlow: "Varsayılan yanıt akışı"
         }
+      },
+      flowDefaults: {
+        welcomeFlowDescription: "Bu akış yalnızca yeni kişiler için tetiklenir; kişi listenizde olmayan ve mesaj gönderen kişiler.",
+        defaultResponseFlowDescription: "Varsayılan yanıt, anahtar kelime olmayan herhangi bir karakterle gönderilir. DİKKAT! Görüşme zaten kapalıysa tetiklenir."
       }
     }
   }

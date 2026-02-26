@@ -81,10 +81,9 @@ function SchedulesForm(props) {
                     <Grid key={index} xs={12} md={4} item>
                       <Grid container>
                         <Grid className={classes.control} xs={12} item>
-                          <FastField
-                            as={TextField}
-                            abel={i18n.t("queueModal.serviceHours.dayWeek")}
-                            name={`schedules[${index}].weekday`}
+                          <TextField
+                            label={i18n.t("queueModal.serviceHours.dayWeek")}
+                            value={i18n.t(`queueModal.serviceHours.${item.weekdayEn}`)}
                             disabled
                             variant="outlined"
                             className={classes.fullWidth}

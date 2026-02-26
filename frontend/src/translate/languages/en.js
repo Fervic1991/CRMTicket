@@ -64,6 +64,13 @@ const messages = {
           submit: "Register",
           success: "Company successfully created!",
         },
+        toasts: {
+          loadError: "Could not load the company list.",
+          saveSuccess: "Operation completed successfully!",
+          saveError: "Could not complete the operation. Check if a company with the same name already exists or if the fields were filled correctly.",
+          deleteSuccess: "Operation completed successfully!",
+          deleteError: "Could not complete the operation."
+        }
       },
 
       auth: {
@@ -1924,6 +1931,7 @@ const messages = {
           save: "Save",
           generateInvoice: "Generate Invoice",
           currency: "Currency",
+          noCompanies: "No companies found."
         },
         buttons: {
           add: "Add Company",
@@ -1942,6 +1950,7 @@ const messages = {
           name: "Name",
           users: "Users",
           connections: "Connections",
+          currency: "Currency",
           campaigns: "Campaigns",
           schedules: "Schedules",
           enabled: "Enabled",
@@ -2094,6 +2103,33 @@ const messages = {
       settings: {
         success: "Settings saved successfully.",
         title: "Settings",
+        finalization: {
+          title: "Service Finalization",
+          generalConfig: "General Settings",
+          askSaleValue: "Ask for sale value when finalizing service",
+          askSaleValueHelper: "When enabled, the sale value field will appear in the finalization modal",
+          reasonsTitle: "Finalization Reasons",
+          addReason: "Add Reason",
+          editReason: "Edit Reason",
+          reasonName: "Reason Name",
+          reasonDescription: "Description (optional)",
+          cancel: "Cancel",
+          saving: "Saving...",
+          update: "Update",
+          add: "Add",
+          empty: "No reasons registered. Click \"Add Reason\" to start.",
+          table: {
+            name: "Name",
+            description: "Description",
+            actions: "Actions",
+            noDescription: "No description"
+          },
+          toasts: {
+            updateSuccess: "Settings updated successfully!",
+            updateError: "Error updating settings",
+            deleteError: "Error deleting reason"
+          }
+        },
         tabs: {
           options: "Options",
           plans: "Plans",
@@ -2309,6 +2345,7 @@ const messages = {
         },
       },
       backendErrors: {
+        ERR_USER_EMAIL_EXISTS: "A user with this email already exists.",
         ERR_NO_OTHER_WHATSAPP:
           "There must be at lest one default WhatsApp connection.",
         ERR_NO_DEF_WAPP_FOUND:
@@ -2964,6 +3001,10 @@ const messages = {
         welcomeFlow: "Welcome flow",
         defaultResponseFlow: "Default response flow"
       }
+    },
+    flowDefaults: {
+      welcomeFlowDescription: "This flow is triggered only for new contacts—people you don’t have in your contact list and who sent a message.",
+      defaultResponseFlowDescription: "The default response is sent for any character that is not a keyword. ATTENTION! It will trigger if the ticket is already closed."
     }
   },
 };

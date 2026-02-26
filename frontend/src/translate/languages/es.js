@@ -64,6 +64,13 @@ const messages = {
           submit: "Registrar",
           success: "¡Empresa creada exitosamente!",
         },
+        toasts: {
+          loadError: "No se pudo cargar la lista de empresas.",
+          saveSuccess: "¡Operación realizada con éxito!",
+          saveError: "No se pudo completar la operación. Verifica si ya existe una empresa con el mismo nombre o si los campos fueron completados correctamente.",
+          deleteSuccess: "¡Operación realizada con éxito!",
+          deleteError: "No se pudo completar la operación."
+        }
       },
       auth: {
         toasts: {
@@ -1914,6 +1921,7 @@ const messages = {
           save: "Guardar",
           generateInvoice: "Generar Factura",
           currency: "Moneda",
+          noCompanies: "No se encontraron empresas."
         },
         buttons: {
           add: "Agregar Empresa",
@@ -1932,6 +1940,7 @@ const messages = {
           name: "Nombre",
           users: "Usuarios",
           connections: "Conexiones",
+          currency: "Moneda",
           campaigns: "Campañas",
           schedules: "Horarios",
           enabled: "Habilitado",
@@ -2084,6 +2093,33 @@ const messages = {
       settings: {
         success: "Configuración guardada exitosamente.",
         title: "Configuración",
+        finalization: {
+          title: "Finalización de Atención",
+          generalConfig: "Configuración General",
+          askSaleValue: "Informar el valor de la venta al finalizar la atención",
+          askSaleValueHelper: "Cuando está habilitado, el campo de valor de la venta aparecerá en el modal de finalización",
+          reasonsTitle: "Motivos de Finalización",
+          addReason: "Agregar Motivo",
+          editReason: "Editar Motivo",
+          reasonName: "Nombre del Motivo",
+          reasonDescription: "Descripción (opcional)",
+          cancel: "Cancelar",
+          saving: "Guardando...",
+          update: "Actualizar",
+          add: "Agregar",
+          empty: "No hay motivos registrados. Haz clic en \"Agregar Motivo\" para comenzar.",
+          table: {
+            name: "Nombre",
+            description: "Descripción",
+            actions: "Acciones",
+            noDescription: "Sin descripción"
+          },
+          toasts: {
+            updateSuccess: "Configuración actualizada con éxito!",
+            updateError: "Error al actualizar la configuración",
+            deleteError: "Error al eliminar el motivo"
+          }
+        },
         tabs: {
           options: "Opciones",
           plans: "Planes",
@@ -2299,6 +2335,7 @@ const messages = {
         },
       },
       backendErrors: {
+        ERR_USER_EMAIL_EXISTS: "Ya existe un usuario con este correo electrónico.",
         ERR_NO_OTHER_WHATSAPP:
           "Debe haber al menos una conexión de WhatsApp predeterminada.",
         ERR_NO_DEF_WAPP_FOUND:
@@ -2952,6 +2989,10 @@ const messages = {
         welcomeFlow: "Flujo de bienvenida",
         defaultResponseFlow: "Flujo de respuesta predeterminada"
       }
+    },
+    flowDefaults: {
+      welcomeFlowDescription: "Este flujo se dispara solo para contactos nuevos, personas que no tienes en tu lista de contactos y que enviaron un mensaje.",
+      defaultResponseFlowDescription: "La respuesta predeterminada se envía con cualquier carácter distinto de una palabra clave. ¡ATENCIÓN! Se activará si la atención ya está cerrada."
     }
   },
 };

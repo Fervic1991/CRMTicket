@@ -75,12 +75,20 @@ const useStyles = makeStyles((theme) => ({
     lineHeight: 1,
     color: theme.palette.text.primary,
   },
+  dashboardBackground: {
+    minHeight: "100%",
+    padding: theme.appTokens?.spacing?.lg || theme.spacing(2),
+    background:
+      theme.palette.mode === "dark"
+        ? "radial-gradient(1200px 600px at 8% -10%, rgba(59,130,246,0.16), transparent 55%), radial-gradient(900px 500px at 110% 10%, rgba(16,185,129,0.14), transparent 60%), linear-gradient(180deg, rgba(2,6,23,0.98), rgba(15,23,42,0.98))"
+        : "radial-gradient(1200px 600px at 8% -10%, rgba(59,130,246,0.14), transparent 55%), radial-gradient(900px 500px at 110% 10%, rgba(16,185,129,0.12), transparent 60%), linear-gradient(180deg, rgba(248,250,252,0.98), rgba(241,245,249,0.98))",
+  },
   selected: {}, // Adiciona a classe selected vazia para referência
   tab: {
     minWidth: "auto",
     width: "auto",
     padding: theme.spacing(0.5, 1),
-    borderRadius: 8,
+    borderRadius: theme.appTokens?.radius?.md || 8,
     transition: "0.3s",
     borderWidth: "1px",
     borderStyle: "solid",
@@ -100,7 +108,9 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: theme.spacing(0.3),
     },
     "&:hover": {
-      backgroundColor: "rgba(6, 81, 131, 0.3)",
+      backgroundColor: theme.palette.mode === "dark"
+        ? "rgba(148,163,184,0.14)"
+        : "rgba(15,23,42,0.06)",
     },
     "&$selected": {
       color: theme.palette.primary.contrastText,
@@ -182,13 +192,32 @@ const useStyles = makeStyles((theme) => ({
     overflowX: "hidden",
     ...theme.scrollbarStyles,
     backgroundColor: "transparent !important",
-    borderRadius: "10px",
+    borderRadius: theme.appTokens?.radius?.lg || 18,
   },
   paper: {
     padding: theme.spacing(2),
-    borderRadius: 12,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[1],
+    borderRadius: theme.appTokens?.radius?.lg || 18,
+    background: theme.appTokens?.glass?.background,
+    border: theme.appTokens?.glass?.border,
+    boxShadow: theme.appTokens?.glass?.shadow,
+    backdropFilter: theme.appTokens?.glass?.blur,
+  },
+  sectionHeader: {
+    display: "flex",
+    alignItems: "baseline",
+    justifyContent: "space-between",
+    gap: theme.spacing(2),
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(1.5),
+  },
+  sectionTitle: {
+    fontSize: "1.35rem",
+    fontWeight: 700,
+    color: theme.appTokens?.colors?.text || (theme.palette.mode === "dark" ? "#e2e8f0" : "#0f172a"),
+  },
+  sectionHint: {
+    fontSize: 12,
+    color: theme.appTokens?.colors?.textMuted || (theme.palette.mode === "dark" ? "rgba(226,232,240,0.65)" : "#64748b"),
   },
   barContainer: {
     display: "flex",
@@ -210,15 +239,83 @@ const useStyles = makeStyles((theme) => ({
   infoCard: {
     padding: theme.spacing(2),
     textAlign: "center",
-    borderRadius: 12,
-    boxShadow: theme.shadows[1],
-    backgroundColor: theme.palette.background.paper,
+    borderRadius: 18,
+    background:
+      theme.palette.mode === "dark"
+        ? "rgba(15, 23, 42, 0.7)"
+        : "rgba(255, 255, 255, 0.82)",
+    border:
+      theme.palette.mode === "dark"
+        ? "1px solid rgba(148, 163, 184, 0.2)"
+        : "1px solid rgba(148, 163, 184, 0.35)",
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 16px 36px rgba(0,0,0,0.4)"
+        : "0 16px 36px rgba(15,23,42,0.08)",
+    backdropFilter: "blur(10px)",
     marginBottom: theme.spacing(2),
   },
   infoIcon: {
     fontSize: "2rem",
     color: theme.palette.primary.main,
     marginBottom: theme.spacing(1),
+  },
+  iconBadge: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    background:
+      theme.palette.mode === "dark"
+        ? "rgba(30, 41, 59, 0.8)"
+        : "rgba(248, 250, 252, 0.9)",
+    border:
+      theme.palette.mode === "dark"
+        ? "1px solid rgba(148, 163, 184, 0.2)"
+        : "1px solid rgba(148, 163, 184, 0.35)",
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 12px 24px rgba(0,0,0,0.35)"
+        : "0 12px 24px rgba(15,23,42,0.08)",
+  },
+  iconModern: {
+    fontSize: 22,
+    color: theme.palette.mode === "dark" ? "#e2e8f0" : "#0f172a",
+    filter: theme.palette.mode === "dark"
+      ? "drop-shadow(0 6px 10px rgba(0,0,0,0.45))"
+      : "drop-shadow(0 6px 10px rgba(15,23,42,0.15))",
+  },
+  iconAccent: {
+    color: theme.palette.mode === "dark" ? "#38bdf8" : "#2563eb",
+  },
+  iconSuccess: {
+    color: theme.palette.mode === "dark" ? "#34d399" : "#10b981",
+  },
+  iconWarning: {
+    color: theme.palette.mode === "dark" ? "#f59e0b" : "#d97706",
+  },
+  iconDanger: {
+    color: theme.palette.mode === "dark" ? "#fb7185" : "#e11d48",
+  },
+  filterButton: {
+    borderRadius: 12,
+    textTransform: "none",
+    fontWeight: 600,
+    padding: theme.spacing(0.8, 2),
+    background:
+      theme.palette.mode === "dark"
+        ? "rgba(15, 23, 42, 0.7)"
+        : "rgba(255, 255, 255, 0.85)",
+    border:
+      theme.palette.mode === "dark"
+        ? "1px solid rgba(148, 163, 184, 0.2)"
+        : "1px solid rgba(148, 163, 184, 0.35)",
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 12px 24px rgba(0,0,0,0.35)"
+        : "0 12px 24px rgba(15,23,42,0.08)",
   },
 }));
 
@@ -229,7 +326,7 @@ const IndicatorCard = memo(({ label, value, icon }) => {
     <Grid2 xs={12} sm={6} md={4} lg={3}>
       <Paper className={classes.paper}>
         <Box display="flex" alignItems="center">
-          {icon}
+          <div className={classes.iconBadge}>{icon}</div>
           <Box ml={2}>
             <Typography variant="h6">{value}</Typography>
             <Typography variant="body2">{label}</Typography>
@@ -268,7 +365,7 @@ const AttendanceCard = memo(({ label, value, icon }) => {
     <Grid2 xs={12} sm={6} md={3}>
       <Paper className={classes.infoCard} style={{ height: '100%' }}>
         <Box display="flex" alignItems="center">
-          {icon}
+          <div className={classes.iconBadge}>{icon}</div>
           <Box ml={2}>
             <Typography variant="h6">{value}</Typography>
             <Typography variant="body2">{label}</Typography>
@@ -322,6 +419,13 @@ const Dashboard = () => {
   const [fetchDataFilter, setFetchDataFilter] = useState(0);
 
   const { user } = useContext(AuthContext);
+
+  const renderIcon = useCallback((IconComponent, accentClass = null) => {
+    const className = accentClass
+      ? `${classes.iconModern} ${accentClass}`
+      : classes.iconModern;
+    return <IconComponent className={className} />;
+  }, [classes.iconModern, classes.iconAccent, classes.iconSuccess, classes.iconWarning, classes.iconDanger]);
 
   // Função memoizada para formatar tempo
   const formatTime = useCallback((minutes) => {
@@ -487,19 +591,19 @@ const Dashboard = () => {
 
   // Dados memoizados para os indicadores
   const indicators = useMemo(() => [
-    { label: i18n.t("dashboard.cards.inAttendance"), value: counters.supportHappening || 0, icon: <CallIcon style={{ color: "#01BBAC" }} /> },
-    { label: i18n.t("dashboard.cards.waiting"), value: counters.supportPending || 0, icon: <HourglassEmptyIcon style={{ color: "#47606e" }} /> },
-    { label: i18n.t("dashboard.cards.finalized"), value: counters.supportFinished || 0, icon: <CheckCircleIcon style={{ color: "#5852ab" }} /> },
-    { label: i18n.t("dashboard.cards.groups"), value: counters.supportGroups || 0, icon: <Groups style={{ color: "#01BBAC" }} /> },
-    { label: i18n.t("dashboard.cards.activeAttendants"), value: `${getUsersOnlineCount}/${attendants.length}`, icon: <RecordVoiceOverIcon style={{ color: "#805753" }} /> },
-    { label: i18n.t("dashboard.cards.newContacts"), value: counters.leads || 0, icon: <GroupAddIcon style={{ color: "#8c6b19" }} /> },
-    { label: i18n.t("dashboard.cards.totalReceivedMessages"), value: `${messagesCount.received}/${messagesCount.receivedAll}`, icon: <MessageIcon style={{ color: "#333133" }} /> },
-    { label: i18n.t("dashboard.cards.totalSentMessages"), value: `${messagesCount.sent}/${messagesCount.sentAll}`, icon: <SendIcon style={{ color: "#558a59" }} /> },
-    { label: i18n.t("dashboard.cards.averageServiceTime"), value: formatTime(counters.avgSupportTime), icon: <AccessAlarmIcon style={{ color: "#F79009" }} /> },
-    { label: i18n.t("dashboard.cards.averageWaitingTime"), value: formatTime(counters.avgWaitTime), icon: <TimerIcon style={{ color: "#8a2c40" }} /> },
-    { label: i18n.t("dashboard.cards.activeTickets"), value: counters.activeTickets || 0, icon: <ArrowUpward style={{ color: "#EE4512" }} /> },
-    { label: i18n.t("dashboard.cards.passiveTickets"), value: counters.passiveTickets || 0, icon: <ArrowDownward style={{ color: "#28C037" }} /> },
-  ], [counters, getUsersOnlineCount, attendants.length, messagesCount, formatTime]);
+    { label: i18n.t("dashboard.cards.inAttendance"), value: counters.supportHappening || 0, icon: renderIcon(CallIcon, classes.iconAccent) },
+    { label: i18n.t("dashboard.cards.waiting"), value: counters.supportPending || 0, icon: renderIcon(HourglassEmptyIcon, classes.iconWarning) },
+    { label: i18n.t("dashboard.cards.finalized"), value: counters.supportFinished || 0, icon: renderIcon(CheckCircleIcon, classes.iconSuccess) },
+    { label: i18n.t("dashboard.cards.groups"), value: counters.supportGroups || 0, icon: renderIcon(Groups, classes.iconAccent) },
+    { label: i18n.t("dashboard.cards.activeAttendants"), value: `${getUsersOnlineCount}/${attendants.length}`, icon: renderIcon(RecordVoiceOverIcon, classes.iconAccent) },
+    { label: i18n.t("dashboard.cards.newContacts"), value: counters.leads || 0, icon: renderIcon(GroupAddIcon, classes.iconAccent) },
+    { label: i18n.t("dashboard.cards.totalReceivedMessages"), value: `${messagesCount.received}/${messagesCount.receivedAll}`, icon: renderIcon(MessageIcon, classes.iconAccent) },
+    { label: i18n.t("dashboard.cards.totalSentMessages"), value: `${messagesCount.sent}/${messagesCount.sentAll}`, icon: renderIcon(SendIcon, classes.iconSuccess) },
+    { label: i18n.t("dashboard.cards.averageServiceTime"), value: formatTime(counters.avgSupportTime), icon: renderIcon(AccessAlarmIcon, classes.iconWarning) },
+    { label: i18n.t("dashboard.cards.averageWaitingTime"), value: formatTime(counters.avgWaitTime), icon: renderIcon(TimerIcon, classes.iconDanger) },
+    { label: i18n.t("dashboard.cards.activeTickets"), value: counters.activeTickets || 0, icon: renderIcon(ArrowUpward, classes.iconAccent) },
+    { label: i18n.t("dashboard.cards.passiveTickets"), value: counters.passiveTickets || 0, icon: renderIcon(ArrowDownward, classes.iconSuccess) },
+  ], [counters, getUsersOnlineCount, attendants.length, messagesCount, formatTime, renderIcon, classes.iconAccent, classes.iconSuccess, classes.iconWarning, classes.iconDanger]);
 
   // Dados memoizados para NPS
   const npsData = useMemo(() => [
@@ -511,11 +615,11 @@ const Dashboard = () => {
 
   // Dados memoizados para atendimentos
   const attendanceData = useMemo(() => [
-    { label: i18n.t("dashboard.attendances.total"), value: counters.tickets || 0, icon: <CallIcon style={{ color: '#01BBAC' }} /> },
-    { label: i18n.t("dashboard.attendances.waitingRating"), value: counters.waitRating || 0, icon: <HourglassEmptyIcon style={{ color: '#47606e' }} /> },
-    { label: i18n.t("dashboard.attendances.withoutRating"), value: counters.withoutRating || 0, icon: <ErrorOutlineIcon style={{ color: '#8a2c40' }} /> },
-    { label: i18n.t("dashboard.attendances.withRating"), value: counters.withRating || 0, icon: <CheckCircleOutlineIcon style={{ color: '#805753' }} /> },
-  ], [counters]);
+    { label: i18n.t("dashboard.attendances.total"), value: counters.tickets || 0, icon: renderIcon(CallIcon, classes.iconAccent) },
+    { label: i18n.t("dashboard.attendances.waitingRating"), value: counters.waitRating || 0, icon: renderIcon(HourglassEmptyIcon, classes.iconWarning) },
+    { label: i18n.t("dashboard.attendances.withoutRating"), value: counters.withoutRating || 0, icon: renderIcon(ErrorOutlineIcon, classes.iconDanger) },
+    { label: i18n.t("dashboard.attendances.withRating"), value: counters.withRating || 0, icon: renderIcon(CheckCircleOutlineIcon, classes.iconSuccess) },
+  ], [counters, renderIcon, classes.iconAccent, classes.iconWarning, classes.iconDanger, classes.iconSuccess]);
 
   // Verificação de perfil memoizada
   const shouldShowDashboard = useMemo(() => {
@@ -529,7 +633,7 @@ const Dashboard = () => {
   return (
     <MainContainer>
       <Paper className={classes.mainPaper} variant="outlined">
-        <Container maxWidth={false} className={classes.container} style={{ padding: '16px 8px', maxWidth: '100%', overflowX: 'hidden' }}>
+        <Container maxWidth={false} className={classes.dashboardBackground} style={{ maxWidth: '100%', overflowX: 'hidden' }}>
           <Grid2 container spacing={2} className={classes.container} style={{ margin: 0, width: '100%' }}>
             {/* FILTROS */}
             <Grid2 xs={12} container justifyContent="flex-end">
@@ -537,6 +641,7 @@ const Dashboard = () => {
                 onClick={toggleShowFilter}
                 color="primary"
                 startIcon={!showFilter ? <FilterListIcon /> : <ClearIcon />}
+                className={classes.filterButton}
               >
                 {showFilter ? i18n.t("dashboard.filters.hide") : i18n.t("dashboard.filters.show")}
               </Button>
@@ -558,9 +663,12 @@ const Dashboard = () => {
             )}
             
             {/* Indicadores Gerais */}
-            <Grid2 xs={12} style={{ marginTop: '20px', paddingLeft: '4px' }}>
-              <Typography variant="h5" style={{ marginBottom: '10px', color: theme.palette.primary.main }}>
+            <Grid2 xs={12} className={classes.sectionHeader}>
+              <Typography className={classes.sectionTitle}>
                 {i18n.t("dashboard.sections.indicators")}
+              </Typography>
+              <Typography className={classes.sectionHint}>
+                {moment(dateStartTicket).format("DD/MM")} → {moment(dateEndTicket).format("DD/MM")}
               </Typography>
             </Grid2>
             {indicators.map((indicator, index) => (
@@ -568,9 +676,12 @@ const Dashboard = () => {
             ))}
 
             {/* Pesquisa de Satisfação (NPS) */}
-            <Grid2 xs={12} style={{ marginTop: '40px', paddingLeft: '4px' }}>
-              <Typography variant="h5" style={{ marginBottom: '10px', color: theme.palette.primary.main }}>
+            <Grid2 xs={12} className={classes.sectionHeader}>
+              <Typography className={classes.sectionTitle}>
                 {i18n.t("dashboard.sections.satisfactionSurvey")}
+              </Typography>
+              <Typography className={classes.sectionHint}>
+                NPS
               </Typography>
             </Grid2>
             {npsData.map((nps, index) => (
@@ -578,9 +689,12 @@ const Dashboard = () => {
             ))}
 
             {/* Informações de Atendimento */}
-            <Grid2 xs={12} style={{ marginTop: '40px', paddingLeft: '4px' }}>
-              <Typography variant="h5" style={{ marginBottom: '10px', color: theme.palette.primary.main }}>
+            <Grid2 xs={12} className={classes.sectionHeader}>
+              <Typography className={classes.sectionTitle}>
                 {i18n.t("dashboard.sections.attendances")}
+              </Typography>
+              <Typography className={classes.sectionHint}>
+                {i18n.t("dashboard.cards.activeTickets")} · {i18n.t("dashboard.cards.passiveTickets")}
               </Typography>
             </Grid2>
             {attendanceData.map((attInfo, index) => (
@@ -588,14 +702,14 @@ const Dashboard = () => {
             ))}
 
             {/* Índice de Avaliação */}
-            <Grid2 xs={12} style={{ marginTop: '40px', paddingLeft: '4px', paddingRight: '4px' }}>
-              <Typography variant="h6" style={{ marginBottom: '15px', color: theme.palette.primary.main }}>
+            <Grid2 xs={12} style={{ marginTop: '24px', paddingLeft: '4px', paddingRight: '4px' }}>
+              <Typography className={classes.sectionTitle} style={{ marginBottom: '15px' }}>
                 {i18n.t("dashboard.sections.ratingIndex")}
               </Typography>
               <Grid2 container alignItems="center" spacing={2}>
                 <Grid2 xs={12} sm={2}>
-                  <Paper className={classes.infoCard} style={{ textAlign: 'center', padding: '8px', backgroundColor: '#FFE3B3' }}>
-                    <Typography variant="h6" style={{ color: '#F79009' }}>
+                  <Paper className={classes.infoCard} style={{ textAlign: 'center', padding: '8px', background: theme.palette.mode === "dark" ? "rgba(30,41,59,0.8)" : "rgba(255, 237, 213, 0.9)" }}>
+                    <Typography variant="h6" style={{ color: theme.palette.mode === "dark" ? "#f59e0b" : "#b45309" }}>
                       {Number(counters.percRating / 100).toLocaleString(undefined, { style: 'percent' }) || "0%"}
                     </Typography>
                   </Paper>
@@ -612,10 +726,15 @@ const Dashboard = () => {
             </Grid2>
 
             {/* Tabela de Atendentes */}
-            <Grid2 xs={12} style={{ marginTop: '40px', paddingLeft: '4px' }}>
-              <Typography variant="h5" style={{ marginBottom: '10px', color: theme.palette.primary.main }}>
+            <Grid2 xs={12} className={classes.sectionHeader}>
+              <Typography className={classes.sectionTitle}>
                 {i18n.t("dashboard.sections.attendants")}
               </Typography>
+              <Typography className={classes.sectionHint}>
+                {i18n.t("dashboard.cards.activeAttendants")}
+              </Typography>
+            </Grid2>
+            <Grid2 xs={12} style={{ marginTop: '4px', paddingLeft: '4px' }}>
               <Paper className={classes.paper}>
                 <TableAttendantsStatus
                   attendants={attendants}

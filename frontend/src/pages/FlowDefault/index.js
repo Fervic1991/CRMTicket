@@ -339,8 +339,7 @@ const FlowDefault = () => {
           <Stack gap={'12px'}>
             <Typography fontSize={18} fontWeight={700}>{i18n.t('forms.labels.welcomeFlow')}</Typography>
             <Typography fontSize={12}>
-              Este fluxo é disparado apenas para novos contatos, pessoas que voce
-              não possui em sua lista de contatos e que mandaram uma mensagem
+              {i18n.t("flowDefaults.welcomeFlowDescription")}
             </Typography>
             {!loading && (<Autocomplete
               disablePortal
@@ -377,7 +376,7 @@ const FlowDefault = () => {
           <Stack gap={'12px'} marginTop={4}>
             <Typography fontSize={18} fontWeight={700}>{i18n.t('forms.labels.defaultResponseFlow')}</Typography>
             <Typography fontSize={12}>
-              Resposta Padrão é enviada com qualquer caractere diferente de uma palavra chave. ATENÇÃO! Será disparada se o atendimento ja estiver fechado e passado 6 horas do seu fechamento.
+              {i18n.t("flowDefaults.defaultResponseFlowDescription")}
             </Typography>
             {!loading && (<Autocomplete
               disablePortal

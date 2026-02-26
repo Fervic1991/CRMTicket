@@ -12,16 +12,19 @@ import { i18n } from "../../translate/i18n";
 const useStyles = makeStyles(theme => ({
 	chatContainer: {
 		flex: 1,
-		background: "radial-gradient(1200px 600px at 10% -10%, rgba(30, 136, 229, 0.18), transparent 55%), radial-gradient(900px 500px at 110% 10%, rgba(67, 160, 71, 0.16), transparent 60%), linear-gradient(180deg, rgba(248, 250, 252, 0.98), rgba(241, 245, 249, 0.98))",
+		background:
+			theme.palette.mode === "dark"
+				? "radial-gradient(1200px 600px at 10% -10%, rgba(59,130,246,0.16), transparent 55%), radial-gradient(900px 500px at 110% 10%, rgba(16,185,129,0.14), transparent 60%), linear-gradient(180deg, rgba(2,6,23,0.98), rgba(15,23,42,0.98))"
+				: "radial-gradient(1200px 600px at 10% -10%, rgba(59,130,246,0.14), transparent 55%), radial-gradient(900px 500px at 110% 10%, rgba(16,185,129,0.12), transparent 60%), linear-gradient(180deg, rgba(248, 250, 252, 0.98), rgba(241, 245, 249, 0.98))",
 		fontFamily: "'Poppins', sans-serif",
-		padding: theme.padding,
+		padding: theme.appTokens?.spacing?.lg || theme.padding,
 		height: `calc(100% - 48px)`,
 		overflowY: "hidden",
-		"--tickets-panel-bg": "rgba(255, 255, 255, 0.78)",
-		"--tickets-panel-border": "rgba(148, 163, 184, 0.35)",
-		"--tickets-panel-shadow": "0 12px 30px rgba(15, 23, 42, 0.08)",
+		"--tickets-panel-bg": theme.appTokens?.glass?.background || "rgba(255, 255, 255, 0.78)",
+		"--tickets-panel-border": theme.appTokens?.colors?.border || "rgba(148, 163, 184, 0.35)",
+		"--tickets-panel-shadow": theme.appTokens?.shadows?.md || "0 12px 30px rgba(15, 23, 42, 0.08)",
 		"--tickets-accent": theme.palette.primary.main,
-		"--tickets-muted": "rgba(71, 85, 105, 0.7)",
+		"--tickets-muted": theme.appTokens?.colors?.textMuted || "rgba(71, 85, 105, 0.7)",
 	},
 
 	chatPapper: {
@@ -30,8 +33,8 @@ const useStyles = makeStyles(theme => ({
 		background: "var(--tickets-panel-bg)",
 		border: "1px solid var(--tickets-panel-border)",
 		boxShadow: "var(--tickets-panel-shadow)",
-		borderRadius: 18,
-		backdropFilter: "blur(10px)",
+		borderRadius: theme.appTokens?.radius?.lg || 18,
+		backdropFilter: theme.appTokens?.glass?.blur || "blur(10px)",
 		overflow: "hidden",
 	},
 
@@ -50,7 +53,9 @@ const useStyles = makeStyles(theme => ({
 		paddingLeft: 8,
 	},
 	welcomeMsg: {
-		background: "linear-gradient(135deg, rgba(248, 250, 252, 0.9), rgba(226, 232, 240, 0.9))",
+		background: theme.palette.mode === "dark"
+			? "linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.9))"
+			: "linear-gradient(135deg, rgba(248, 250, 252, 0.9), rgba(226, 232, 240, 0.9))",
 		display: "flex",
 		justifyContent: "space-evenly",
 		alignItems: "center",

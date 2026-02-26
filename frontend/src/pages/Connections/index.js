@@ -73,9 +73,18 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     borderRadius: 18,
     padding: theme.spacing(2),
-    background: "linear-gradient(135deg, rgba(255,255,255,0.85), rgba(245,248,255,0.9))",
-    border: "1px solid rgba(120,130,160,0.18)",
-    boxShadow: "0 18px 45px rgba(31, 45, 61, 0.08)",
+    background:
+      theme.palette.mode === "dark"
+        ? "linear-gradient(135deg, rgba(59,130,246,0.28), rgba(16,185,129,0.18))"
+        : "linear-gradient(135deg, rgba(255,255,255,0.85), rgba(245,248,255,0.9))",
+    border:
+      theme.palette.mode === "dark"
+        ? "1px solid rgba(148, 163, 184, 0.2)"
+        : "1px solid rgba(120,130,160,0.18)",
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 18px 45px rgba(0,0,0,0.35)"
+        : "0 18px 45px rgba(31, 45, 61, 0.08)",
   },
   headerTitle: {
     fontWeight: 700,
@@ -86,9 +95,18 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1.5),
     overflowY: "auto",
     borderRadius: 18,
-    background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(248,250,255,0.95) 100%)",
-    border: "1px solid rgba(120,130,160,0.18)",
-    boxShadow: "0 20px 55px rgba(31, 45, 61, 0.08)",
+    background:
+      theme.palette.mode === "dark"
+        ? "rgba(15, 23, 42, 0.7)"
+        : "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(248,250,255,0.95) 100%)",
+    border:
+      theme.palette.mode === "dark"
+        ? "1px solid rgba(148, 163, 184, 0.2)"
+        : "1px solid rgba(120,130,160,0.18)",
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 20px 55px rgba(0,0,0,0.35)"
+        : "0 20px 55px rgba(31, 45, 61, 0.08)",
     ...theme.scrollbarStyles,
   },
   table: {
@@ -132,6 +150,50 @@ const useStyles = makeStyles((theme) => ({
       borderColor: "rgba(63,81,181,0.35)",
     },
   },
+  menuPaper: {
+    borderRadius: 16,
+    padding: theme.spacing(0.5),
+    background:
+      theme.palette.mode === "dark"
+        ? "rgba(15, 23, 42, 0.92)"
+        : "rgba(255, 255, 255, 0.95)",
+    border:
+      theme.palette.mode === "dark"
+        ? "1px solid rgba(148, 163, 184, 0.2)"
+        : "1px solid rgba(148, 163, 184, 0.25)",
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 18px 40px rgba(0,0,0,0.45)"
+        : "0 18px 40px rgba(15,23,42,0.12)",
+    backdropFilter: "blur(12px)",
+  },
+  menuItem: {
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+    borderRadius: 12,
+    padding: theme.spacing(1, 1.5),
+    marginBottom: 4,
+    "&:hover": {
+      background:
+        theme.palette.mode === "dark"
+          ? "rgba(30, 41, 59, 0.8)"
+          : "rgba(226, 232, 240, 0.7)",
+    },
+  },
+  menuItemText: {
+    display: "flex",
+    flexDirection: "column",
+    lineHeight: 1.2,
+  },
+  menuItemTitle: {
+    fontWeight: 600,
+    color: theme.palette.mode === "dark" ? "#e2e8f0" : "#0f172a",
+  },
+  menuItemSubtitle: {
+    fontSize: 11,
+    color: theme.palette.mode === "dark" ? "rgba(226,232,240,0.65)" : "#64748b",
+  },
   primaryButton: {
     height: 42,
     borderRadius: 12,
@@ -145,8 +207,29 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 12,
     fontWeight: 600,
     textTransform: "none",
-    background: "rgba(255,255,255,0.9)",
-    border: "1px solid rgba(120,130,160,0.2)",
+    background:
+      theme.palette.mode === "dark"
+        ? "rgba(15, 23, 42, 0.7)"
+        : "rgba(255,255,255,0.9)",
+    border:
+      theme.palette.mode === "dark"
+        ? "1px solid rgba(148, 163, 184, 0.2)"
+        : "1px solid rgba(120,130,160,0.2)",
+    color: theme.palette.mode === "dark" ? "#e2e8f0" : "#0f172a",
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 12px 28px rgba(0,0,0,0.35)"
+        : "0 12px 28px rgba(31,45,61,0.08)",
+    "&:hover": {
+      background:
+        theme.palette.mode === "dark"
+          ? "rgba(30, 41, 59, 0.8)"
+          : "rgba(241, 245, 249, 0.9)",
+      borderColor:
+        theme.palette.mode === "dark"
+          ? "rgba(148, 163, 184, 0.4)"
+          : "rgba(63,81,181,0.35)",
+    },
   },
   customTableCell: {
     display: "flex",
@@ -882,7 +965,7 @@ const Connections = () => {
                 variant="contained"
                 color="primary"
                 onClick={restartWhatsapps}
-                className={classes.secondaryButton}
+                className={classes.primaryButton}
               >
                 {i18n.t("connections.restartConnections")}
               </Button>
@@ -891,7 +974,7 @@ const Connections = () => {
                 variant="contained"
                 color="primary"
                 onClick={() => openInNewTab(`https://wa.me/${process.env.REACT_APP_NUMBER_SUPPORT}`)}
-                className={classes.secondaryButton}
+                className={classes.primaryButton}
               >
                 {i18n.t("connections.callSupport")}
               </Button>
@@ -911,7 +994,10 @@ const Connections = () => {
                           >
                             {i18n.t("connections.newConnection")}
                           </Button>
-                          <Menu {...bindMenu(popupState)}>
+                          <Menu
+                            {...bindMenu(popupState)}
+                            PaperProps={{ className: classes.menuPaper }}
+                          >
                             {/* WHATSAPP */}
                             <MenuItem
                               disabled={planConfig?.plan?.useWhatsapp ? false : true}
@@ -920,14 +1006,16 @@ const Connections = () => {
                                 popupState.close();
                               }}
                             >
-                              <WhatsApp
-                                fontSize="small"
-                                style={{
-                                  marginRight: "10px",
-                                  color: "#25D366",
-                                }}
-                              />
-                              WhatsApp
+                              <div className={classes.menuItem}>
+                                <WhatsApp
+                                  fontSize="small"
+                                  style={{ color: "#25D366" }}
+                                />
+                                <div className={classes.menuItemText}>
+                                  <span className={classes.menuItemTitle}>WhatsApp</span>
+                                  <span className={classes.menuItemSubtitle}>{i18n.t("connections.whatsapp")}</span>
+                                </div>
+                              </div>
                             </MenuItem>
                             {/* WHATSAPP OFICIAL */}
                             <MenuItem
@@ -937,14 +1025,16 @@ const Connections = () => {
                                 popupState.close();
                               }}
                             >
-                              <WhatsApp
-                                fontSize="small"
-                                style={{
-                                  marginRight: "10px",
-                                  color: "#25D366",
-                                }}
-                              />
-                              {i18n.t("connections.whatsappOfficial")}
+                              <div className={classes.menuItem}>
+                                <WhatsApp
+                                  fontSize="small"
+                                  style={{ color: "#25D366" }}
+                                />
+                                <div className={classes.menuItemText}>
+                                  <span className={classes.menuItemTitle}>{i18n.t("connections.whatsappOfficial")}</span>
+                                  <span className={classes.menuItemSubtitle}>{i18n.t("connections.whatsappOfficial")}</span>
+                                </div>
+                              </div>
                             </MenuItem>
                             {/* FACEBOOK */}
                             <FacebookLogin
@@ -961,14 +1051,16 @@ const Connections = () => {
                                   disabled={planConfig?.plan?.useFacebook ? false : true}
                                   onClick={renderProps.onClick}
                                 >
-                                  <Facebook
-                                    fontSize="small"
-                                    style={{
-                                      marginRight: "10px",
-                                      color: "#3b5998",
-                                    }}
-                                  />
-                                  Facebook
+                                  <div className={classes.menuItem}>
+                                    <Facebook
+                                      fontSize="small"
+                                      style={{ color: "#3b5998" }}
+                                    />
+                                    <div className={classes.menuItemText}>
+                                      <span className={classes.menuItemTitle}>Facebook</span>
+                                      <span className={classes.menuItemSubtitle}>{i18n.t("connections.facebook")}</span>
+                                    </div>
+                                  </div>
                                 </MenuItem>
                               )}
                             />
@@ -987,14 +1079,16 @@ const Connections = () => {
                                   disabled={planConfig?.plan?.useInstagram ? false : true}
                                   onClick={renderProps.onClick}
                                 >
-                                  <Instagram
-                                    fontSize="small"
-                                    style={{
-                                      marginRight: "10px",
-                                      color: "#e1306c",
-                                    }}
-                                  />
-                                  Instagram
+                                  <div className={classes.menuItem}>
+                                    <Instagram
+                                      fontSize="small"
+                                      style={{ color: "#e1306c" }}
+                                    />
+                                    <div className={classes.menuItemText}>
+                                      <span className={classes.menuItemTitle}>Instagram</span>
+                                      <span className={classes.menuItemSubtitle}>{i18n.t("connections.instagram")}</span>
+                                    </div>
+                                  </div>
                                 </MenuItem>
                               )}
                             />

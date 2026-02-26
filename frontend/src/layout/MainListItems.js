@@ -114,25 +114,31 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 12,
+    borderRadius: theme.appTokens?.radius?.md || 12,
     height: 38,
     width: 38,
     backgroundColor:
       theme.mode === "light"
         ? "rgba(120,120,120,0.08)"
         : "rgba(120,120,120,0.35)",
-    border: "1px solid rgba(120,130,160,0.2)",
-    color: theme.mode === "light" ? "#5b6475" : "#FFF",
+    border: `1px solid ${theme.appTokens?.colors?.border || "rgba(120,130,160,0.2)"}`,
+    color: theme.appTokens?.colors?.textMuted || (theme.mode === "light" ? "#5b6475" : "#FFF"),
     transition: "all 0.25s ease",
     "&.active": {
-      background: "linear-gradient(135deg, rgba(63,81,181,0.9), rgba(33,150,243,0.95))",
+      background: theme.appTokens?.glass?.background || "linear-gradient(135deg, rgba(63,81,181,0.9), rgba(33,150,243,0.95))",
       color: "#fff",
-      boxShadow: `0 10px 22px ${theme.palette.primary.main}30`,
-      borderColor: "rgba(63,81,181,0.6)",
+      boxShadow: theme.appTokens?.shadows?.md || `0 10px 22px ${theme.palette.primary.main}30`,
+      borderColor: theme.palette.primary.main,
     },
     "& .MuiSvgIcon-root": {
-      fontSize: "1.35rem",
+      fontSize: "1.25rem",
+      width: 20,
+      height: 20,
       transition: "transform 0.3s ease",
+    },
+    "& svg": {
+      width: 20,
+      height: 20,
     },
     "&:hover .MuiSvgIcon-root": {
       transform: "scale(1.1)", // Pequena animação no hover

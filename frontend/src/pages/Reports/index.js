@@ -67,7 +67,11 @@ import { Field } from "formik";
 
 const useStyles = makeStyles((theme) => ({
   mainContainer: {
-    background: theme.palette.fancyBackground,
+    background:
+      theme.palette.mode === "dark"
+        ? "radial-gradient(1200px 600px at 8% -10%, rgba(59,130,246,0.16), transparent 55%), radial-gradient(900px 500px at 110% 10%, rgba(16,185,129,0.14), transparent 60%), linear-gradient(180deg, rgba(2,6,23,0.98), rgba(15,23,42,0.98))"
+        : "radial-gradient(1200px 600px at 8% -10%, rgba(59,130,246,0.14), transparent 55%), radial-gradient(900px 500px at 110% 10%, rgba(16,185,129,0.12), transparent 60%), linear-gradient(180deg, rgba(248,250,252,0.98), rgba(241,245,249,0.98))",
+    minHeight: "100%",
   },
   formControl: {
     display: "flex",
@@ -75,24 +79,42 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
   },
-  mainPaper: {
+  headerCard: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: theme.spacing(2),
+    padding: theme.spacing(2),
+    borderRadius: theme.appTokens?.radius?.lg || 18,
+    background: theme.appTokens?.glass?.background,
+    border: theme.appTokens?.glass?.border,
+    boxShadow: theme.appTokens?.glass?.shadow,
+    backdropFilter: theme.appTokens?.glass?.blur,
+  },
+  headerMeta: {
+    fontSize: 12,
+    color: theme.appTokens?.colors?.textMuted || (theme.palette.mode === "dark" ? "rgba(226,232,240,0.7)" : "#64748b"),
+  },
+  filterCard: {
     flex: 1,
-    marginTop: 40,
-    borderRadius: 20,
-    border: "0px !important",
-    marginBottom: 40,
-    overflow: "hidden",
+    overflow: "auto",
+    padding: theme.spacing(2),
+    borderRadius: theme.appTokens?.radius?.lg || 18,
+    background: theme.appTokens?.glass?.background,
+    border: theme.appTokens?.glass?.border,
+    boxShadow: theme.appTokens?.glass?.shadow,
+    backdropFilter: theme.appTokens?.glass?.blur,
+    ...theme.scrollbarStylesSoftBig,
   },
   mainPaperTable: {
     flex: 1,
     overflow: "auto",
     height: "68vh",
-    ...theme.scrollbarStylesSoftBig,
-  },
-  mainPaperFilter: {
-    flex: 1,
-    overflow: "auto",
-    height: "20vh",
+    borderRadius: theme.appTokens?.radius?.lg || 18,
+    background: theme.appTokens?.glass?.background,
+    border: theme.appTokens?.glass?.border,
+    boxShadow: theme.appTokens?.glass?.shadow,
+    backdropFilter: theme.appTokens?.glass?.blur,
     ...theme.scrollbarStylesSoftBig,
   },
   mainHeaderBlock: {
@@ -100,6 +122,43 @@ const useStyles = makeStyles((theme) => ({
       display: "flex",
       flexWrap: "wrap",
     },
+  },
+  tableHeadCell: {
+    fontWeight: 700,
+    fontSize: 12,
+    textTransform: "uppercase",
+    letterSpacing: 0.4,
+    color: theme.appTokens?.colors?.text || (theme.palette.mode === "dark" ? "#e2e8f0" : "#0f172a"),
+    borderBottom: `1px solid ${theme.appTokens?.colors?.border || theme.palette.divider}`,
+    background:
+      theme.palette.mode === "dark"
+        ? "rgba(30, 41, 59, 0.7)"
+        : "rgba(248, 250, 252, 0.9)",
+  },
+  tableRow: {
+    "&:hover": {
+      background:
+        theme.palette.mode === "dark"
+          ? "rgba(30, 41, 59, 0.5)"
+          : "rgba(226, 232, 240, 0.6)",
+    },
+  },
+  tableCell: {
+    borderBottom: `1px solid ${theme.appTokens?.colors?.border || theme.palette.divider}`,
+  },
+  actionButton: {
+    borderRadius: theme.appTokens?.radius?.md || 12,
+    padding: 6,
+    marginLeft: 6,
+    background: theme.appTokens?.glass?.background,
+    border: theme.appTokens?.glass?.border,
+    boxShadow: theme.appTokens?.shadows?.sm,
+    backdropFilter: theme.appTokens?.glass?.blur,
+  },
+  filterButton: {
+    borderRadius: 12,
+    textTransform: "none",
+    fontWeight: 600,
   },
   filterItem: {
     width: 200,
@@ -632,8 +691,15 @@ const Reports = () => {
         className={classes.mainHeaderFilter}
         style={{ display: "flex" }}
       >
-        <Paper className={classes.mainPaperFilter}>
-          <div style={{ paddingTop: "15px" }} />
+        <Paper className={classes.filterCard}>
+          <div className={classes.headerCard} style={{ marginBottom: 12 }}>
+            <div>
+              <Typography variant="h6">{i18n.t("reports.title")}</Typography>
+              <Typography className={classes.headerMeta}>
+                {moment(dateFrom).format("DD/MM/YYYY")} → {moment(dateTo).format("DD/MM/YYYY")}
+              </Typography>
+            </div>
+          </div>
           <Grid container spacing={1}>
             <Grid item xs={12} md={3} xl={3}>
               {renderContactAutocomplete()}
@@ -705,6 +771,7 @@ const Reports = () => {
               <IconButton
                 onClick={exportarGridParaExcel}
                 aria-label={i18n.t("reports.buttons.exportExcel")}
+                className={classes.actionButton}
               >
                 <SaveAlt />
               </IconButton>
@@ -713,6 +780,7 @@ const Reports = () => {
                 color="primary"
                 onClick={() => handleFilter(pageNumber)}
                 size="small"
+                className={classes.filterButton}
               >
                 {i18n.t("reports.buttons.filter")}
               </Button>
@@ -725,40 +793,40 @@ const Reports = () => {
           <TableHead>
             <TableRow>
               {/* <TableCell padding="checkbox" /> */}
-              <TableCell align="center">{i18n.t("reports.table.id")}</TableCell>
-              <TableCell align="left">
+              <TableCell align="center" className={classes.tableHeadCell}>{i18n.t("reports.table.id")}</TableCell>
+              <TableCell align="left" className={classes.tableHeadCell}>
                 {i18n.t("reports.table.whatsapp")}
               </TableCell>
-              <TableCell align="left">
+              <TableCell align="left" className={classes.tableHeadCell}>
                 {i18n.t("reports.table.contact")}
               </TableCell>
-              <TableCell align="left">{i18n.t("reports.table.user")}</TableCell>
-              <TableCell align="left">
+              <TableCell align="left" className={classes.tableHeadCell}>{i18n.t("reports.table.user")}</TableCell>
+              <TableCell align="left" className={classes.tableHeadCell}>
                 {i18n.t("reports.table.queue")}
               </TableCell>
-              <TableCell align="left">{i18n.t("reports.table.wallet")}</TableCell>
-              <TableCell align="center">
+              <TableCell align="left" className={classes.tableHeadCell}>{i18n.t("reports.table.wallet")}</TableCell>
+              <TableCell align="center" className={classes.tableHeadCell}>
                 {i18n.t("reports.table.status")}
               </TableCell>
-              <TableCell align="left">
+              <TableCell align="left" className={classes.tableHeadCell}>
                 {i18n.t("reports.table.lastMessage")}
               </TableCell>
-              <TableCell align="center">
+              <TableCell align="center" className={classes.tableHeadCell}>
                 {i18n.t("reports.table.dateOpen")}
               </TableCell>
-              <TableCell align="center">
+              <TableCell align="center" className={classes.tableHeadCell}>
                 {i18n.t("reports.table.dateClose")}
               </TableCell>
-              <TableCell align="center">
+              <TableCell align="center" className={classes.tableHeadCell}>
                 {i18n.t("reports.table.supportTime")}
               </TableCell>
-              <TableCell align="center">
+              <TableCell align="center" className={classes.tableHeadCell}>
                 {i18n.t("reports.table.NPS")}
               </TableCell>
-              <TableCell align="center">{i18n.t("reports.table.valorVenda")}</TableCell>
-              <TableCell align="center">{i18n.t("reports.table.motivoNaoVenda")}</TableCell>
-              <TableCell align="center">{i18n.t("reports.table.finalizadoComVenda")}</TableCell>
-              <TableCell align="center">
+              <TableCell align="center" className={classes.tableHeadCell}>{i18n.t("reports.table.valorVenda")}</TableCell>
+              <TableCell align="center" className={classes.tableHeadCell}>{i18n.t("reports.table.motivoNaoVenda")}</TableCell>
+              <TableCell align="center" className={classes.tableHeadCell}>{i18n.t("reports.table.finalizadoComVenda")}</TableCell>
+              <TableCell align="center" className={classes.tableHeadCell}>
                 {i18n.t("reports.table.actions")}
               </TableCell>
             </TableRow>
@@ -766,38 +834,38 @@ const Reports = () => {
           <TableBody>
             <>
               {tickets.map((ticket) => (
-                <TableRow key={ticket.id}>
-                  <TableCell align="center">{ticket.id}</TableCell>
-                  <TableCell align="left">{ticket?.whatsappName}</TableCell>
-                  <TableCell align="left">{ticket?.contactName}</TableCell>
-                  <TableCell align="left">{ticket?.userName}</TableCell>
-                  <TableCell align="left">{ticket?.queueName}</TableCell>
-                  <TableCell align="left">
+                <TableRow key={ticket.id} className={classes.tableRow}>
+                  <TableCell align="center" className={classes.tableCell}>{ticket.id}</TableCell>
+                  <TableCell align="left" className={classes.tableCell}>{ticket?.whatsappName}</TableCell>
+                  <TableCell align="left" className={classes.tableCell}>{ticket?.contactName}</TableCell>
+                  <TableCell align="left" className={classes.tableCell}>{ticket?.userName}</TableCell>
+                  <TableCell align="left" className={classes.tableCell}>{ticket?.queueName}</TableCell>
+                  <TableCell align="left" className={classes.tableCell}>
                     {ticket?.walletName || "-"}
                   </TableCell>
-                  <TableCell align="center">{ticket?.status}</TableCell>
-                  <TableCell align="left">{ticket?.lastMessage}</TableCell>
-                  <TableCell align="center">{ticket?.createdAt}</TableCell>
-                  <TableCell align="center">{ticket?.closedAt}</TableCell>
-                  <TableCell align="center">{ticket?.supportTime}</TableCell>
-                  <TableCell align="center">{ticket?.NPS}</TableCell>
-                  <TableCell align="center">
+                  <TableCell align="center" className={classes.tableCell}>{ticket?.status}</TableCell>
+                  <TableCell align="left" className={classes.tableCell}>{ticket?.lastMessage}</TableCell>
+                  <TableCell align="center" className={classes.tableCell}>{ticket?.createdAt}</TableCell>
+                  <TableCell align="center" className={classes.tableCell}>{ticket?.closedAt}</TableCell>
+                  <TableCell align="center" className={classes.tableCell}>{ticket?.supportTime}</TableCell>
+                  <TableCell align="center" className={classes.tableCell}>{ticket?.NPS}</TableCell>
+                  <TableCell align="center" className={classes.tableCell}>
                     {ticket?.valorVenda !== undefined &&
                     ticket?.valorVenda !== null
                       ? ticket.valorVenda
                       : "-"}
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="center" className={classes.tableCell}>
                     {ticket?.motivoNaoVenda || "-"}
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="center" className={classes.tableCell}>
                     {ticket?.finalizadoComVenda === true
                       ? i18n.t("reports.finalizadoComVenda.sim")
                       : ticket?.finalizadoComVenda === false
                       ? i18n.t("reports.finalizadoComVenda.nao")
                       : "-"}
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="center" className={classes.tableCell}>
                     <Typography
                       noWrap
                       component="span"
@@ -805,33 +873,27 @@ const Reports = () => {
                       color="textPrimary"
                     >
                       <Tooltip title={i18n.t("reports.tooltips.logsTicket")}>
-                        <History
+                        <IconButton
+                          className={classes.actionButton}
                           onClick={() => {
                             setOpenTicketMessageDialog(true);
                             setTicketOpen(ticket);
                           }}
-                          fontSize="small"
-                          style={{
-                            color: blue[700],
-                            cursor: "pointer",
-                            marginLeft: 10,
-                            verticalAlign: "middle",
-                          }}
-                        />
+                          size="small"
+                        >
+                          <History fontSize="small" style={{ color: blue[700] }} />
+                        </IconButton>
                       </Tooltip>
                       <Tooltip title={i18n.t("reports.tooltips.accessTicket")}>
-                        <Forward
+                        <IconButton
+                          className={classes.actionButton}
                           onClick={() => {
                             history.push(`/tickets/${ticket.uuid}`);
                           }}
-                          fontSize="small"
-                          style={{
-                            color: green[700],
-                            cursor: "pointer",
-                            marginLeft: 10,
-                            verticalAlign: "middle",
-                          }}
-                        />
+                          size="small"
+                        >
+                          <Forward fontSize="small" style={{ color: green[700] }} />
+                        </IconButton>
                       </Tooltip>
                     </Typography>
                   </TableCell>

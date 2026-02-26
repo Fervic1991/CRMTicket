@@ -83,11 +83,114 @@ const reducer = (state, action) => {
 };
 
 const useStyles = makeStyles((theme) => ({
+  headerCard: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: theme.spacing(2),
+    padding: theme.spacing(2),
+    borderRadius: 18,
+    background:
+      theme.palette.mode === "dark"
+        ? "linear-gradient(135deg, rgba(59,130,246,0.28), rgba(16,185,129,0.18))"
+        : "linear-gradient(135deg, rgba(59,130,246,0.18), rgba(16,185,129,0.16))",
+    border:
+      theme.palette.mode === "dark"
+        ? "1px solid rgba(148, 163, 184, 0.2)"
+        : "1px solid rgba(148, 163, 184, 0.35)",
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 18px 40px rgba(0,0,0,0.4)"
+        : "0 18px 40px rgba(15,23,42,0.08)",
+  },
+  headerMeta: {
+    fontSize: 12,
+    color: theme.palette.mode === "dark" ? "rgba(226,232,240,0.7)" : "#64748b",
+  },
+  searchField: {
+    "& .MuiInputBase-root": {
+      borderRadius: 12,
+      background:
+        theme.palette.mode === "dark"
+          ? "rgba(15, 23, 42, 0.7)"
+          : "rgba(255, 255, 255, 0.9)",
+      boxShadow:
+        theme.palette.mode === "dark"
+          ? "0 12px 24px rgba(0,0,0,0.35)"
+          : "0 12px 24px rgba(15,23,42,0.08)",
+    },
+  },
+  addButton: {
+    borderRadius: 12,
+    textTransform: "none",
+    fontWeight: 600,
+  },
   mainPaper: {
     flex: 1,
-    padding: theme.spacing(1),
+    padding: theme.spacing(2),
     overflowY: "scroll",
+    borderRadius: 18,
+    background:
+      theme.palette.mode === "dark"
+        ? "rgba(15, 23, 42, 0.7)"
+        : "rgba(255, 255, 255, 0.82)",
+    border:
+      theme.palette.mode === "dark"
+        ? "1px solid rgba(148, 163, 184, 0.2)"
+        : "1px solid rgba(148, 163, 184, 0.35)",
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 18px 40px rgba(0,0,0,0.4)"
+        : "0 18px 40px rgba(15,23,42,0.08)",
+    backdropFilter: "blur(10px)",
     ...theme.scrollbarStyles,
+  },
+  tableHeadCell: {
+    fontWeight: 700,
+    fontSize: 12,
+    textTransform: "uppercase",
+    letterSpacing: 0.4,
+    color: theme.palette.mode === "dark" ? "#e2e8f0" : "#0f172a",
+    borderBottom:
+      theme.palette.mode === "dark"
+        ? "1px solid rgba(148, 163, 184, 0.2)"
+        : "1px solid rgba(148, 163, 184, 0.35)",
+    background:
+      theme.palette.mode === "dark"
+        ? "rgba(30, 41, 59, 0.7)"
+        : "rgba(248, 250, 252, 0.9)",
+  },
+  tableRow: {
+    "&:hover": {
+      background:
+        theme.palette.mode === "dark"
+          ? "rgba(30, 41, 59, 0.5)"
+          : "rgba(226, 232, 240, 0.6)",
+    },
+  },
+  tableCell: {
+    borderBottom:
+      theme.palette.mode === "dark"
+        ? "1px solid rgba(148, 163, 184, 0.15)"
+        : "1px solid rgba(148, 163, 184, 0.25)",
+  },
+  actionButton: {
+    borderRadius: 12,
+    padding: 6,
+    marginLeft: 6,
+    background:
+      theme.palette.mode === "dark"
+        ? "rgba(15, 23, 42, 0.7)"
+        : "rgba(255, 255, 255, 0.85)",
+    border:
+      theme.palette.mode === "dark"
+        ? "1px solid rgba(148, 163, 184, 0.2)"
+        : "1px solid rgba(148, 163, 184, 0.35)",
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 10px 24px rgba(0,0,0,0.35)"
+        : "0 10px 24px rgba(15,23,42,0.08)",
   },
   mediaChip: {
     fontSize: '0.75rem',
@@ -261,41 +364,44 @@ const Quickemessages = () => {
         quickemessageId={selectedQuickemessage && selectedQuickemessage.id}
       />
       <MainHeader>
-        <Grid style={{ width: "99.6%" }} container>
-          <Grid xs={12} sm={8} item>
+        <div className={classes.headerCard}>
+          <div>
             <Title>{i18n.t("quickMessages.title")}</Title>
-          </Grid>
-          <Grid xs={12} sm={4} item>
-            <Grid spacing={2} container>
-              <Grid xs={6} sm={6} item>
-                <TextField
-                  fullWidth
-                  placeholder={i18n.t("quickMessages.searchPlaceholder")}
-                  type="search"
-                  value={searchParam}
-                  onChange={handleSearch}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon style={{ color: "gray" }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Grid>
-              <Grid xs={6} sm={6} item>
-                <Button
-                  fullWidth
-                  variant="contained"
-                  onClick={handleOpenQuickMessageDialog}
-                  color="primary"
-                >
-                  {i18n.t("quickMessages.buttons.add")}
-                </Button>
-              </Grid>
+            <div className={classes.headerMeta}>
+              {i18n.t("quickMessages.searchPlaceholder")}
+            </div>
+          </div>
+          <Grid container spacing={2} style={{ maxWidth: 420 }}>
+            <Grid xs={12} sm={7} item>
+              <TextField
+                fullWidth
+                className={classes.searchField}
+                placeholder={i18n.t("quickMessages.searchPlaceholder")}
+                type="search"
+                value={searchParam}
+                onChange={handleSearch}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon style={{ color: "gray" }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
+            <Grid xs={12} sm={5} item>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={handleOpenQuickMessageDialog}
+                color="primary"
+                className={classes.addButton}
+              >
+                {i18n.t("quickMessages.buttons.add")}
+              </Button>
             </Grid>
           </Grid>
-        </Grid>
+        </div>
       </MainHeader>
       <Paper
         className={classes.mainPaper}
@@ -305,16 +411,16 @@ const Quickemessages = () => {
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell align="center">
+              <TableCell align="center" className={classes.tableHeadCell}>
                 {i18n.t("quickMessages.table.shortcode")}
               </TableCell>
-              <TableCell align="center">
+              <TableCell align="center" className={classes.tableHeadCell}>
                 {i18n.t("quickMessages.table.media")}
               </TableCell>
-              <TableCell align="center">
+              <TableCell align="center" className={classes.tableHeadCell}>
                 {i18n.t("quickMessages.table.status")}
               </TableCell>
-              <TableCell align="center">
+              <TableCell align="center" className={classes.tableHeadCell}>
                 {i18n.t("quickMessages.table.actions")}
               </TableCell>
             </TableRow>
@@ -322,22 +428,23 @@ const Quickemessages = () => {
           <TableBody>
             <>
               {quickemessages.map((quickemessage) => (
-                <TableRow key={quickemessage.id}>
-                  <TableCell align="center">{quickemessage.shortcode}</TableCell>
-                  <TableCell align="center">
+                <TableRow key={quickemessage.id} className={classes.tableRow}>
+                  <TableCell align="center" className={classes.tableCell}>{quickemessage.shortcode}</TableCell>
+                  <TableCell align="center" className={classes.tableCell}>
                     {getMediaTypeDisplay(quickemessage)}
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="center" className={classes.tableCell}>
                     {quickemessage.geral === true ? (
                       <CheckCircleIcon style={{ color: 'green' }} />
                     ) : (
                       ''
                     )}
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="center" className={classes.tableCell}>
                     <IconButton
                       size="small"
                       onClick={() => handleEditQuickemessage(quickemessage)}
+                      className={classes.actionButton}
                     >
                       <EditIcon />
                     </IconButton>
@@ -348,6 +455,7 @@ const Quickemessages = () => {
                         setConfirmModalOpen(true);
                         setDeletingQuickemessage(quickemessage);
                       }}
+                      className={classes.actionButton}
                     >
                       <DeleteOutlineIcon />
                     </IconButton>

@@ -143,9 +143,15 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    background: "rgba(255, 255, 255, 0.75)",
+    background:
+      theme.mode === "light"
+        ? "rgba(255, 255, 255, 0.75)"
+        : "rgba(15, 23, 42, 0.7)",
     borderRadius: 16,
-    borderColor: "rgba(148, 163, 184, 0.35)",
+    borderColor:
+      theme.mode === "light"
+        ? "rgba(148, 163, 184, 0.35)"
+        : "rgba(148, 163, 184, 0.25)",
     borderWidth: "1px",
     borderStyle: "solid",
     marginTop: theme.spacing(1),
@@ -153,28 +159,43 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     padding: theme.spacing(1),
-    boxShadow: "0 10px 24px rgba(15, 23, 42, 0.06)",
+    boxShadow:
+      theme.mode === "light"
+        ? "0 10px 24px rgba(15, 23, 42, 0.06)"
+        : "0 10px 24px rgba(0, 0, 0, 0.35)",
   },
 
   serachInputWrapper: {
     flex: 1,
     height: 40,
-    background: "rgba(248, 250, 252, 0.85)",
+    background:
+      theme.mode === "light"
+        ? "rgba(248, 250, 252, 0.85)"
+        : "rgba(15, 23, 42, 0.9)",
     display: "flex",
     borderRadius: 999,
     padding: "4px 8px",
-    borderColor: "rgba(148, 163, 184, 0.35)",
+    borderColor:
+      theme.mode === "light"
+        ? "rgba(148, 163, 184, 0.35)"
+        : "rgba(148, 163, 184, 0.25)",
     borderWidth: "1px",
     borderStyle: "solid",
     marginTop: theme.spacing(0.5),
     marginBottom: theme.spacing(0.5),
     marginLeft: theme.spacing(0.5),
     marginRight: theme.spacing(0.5),
-    boxShadow: "inset 0 1px 3px rgba(15, 23, 42, 0.06)",
+    boxShadow:
+      theme.mode === "light"
+        ? "inset 0 1px 3px rgba(15, 23, 42, 0.06)"
+        : "inset 0 1px 3px rgba(0, 0, 0, 0.45)",
   },
 
   searchIcon: {
-    color: "rgba(71, 85, 105, 0.9)",
+    color:
+      theme.mode === "light"
+        ? "rgba(71, 85, 105, 0.9)"
+        : "rgba(226, 232, 240, 0.9)",
     marginLeft: 6,
     marginRight: 6,
     alignSelf: "center",
@@ -184,6 +205,26 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     border: "none",
     borderRadius: 30,
+    "& input": {
+      color: theme.mode === "light" ? "#0f172a" : "#f8fafc",
+      "::placeholder": {
+        color: theme.mode === "light" ? "rgba(100,116,139,0.9)" : "rgba(203,213,225,0.75)",
+        opacity: 1,
+      },
+    },
+  },
+
+  tooltip: {
+    backgroundColor: theme.mode === "light" ? "#0f172a" : "#e2e8f0",
+    color: theme.mode === "light" ? "#f8fafc" : "#0f172a",
+    fontSize: 12,
+    boxShadow:
+      theme.mode === "light"
+        ? "0 10px 24px rgba(15, 23, 42, 0.2)"
+        : "0 10px 24px rgba(0, 0, 0, 0.5)",
+  },
+  tooltipArrow: {
+    color: theme.mode === "light" ? "#0f172a" : "#e2e8f0",
   },
 
   badge: {
@@ -274,25 +315,69 @@ const useStyles = makeStyles((theme) => ({
   filterIcon: {
     marginRight: 6,
     alignSelf: "center",
-    color: theme.mode === "light" ? "#0872b9" : "#FFF",
     cursor: "pointer",
+    borderRadius: 12,
+    padding: 4,
+    background:
+      theme.mode === "light"
+        ? "rgba(255, 255, 255, 0.75)"
+        : "rgba(15, 23, 42, 0.7)",
+    border:
+      theme.mode === "light"
+        ? "1px solid rgba(148, 163, 184, 0.4)"
+        : "1px solid rgba(148, 163, 184, 0.2)",
+    boxShadow:
+      theme.mode === "light"
+        ? "0 10px 24px rgba(15, 23, 42, 0.12)"
+        : "0 10px 24px rgba(0, 0, 0, 0.4)",
+    backdropFilter: "blur(10px)",
+    "&:hover": {
+      borderColor:
+        theme.mode === "light"
+          ? theme.palette.primary.main
+          : "rgba(248, 250, 252, 0.6)",
+      transform: "translateY(-1px)",
+    },
   },
   button: {
     height: 30,
     width: 30,
-    border: "1px solid rgba(148, 163, 184, 0.55)",
-    borderRadius: 10,
+    border:
+      theme.mode === "light"
+        ? "1px solid rgba(148, 163, 184, 0.55)"
+        : "1px solid rgba(148, 163, 184, 0.25)",
+    borderRadius: 12,
     marginRight: 8,
-    background: "rgba(255, 255, 255, 0.9)",
+    background:
+      theme.mode === "light"
+        ? "rgba(255, 255, 255, 0.9)"
+        : "rgba(15, 23, 42, 0.75)",
+    boxShadow:
+      theme.mode === "light"
+        ? "0 10px 24px rgba(15, 23, 42, 0.12)"
+        : "0 10px 24px rgba(0, 0, 0, 0.4)",
+    backdropFilter: "blur(10px)",
     "&:hover": {
-      borderColor: theme.mode === "light" ? theme.palette.primary.main : "#FFF",
-      background: "rgba(226, 232, 240, 0.6)",
+      borderColor:
+        theme.mode === "light"
+          ? theme.palette.primary.main
+          : "rgba(248, 250, 252, 0.6)",
+      background:
+        theme.mode === "light"
+          ? "rgba(226, 232, 240, 0.6)"
+          : "rgba(30, 41, 59, 0.7)",
     },
   },
   icon: {
-    color: "rgba(71, 85, 105, 0.8)",
+    color:
+      theme.mode === "light"
+        ? "rgba(71, 85, 105, 0.85)"
+        : "rgba(226, 232, 240, 0.9)",
     "&:hover": {
-      color: theme.mode === "light" ? theme.palette.primary.main : "#FFF",
+      color:
+        theme.mode === "light"
+          ? theme.palette.primary.main
+          : "#ffffff",
     },
   },
   buttonOpen: {
@@ -304,15 +389,33 @@ const useStyles = makeStyles((theme) => ({
   standardButton: {
     height: 30,
     width: 30,
-    border: "1px solid rgba(148, 163, 184, 0.55)",
-    borderRadius: 10,
+    border:
+      theme.mode === "light"
+        ? "1px solid rgba(148, 163, 184, 0.55)"
+        : "1px solid rgba(148, 163, 184, 0.25)",
+    borderRadius: 12,
     marginRight: 8,
     padding: 0,
     minWidth: 'auto',
-    background: "rgba(255, 255, 255, 0.9)",
+    background:
+      theme.mode === "light"
+        ? "rgba(255, 255, 255, 0.9)"
+        : "rgba(15, 23, 42, 0.75)",
+    boxShadow:
+      theme.mode === "light"
+        ? "0 10px 24px rgba(15, 23, 42, 0.12)"
+        : "0 10px 24px rgba(0, 0, 0, 0.4)",
+    backdropFilter: "blur(10px)",
     "&:hover": {
-      borderColor: theme.mode === "light" ? theme.palette.primary.main : "#FFF",
-      background: "rgba(226, 232, 240, 0.6)",
+      borderColor:
+        theme.mode === "light"
+          ? theme.palette.primary.main
+          : "rgba(248, 250, 252, 0.6)",
+      background:
+        theme.mode === "light"
+          ? "rgba(226, 232, 240, 0.6)"
+          : "rgba(30, 41, 59, 0.7)",
+      transform: "translateY(-1px)",
     },
     [theme.breakpoints.down('sm')]: {
       height: 28,
@@ -325,10 +428,16 @@ const useStyles = makeStyles((theme) => ({
     borderWidth: "3px",
   },
   standardIcon: {
-    color: "#aaa",
+    color:
+      theme.mode === "light"
+        ? "rgba(71, 85, 105, 0.85)"
+        : "rgba(226, 232, 240, 0.9)",
     fontSize: 18,
     "&:hover": {
-      color: theme.mode === "light" ? theme.palette.primary.main : "#FFF",
+      color:
+        theme.mode === "light"
+          ? theme.palette.primary.main
+          : "#ffffff",
     },
     [theme.breakpoints.down('sm')]: {
       fontSize: 16,
@@ -588,7 +697,12 @@ const TicketsManagerTabs = () => {
           type="search"
           onChange={handleSearch}
         />
-        <Tooltip placement="top" title={i18n.t("tickets.inbox.searchOnMessagesTooltip")}>
+        <Tooltip
+          placement="top"
+          title={i18n.t("tickets.inbox.searchOnMessagesTooltip")}
+          arrow
+          classes={{ tooltip: classes.tooltip, arrow: classes.tooltipArrow }}
+        >
           <div>
             <Switch
               size="small"

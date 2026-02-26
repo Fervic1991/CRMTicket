@@ -24,7 +24,7 @@ const USFlag = '/flags/us.png';
 const ESFlag = '/flags/es.png';
 const ARFlag = '/flags/sa.png';
 const TRFlag = '/flags/tr.png';
-const ITFlag = '/flags/tr.png';
+const ITFlag = '/flags/it.png';
 import PublicLogo from "../../components/PublicLogo";
 import clsx from "clsx";
 import { getBackendUrl } from "../../config";

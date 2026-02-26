@@ -463,11 +463,12 @@ class LanguageService {
       const data = await this.getAvailableLanguages();
       
       if (data.currentLanguage) {
-        i18n.changeLanguage(data.currentLanguage);
+        const normalized = data.currentLanguage.split("-")[0];
+        i18n.changeLanguage(normalized);
         
         // Manter compatibilidade com localStorage
-        localStorage.setItem("i18nextLng", data.currentLanguage);
-        localStorage.setItem("language", data.currentLanguage);
+        localStorage.setItem("i18nextLng", normalized);
+        localStorage.setItem("language", normalized);
       }
       
       // Processar fila offline se houver
@@ -481,7 +482,7 @@ class LanguageService {
       console.error("Error initializing language service:", error);
       
       // Fallback para configuração do localStorage
-      const savedLang = localStorage.getItem("i18nextLng") || "pt";
+      const savedLang = (localStorage.getItem("i18nextLng") || "pt").split("-")[0];
       i18n.changeLanguage(savedLang);
       
       return {
@@ -505,9 +506,9 @@ class LanguageService {
       }
 
       // Obter idioma atual do localStorage
-      const localLanguage = localStorage.getItem("i18nextLng") || 
+      const localLanguage = (localStorage.getItem("i18nextLng") || 
                           localStorage.getItem("language") || 
-                          "pt";
+                          "pt").split("-")[0];
 
       // Verificar se o idioma está disponível
       const availableData = await this.getAvailableLanguages();

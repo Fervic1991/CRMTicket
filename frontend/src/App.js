@@ -15,6 +15,7 @@ import defaultLogoDark from "./assets/logo-black.png";
 import defaultLogoFavicon from "./assets/favicon.ico";
 import useSettings from "./hooks/useSettings";
 import languageService from "./services/languageService";
+import { getAppTokens } from "./theme/tokens";
 
 import "./styles/animations.css";
 
@@ -69,7 +70,13 @@ const App = () => {
   const theme = useMemo(
     () =>
       createTheme(
-        {
+        (() => {
+          const tokens = getAppTokens(
+            mode,
+            mode === "light" ? primaryColorLight : primaryColorDark
+          );
+          return {
+          appTokens: tokens,
           // Scrollbar styles melhorados mas usando cores do tema
           scrollbarStyles: {
             "&::-webkit-scrollbar": {
@@ -116,6 +123,11 @@ const App = () => {
                 : `${primaryColorDark}CC`,
               contrastText: "#ffffff",
             },
+            background: {
+              default: tokens.colors.surfaceAlt,
+              paper: tokens.colors.surfaceElevated
+            },
+            divider: tokens.colors.border,
             textPrimary:
               mode === "light" ? primaryColorLight : primaryColorDark,
             borderPrimary:
@@ -134,8 +146,9 @@ const App = () => {
 
           typography: {
             fontFamily: [
+              'Space Grotesk',
               'Inter',
-              'Roboto',
+              'Manrope',
               '-apple-system',
               'BlinkMacSystemFont',
               '"Segoe UI"',
@@ -175,13 +188,13 @@ const App = () => {
           },
 
           shape: {
-            borderRadius: 8, // Bordas arredondadas mas não excessivas
+            borderRadius: tokens.radius.md,
           },
           overrides: {
             // Botões usando cor do tema
             MuiButton: {
               root: {
-                borderRadius: 8,
+                borderRadius: tokens.radius.md,
                 textTransform: 'none',
                 fontWeight: 600,
                 letterSpacing: '0.025em',
@@ -194,9 +207,9 @@ const App = () => {
                 }
               },
               contained: {
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                boxShadow: tokens.shadows.sm,
                 '&:hover': {
-                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15)',
+                  boxShadow: tokens.shadows.md,
                 }
               }
             },
@@ -237,16 +250,16 @@ const App = () => {
                 },
               },
               rounded: {
-                borderRadius: 12,
+                borderRadius: tokens.radius.lg,
               },
               elevation1: {
-                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                boxShadow: tokens.shadows.sm,
               },
               elevation2: {
-                boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+                boxShadow: tokens.shadows.md,
               },
               elevation3: {
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                boxShadow: tokens.shadows.lg,
               }
             },
 
@@ -281,11 +294,11 @@ const App = () => {
             MuiTextField: {
               root: {
                 '& .MuiOutlinedInput-root': {
-                  borderRadius: 8,
+                  borderRadius: tokens.radius.md,
                   transition: 'all 0.3s ease',
                   '&:hover': {
                     '& .MuiOutlinedInput-notchedOutline': {
-                      borderColor: mode === "light" ? "#ccc" : "#555",
+                      borderColor: tokens.colors.borderStrong,
                     }
                   },
                   '&.Mui-focused': {
@@ -355,7 +368,8 @@ const App = () => {
             }
             return appLogoLight;
           },
-        },
+        };
+        })(),
         locale
       ),
     [

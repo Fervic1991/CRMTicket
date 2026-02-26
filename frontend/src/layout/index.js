@@ -586,20 +586,25 @@ useEffect(() => {
     }
   };
 
+  const normalizeLang = (lang) => (lang ? lang.split("-")[0] : lang);
   const handleLanguageChange = (lng) => {
-    i18n.changeLanguage(lng);
-    localStorage.setItem("language", lng);
+    const normalized = normalizeLang(lng);
+    i18n.changeLanguage(normalized);
+    localStorage.setItem("language", normalized);
+    localStorage.setItem("i18nextLng", normalized);
     window.location.reload();
   };
 
   const LANGUAGE_OPTIONS = [
-    { code: "pt-BR", label: "Português" },
+    { code: "pt", label: "Português" },
     { code: "en", label: "English" },
     { code: "es", label: "Spanish" },
+    { code: "it", label: "Italiano" },
     { code: "ar", label: "عربي" },
+    { code: "tr", label: "Türkçe" },
   ];
 
-  const [enabledLanguages, setEnabledLanguages] = useState(["pt-BR", "en"]);
+  const [enabledLanguages, setEnabledLanguages] = useState(["pt", "en"]);
   const { getAll } = useSettings();
   useEffect(() => {
     async function fetchSettings() {
@@ -608,7 +613,7 @@ useEffect(() => {
         const enabledLanguagesSetting = settings.find(
           (s) => s.key === "enabledLanguages"
         )?.value;
-        let langs = ["pt-BR", "en"];
+        let langs = ["pt", "en"];
         try {
           if (enabledLanguagesSetting) {
             langs = JSON.parse(enabledLanguagesSetting);
@@ -620,7 +625,7 @@ useEffect(() => {
           "para companyId:",
           user?.companyId
         );
-        setEnabledLanguages(langs);
+        setEnabledLanguages(langs.map(normalizeLang));
       } catch (error) {
         console.log("Layout - erro ao carregar enabledLanguages:", error);
       }

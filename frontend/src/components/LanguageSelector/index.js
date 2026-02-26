@@ -71,6 +71,7 @@ const languageFlags = {
   es: esFlag,
   ar: saFlag,
   tr: trFlag,
+  it: itFlag,
 };
 
 const languageNames = {
@@ -79,11 +80,12 @@ const languageNames = {
   es: { name: 'Español', nativeName: 'Español' },
   ar: { name: 'العربية', nativeName: 'العربية' },
   tr: { name: 'Türkçe', nativeName: 'Türkçe' },
-  tr: { name: 'Italiano', nativeName: 'Italiano' },
+  it: { name: 'Italiano', nativeName: 'Italiano' },
 };
 
 const LanguageSelector = ({ variant = 'default' }) => {
   const classes = useStyles();
+  const normalizeLang = (lang) => (lang ? lang.split("-")[0] : lang);
   const [currentLanguage, setCurrentLanguage] = useState('pt');
   const [availableLanguages, setAvailableLanguages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -102,10 +104,11 @@ const LanguageSelector = ({ variant = 'default' }) => {
         if (data && isMounted) {
           // Filtrar apenas idiomas válidos
           const validLanguages = (data.languages || ['pt', 'en', 'es', 'ar', 'tr','it'])
+            .map(normalizeLang)
             .filter(code => languageNames[code] && languageFlags[code]);
           
           // Garantir que o idioma atual seja válido
-          let validCurrentLanguage = data.currentLanguage || 'pt';
+          let validCurrentLanguage = normalizeLang(data.currentLanguage) || 'pt';
           if (!validLanguages.includes(validCurrentLanguage)) {
             validCurrentLanguage = validLanguages.includes('pt') ? 'pt' : validLanguages[0] || 'pt';
           }
@@ -122,7 +125,7 @@ const LanguageSelector = ({ variant = 'default' }) => {
         
         if (isMounted) {
           // Fallback para localStorage
-          const saved = localStorage.getItem('i18nextLng') || 'pt';
+          const saved = normalizeLang(localStorage.getItem('i18nextLng')) || 'pt';
           setCurrentLanguage(saved);
           setAvailableLanguages(['pt', 'en', 'es', 'ar', 'tr', 'it']);
           setUseBackend(false);
@@ -155,7 +158,7 @@ const LanguageSelector = ({ variant = 'default' }) => {
   }, []);
 
   const handleLanguageChange = async (event) => {
-    const newLanguage = event.target.value;
+    const newLanguage = normalizeLang(event.target.value);
     setCurrentLanguage(newLanguage);
     
     try {

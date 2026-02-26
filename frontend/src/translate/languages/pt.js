@@ -71,6 +71,13 @@ const messages = {
           submit: "Cadastrar",
           success: "Empresa criada com sucesso!",
         },
+        toasts: {
+          loadError: "Não foi possível carregar a lista de registros.",
+          saveSuccess: "Operação realizada com sucesso!",
+          saveError: "Não foi possível realizar a operação. Verifique se já existe uma empresa com o mesmo nome ou se os campos foram preenchidos corretamente.",
+          deleteSuccess: "Operação realizada com sucesso!",
+          deleteError: "Não foi possível realizar a operação."
+        }
       },
       auth: {
         toasts: {
@@ -1971,6 +1978,7 @@ const messages = {
           save: "Salvar",
           generateInvoice: "Gerar Fatura",
           currency: "Moeda",
+          noCompanies: "Nenhuma empresa encontrada."
         },
         buttons: {
           add: "Adicionar empresa",
@@ -1989,6 +1997,7 @@ const messages = {
           name: "Nome",
           users: "Usuários",
           connections: "Conexões",
+          currency: "Moeda",
           campaigns: "Campanhas",
           schedules: "Agendamentos",
           enabled: "Habilitadas",
@@ -2144,6 +2153,33 @@ const messages = {
       settings: {
         success: "Configurações salvas com sucesso.",
         title: "Configurações",
+        finalization: {
+          title: "Finalização de Atendimento",
+          generalConfig: "Configurações Gerais",
+          askSaleValue: "Informar valor da venda ao finalizar atendimento",
+          askSaleValueHelper: "Quando habilitado, o campo de valor da venda aparecerá no modal de finalização",
+          reasonsTitle: "Motivos de Finalização",
+          addReason: "Adicionar Motivo",
+          editReason: "Editar Motivo",
+          reasonName: "Nome do Motivo",
+          reasonDescription: "Descrição (opcional)",
+          cancel: "Cancelar",
+          saving: "Salvando...",
+          update: "Atualizar",
+          add: "Adicionar",
+          empty: "Nenhum motivo cadastrado. Clique em \"Adicionar Motivo\" para começar.",
+          table: {
+            name: "Nome",
+            description: "Descrição",
+            actions: "Ações",
+            noDescription: "Sem descrição"
+          },
+          toasts: {
+            updateSuccess: "Configuração atualizada com sucesso!",
+            updateError: "Erro ao atualizar configuração",
+            deleteError: "Erro ao excluir motivo"
+          }
+        },
         tabs: {
           options: "Opções",
           plans: "Planos",
@@ -2366,6 +2402,7 @@ const messages = {
         },
       },
       backendErrors: {
+        ERR_USER_EMAIL_EXISTS: "Já existe um usuário com esse e-mail.",
         ERR_NO_OTHER_WHATSAPP: "Deve haver pelo menos um WhatsApp padrão.",
         ERR_NO_DEF_WAPP_FOUND:
           "Nenhum WhatsApp padrão encontrado. Verifique a página de conexões.",
@@ -3052,6 +3089,10 @@ whitelabel: {
           welcomeFlow: "Fluxo de boas vindas",
           defaultResponseFlow: "Fluxo de resposta padrão"
         }
+      },
+      flowDefaults: {
+        welcomeFlowDescription: "Este fluxo é disparado apenas para novos contatos, pessoas que você não possui em sua lista de contatos e que mandaram uma mensagem",
+        defaultResponseFlowDescription: "Resposta Padrão é enviada com qualquer caractere diferente de uma palavra chave. ATENÇÃO! Será disparada se o atendimento já estiver fechado."
       }
     },
   },

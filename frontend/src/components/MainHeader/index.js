@@ -6,7 +6,12 @@ const useStyles = makeStyles(theme => ({
 	contactsHeader: {
 		display: "flex",
 		alignItems: "center",
-		padding: "0px 6px 6px 6px",
+		padding: `${theme.appTokens?.spacing?.xs || 6}px ${theme.appTokens?.spacing?.sm || 10}px`,
+		borderRadius: theme.appTokens?.radius?.lg || theme.shape.borderRadius,
+		background: theme.appTokens?.glass?.background,
+		backdropFilter: theme.appTokens?.glass?.blur,
+		border: theme.appTokens?.glass?.border,
+		boxShadow: theme.appTokens?.glass?.shadow,
 	},
 }));
 

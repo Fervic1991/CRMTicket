@@ -28,6 +28,8 @@ import { useDate } from "../../hooks/useDate";
 import usePlans from "../../hooks/usePlans";
 import moment from "moment";
 import ColorModeContext from "../../layout/themeContext";
+import { useCurrency } from "../../utils/currencyUtils";
+import EmptyState from "../../components/EmptyState";
 
 const reducer = (state, action) => {
   if (action.type === "LOAD_COMPANIES") {
@@ -190,11 +192,12 @@ const Companies = () => {
     return row.status === false ? i18n.t("common.no") : i18n.t("common.yes");
   };
 
+  const { formatCurrency } = useCurrency();
+
   const renderPlanValue = (row) => {
-    return row.planId !== null
-      ? row.plan.amount
-        ? row.plan.amount.toLocaleString("pt-br", { minimumFractionDigits: 2 })
-        : "00.00"
+    const currencyCode = row.plan?.currency || row.currency;
+    return row.planId !== null && row.plan?.amount
+      ? formatCurrency(row.plan.amount, currencyCode)
       : "-";
   };
 
@@ -388,7 +391,7 @@ const Companies = () => {
                   <TableCell style={cellStyle(company)} align="center">{company.email}</TableCell>
                   <TableCell style={cellStyle(company)} align="center">{company?.plan?.name}</TableCell>
                   <TableCell style={cellStyle(company)} align="center">
-                    R$ {renderPlanValue(company)}
+                    {renderPlanValue(company)}
                   </TableCell>
                   <TableCell style={cellStyle(company)} align="center">
                     {dateToClient(company.createdAt)}
@@ -442,6 +445,14 @@ const Companies = () => {
             </>
           </TableBody>
         </Table>
+        {!loading && companies.length === 0 ? (
+          <div style={{ padding: 24 }}>
+            <EmptyState
+              title={i18n.t("compaies.title")}
+              subtitle={i18n.t("compaies.table.noCompanies") || "Nenhuma empresa encontrada."}
+            />
+          </div>
+        ) : null}
       </Paper>
     </MainContainer>
   );

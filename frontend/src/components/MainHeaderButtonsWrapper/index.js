@@ -7,7 +7,7 @@ const useStyles = makeStyles(theme => ({
 		flex: "none",
 		marginLeft: "auto",
 		"& > *": {
-			margin: theme.spacing(1),
+			margin: theme.appTokens?.spacing?.xs || theme.spacing(1),
 		},
 	},
 }));
