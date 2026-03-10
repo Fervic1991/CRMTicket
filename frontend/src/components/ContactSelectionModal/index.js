@@ -17,6 +17,10 @@ import {
   CircularProgress,
   Box,
   Paper,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import { makeStyles } from "@material-ui/core/styles";
@@ -25,6 +29,7 @@ import toastError from "../../errors/toastError";
 import { i18n } from "../../translate/i18n";
 import { TagsFilter } from "../TagsFilter";
 import { toast } from "react-toastify";
+import useWhatsApps from "../../hooks/useWhatsApps";
 const useStyles = makeStyles((theme) => ({
   dialogPaper: {
     borderRadius: 18,
@@ -109,8 +114,10 @@ const ContactSelectionModal = ({ open, onClose, contactListId, onAddContacts }) 
   const [loading, setLoading] = useState(false);
   const [searchParam, setSearchParam] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedWhatsappId, setSelectedWhatsappId] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
   const [hasMore, setHasMore] = useState(false);
+  const { whatsApps } = useWhatsApps();
 
   useEffect(() => {
     if (open) {
@@ -119,6 +126,7 @@ const ContactSelectionModal = ({ open, onClose, contactListId, onAddContacts }) 
       setPageNumber(1);
       setSearchParam("");
       setSelectedTags([]);
+      setSelectedWhatsappId("");
     }
   }, [open]);
 
@@ -134,6 +142,7 @@ const ContactSelectionModal = ({ open, onClose, contactListId, onAddContacts }) 
               searchParam,
               pageNumber,
               contactTag: JSON.stringify(selectedTags),
+              whatsappId: selectedWhatsappId || undefined,
             },
           });
           if (pageNumber === 1) {
@@ -152,7 +161,7 @@ const ContactSelectionModal = ({ open, onClose, contactListId, onAddContacts }) 
     }, 500);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [open, searchParam, selectedTags, pageNumber]);
+  }, [open, searchParam, selectedTags, selectedWhatsappId, pageNumber]);
 
   const handleSelectContact = (contactId) => {
     setSelectedContacts((prev) => {
@@ -205,6 +214,11 @@ const ContactSelectionModal = ({ open, onClose, contactListId, onAddContacts }) 
     setPageNumber(1);
   };
 
+  const handleWhatsappFilter = (event) => {
+    setSelectedWhatsappId(event.target.value);
+    setPageNumber(1);
+  };
+
   const handleLoadMore = () => {
     setPageNumber((prev) => prev + 1);
   };
@@ -216,6 +230,32 @@ const ContactSelectionModal = ({ open, onClose, contactListId, onAddContacts }) 
         <Box className={classes.filterContainer}>
           <TagsFilter onFiltered={handleTagsFilter} />
         </Box>
+
+        <FormControl
+          fullWidth
+          variant="outlined"
+          size="small"
+          className={classes.searchField}
+        >
+          <InputLabel id="contact-selection-whatsapp-filter-label">
+            Connessione
+          </InputLabel>
+          <Select
+            labelId="contact-selection-whatsapp-filter-label"
+            value={selectedWhatsappId}
+            onChange={handleWhatsappFilter}
+            label="Connessione"
+          >
+            <MenuItem value="">
+              Tutte le connessioni
+            </MenuItem>
+            {whatsApps.map((whatsApp) => (
+              <MenuItem key={whatsApp.id} value={String(whatsApp.id)}>
+                {whatsApp.name || "Connessione"}{whatsApp.number ? ` (${whatsApp.number})` : ""}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
         <TextField
           fullWidth

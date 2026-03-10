@@ -60,6 +60,7 @@ type IndexQuery = {
   pageNumber: string;
   contactTag: string;
   isGroup?: string;
+  whatsappId?: string;
 };
 
 type IndexGetContactQuery = {
@@ -181,7 +182,8 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
     searchParam,
     pageNumber,
     contactTag: tagIdsStringified,
-    isGroup
+    isGroup,
+    whatsappId: whatsappIdString
   } = req.query as IndexQuery;
   const { id: userId, companyId } = req.user;
 
@@ -197,6 +199,7 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
     companyId,
     tagsIds,
     isGroup,
+    whatsappId: whatsappIdString ? Number(whatsappIdString) : undefined,
     userId: Number(userId)
   });
 

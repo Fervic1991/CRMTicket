@@ -130,14 +130,42 @@ const useStyles = makeStyles((theme) => ({
     textTransform: "none",
     background: "linear-gradient(135deg, rgba(63,81,181,0.9), rgba(25,118,210,0.95))",
     boxShadow: "0 12px 28px rgba(63,81,181,0.3)",
+    color: "#fff",
+    "&:hover": {
+      background: "linear-gradient(135deg, rgba(56,73,166,0.96), rgba(22,104,188,1))",
+    },
   },
   actionButton: {
     height: 42,
     borderRadius: 12,
     fontWeight: 600,
     textTransform: "none",
-    background: "rgba(255,255,255,0.9)",
-    border: "1px solid rgba(120,130,160,0.2)",
+    background:
+      theme.mode === "light"
+        ? "rgba(255,255,255,0.96)"
+        : "rgba(15,23,42,0.78)",
+    color:
+      theme.mode === "light"
+        ? theme.palette.primary.main
+        : "#e2e8f0",
+    border:
+      theme.mode === "light"
+        ? "1px solid rgba(120,130,160,0.24)"
+        : "1px solid rgba(148,163,184,0.18)",
+    boxShadow:
+      theme.mode === "light"
+        ? "0 10px 24px rgba(31,45,61,0.08)"
+        : "0 10px 24px rgba(2,6,23,0.28)",
+    "&:hover": {
+      background:
+        theme.mode === "light"
+          ? "rgba(244,247,255,1)"
+          : "rgba(30,41,59,0.9)",
+      borderColor:
+        theme.mode === "light"
+          ? "rgba(63,81,181,0.32)"
+          : "rgba(96,165,250,0.35)",
+    },
   },
   summaryBar: {
     display: "flex",
@@ -263,11 +291,24 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 10,
     padding: 6,
     border: "1px solid rgba(120,130,160,0.2)",
-    backgroundColor: "rgba(255,255,255,0.8)",
+    backgroundColor:
+      theme.mode === "light"
+        ? "rgba(255,255,255,0.88)"
+        : "rgba(15,23,42,0.7)",
+    color:
+      theme.mode === "light"
+        ? theme.palette.primary.main
+        : "#e2e8f0",
     transition: "all 0.2s ease",
     "&:hover": {
-      backgroundColor: "rgba(63,81,181,0.08)",
-      borderColor: "rgba(63,81,181,0.35)",
+      backgroundColor:
+        theme.mode === "light"
+          ? "rgba(63,81,181,0.08)"
+          : "rgba(30,41,59,0.92)",
+      borderColor:
+        theme.mode === "light"
+          ? "rgba(63,81,181,0.35)"
+          : "rgba(96,165,250,0.35)",
     },
   },
   emptyState: {

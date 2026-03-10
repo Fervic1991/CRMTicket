@@ -17,6 +17,7 @@ interface Request {
   companyId: number;
   tagsIds?: number[];
   isGroup?: string;
+  whatsappId?: number;
   userId?: number;
 }
 
@@ -31,6 +32,7 @@ const buildWhereCondition = async ({
   companyId,
   tagsIds,
   isGroup,
+  whatsappId,
   userId
 }: Request): Promise<Filterable["where"]> => {
 
@@ -98,6 +100,13 @@ const buildWhereCondition = async ({
     };
   }
 
+  if (whatsappId) {
+    whereCondition = {
+      ...whereCondition,
+      whatsappId
+    };
+  }
+
   return whereCondition;
 };
 
@@ -107,6 +116,7 @@ const ListContactsService = async ({
   companyId,
   tagsIds,
   isGroup,
+  whatsappId,
   userId
 }: Request): Promise<Response> => {
 
@@ -115,6 +125,7 @@ const ListContactsService = async ({
     companyId,
     tagsIds,
     isGroup,
+    whatsappId,
     userId
   });
 
