@@ -51,6 +51,10 @@ const ImportContactsService = async (
     throw new Error(`No whatsapp connection found for company ${companyId}`);
   }
 
+  logger.info(
+    `[ImportContactsService] start company=${companyId} selectedWhatsapp=${selectedWhatsapp.id} selectedName=${selectedWhatsapp.name || ""} selectedNumber=${selectedWhatsapp.number || ""}`
+  );
+
   const wbot = getWbot(selectedWhatsapp.id);
 
   let phoneContacts;
@@ -96,6 +100,9 @@ const ImportContactsService = async (
     for (const { id, name, notify } of phoneContactsList) {
       if (id === "status@broadcast" || id.includes("g.us")) {
         skippedContacts += 1;
+        logger.info(
+          `[ImportContactsService] skip broadcast/group rawId=${id}`
+        );
         continue;
       }
       const number = normalizeNumber(id);
@@ -103,8 +110,15 @@ const ImportContactsService = async (
 
       if (!numberVariants.length) {
         skippedContacts += 1;
+        logger.warn(
+          `[ImportContactsService] skip invalid-number rawId=${id} normalized=${number}`
+        );
         continue;
       }
+
+      logger.info(
+        `[ImportContactsService] processing rawId=${id} normalized=${number} variants=${numberVariants.join(",")} name=${name || notify || ""}`
+      );
 
       const existingContact = await Contact.findOne({
         where: {
@@ -117,13 +131,31 @@ const ImportContactsService = async (
       });
 
       if (existingContact) {
+        const previousWhatsappId = existingContact.whatsappId;
+        logger.info(
+          `[ImportContactsService] found contactId=${existingContact.id} dbNumber=${existingContact.number} previousWhatsappId=${previousWhatsappId || "null"}`
+        );
+
         existingContact.name = name || notify;
         if (!existingContact.whatsappId) {
           existingContact.whatsappId = selectedWhatsapp.id;
+          logger.info(
+            `[ImportContactsService] assigning whatsappId contactId=${existingContact.id} newWhatsappId=${selectedWhatsapp.id}`
+          );
+        } else {
+          logger.info(
+            `[ImportContactsService] keeping existing whatsappId contactId=${existingContact.id} currentWhatsappId=${existingContact.whatsappId}`
+          );
         }
         await existingContact.save();
+        logger.info(
+          `[ImportContactsService] saved contactId=${existingContact.id} finalWhatsappId=${existingContact.whatsappId || "null"}`
+        );
         updatedContacts += 1;
       } else {
+        logger.info(
+          `[ImportContactsService] no existing contact found normalized=${number} variants=${numberVariants.join(",")} -> creating`
+        );
         try {
           await CreateContactService({
             number,
@@ -131,11 +163,17 @@ const ImportContactsService = async (
             companyId,
             whatsappId: selectedWhatsapp.id
           });
+          logger.info(
+            `[ImportContactsService] created contact normalized=${number} whatsappId=${selectedWhatsapp.id}`
+          );
           createdContacts += 1;
         } catch (error) {
           Sentry.captureException(error);
           logger.warn(
             `Could not get whatsapp contacts from phone. Err: ${error}`
+          );
+          logger.warn(
+            `[ImportContactsService] create failed normalized=${number} variants=${numberVariants.join(",")}`
           );
           skippedContacts += 1;
         }
