@@ -537,6 +537,7 @@ const messages = {
           name: "Nome",
           whatsapp: "Connessione",
           email: "Email",
+          ownerPhone: "Telefono associato",
           actions: "Azioni",
           lastMessage: "Ultimo Messaggio",
           wallet: "Portafoglio",

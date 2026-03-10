@@ -494,6 +494,18 @@ const Contacts = () => {
     setDeleteConfirmModalOpen(true);
   };
 
+  const renderContactConnection = (contact) => {
+    if (!contact.whatsapp) {
+      return "-";
+    }
+
+    if (contact.whatsapp.name && contact.whatsapp.number) {
+      return `${contact.whatsapp.name} (${contact.whatsapp.number})`;
+    }
+
+    return contact.whatsapp.name || contact.whatsapp.number || "-";
+  };
+
   // Função para abrir modal da imagem
   const handleOpenImageModal = (imageUrl, contactName) => {
     setSelectedImage(imageUrl);
@@ -885,8 +897,7 @@ const Contacts = () => {
                   <MenuItem
                     className={classes.headerMenuItem}
                     onClick={() => {
-                      setConfirmOpen(true);
-                      setImportContacts(true);
+                      history.push("/contacts/import");
                       popupState.close();
                     }}
                   >
@@ -1025,6 +1036,9 @@ const Contacts = () => {
               <TableCell className={classes.tableHeadCell + " " + classes.columnDivider} align="center">
                 {i18n.t("contacts.table.email")}
               </TableCell>
+              <TableCell className={classes.tableHeadCell + " " + classes.columnDivider} align="center">
+                {i18n.t("contacts.table.ownerPhone")}
+              </TableCell>
               <TableCell className={classes.tableHeadCell + " " + classes.columnDivider} align="center">{i18n.t("contacts.table.status")}</TableCell>
               <TableCell className={classes.tableHeadCell + " " + classes.columnDivider} align="center">{i18n.t("contacts.table.wallet")}</TableCell>
               <TableCell className={classes.tableHeadCell} align="center">
@@ -1076,6 +1090,9 @@ const Contacts = () => {
                         : formatSerializedId(contact?.number)}
                     </TableCell>
                     <TableCell className={classes.tableCell + " " + classes.columnDivider} align="center">{contact.email}</TableCell>
+                    <TableCell className={classes.tableCell + " " + classes.columnDivider} align="center">
+                      {renderContactConnection(contact)}
+                    </TableCell>
                     <TableCell className={classes.tableCell + " " + classes.columnDivider} align="center">
                       <span className={clsx(classes.statusPill, contact.active ? classes.statusActive : classes.statusInactive)}>
                         {contact.active ? i18n.t("contacts.status.active") : i18n.t("contacts.status.inactive")}

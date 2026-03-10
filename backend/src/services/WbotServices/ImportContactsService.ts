@@ -8,10 +8,21 @@ import CreateContactService from "../ContactServices/CreateContactService";
 import { isString, isArray } from "lodash";
 import path from "path";
 import fs from 'fs';
+import Whatsapp from "../../models/Whatsapp";
 
-const ImportContactsService = async (companyId: number): Promise<void> => {
-  const defaultWhatsapp = await GetDefaultWhatsApp(companyId);
-  const wbot = getWbot(defaultWhatsapp.id);
+const ImportContactsService = async (
+  companyId: number,
+  whatsappId?: number
+): Promise<void> => {
+  const selectedWhatsapp = whatsappId
+    ? await Whatsapp.findOne({ where: { id: whatsappId, companyId } })
+    : await GetDefaultWhatsApp(companyId);
+
+  if (!selectedWhatsapp) {
+    throw new Error(`No whatsapp connection found for company ${companyId}`);
+  }
+
+  const wbot = getWbot(selectedWhatsapp.id);
 
   let phoneContacts;
 
@@ -60,6 +71,9 @@ const ImportContactsService = async (companyId: number): Promise<void> => {
       if (existingContact) {
         // Atualiza o nome do contato existente
         existingContact.name = name || notify;
+        if (!existingContact.whatsappId) {
+          existingContact.whatsappId = selectedWhatsapp.id;
+        }
         await existingContact.save();
       } else {
         // Criar um novo contato
@@ -67,7 +81,8 @@ const ImportContactsService = async (companyId: number): Promise<void> => {
           await CreateContactService({
             number,
             name: name || notify,
-            companyId
+            companyId,
+            whatsappId: selectedWhatsapp.id
           });
         } catch (error) {
           Sentry.captureException(error);

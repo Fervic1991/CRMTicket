@@ -4,8 +4,10 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import { read, utils } from "xlsx";
 import {
   Button,
+  FormControl,
   FormControlLabel,
   FormGroup,
+  InputLabel,
   MenuItem,
   Select,
   Switch,
@@ -22,6 +24,7 @@ import { useHistory } from "react-router-dom";
 import toastError from "../../errors/toastError";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import { toast } from "react-toastify";
+import useWhatsApps from "../../hooks/useWhatsApps";
 
 function WorksheetToDatagrid(ws) {
   /* create an array of arrays */
@@ -102,6 +105,8 @@ const ContactImport = () => {
   const [imported, setImported] = useState(false);
   const [selectedRows, setSelectedRows] = useState({});
   const [validateContact, setValidateContact] = useState(false);
+  const [selectedWhatsappId, setSelectedWhatsappId] = useState("");
+  const { whatsApps } = useWhatsApps();
   const contactFields = [
     { id: "name", label: "Nome", required: true },
     { id: "number", label: "Número", required: true },
@@ -113,6 +118,15 @@ const ContactImport = () => {
   useEffect(() => {
     setContactFieldsAvailable(contactFields);
   }, []);
+
+  useEffect(() => {
+    if (!selectedWhatsappId && whatsApps.length > 0) {
+      const defaultConnection = whatsApps.find((item) => item.isDefault) || whatsApps[0];
+      if (defaultConnection?.id) {
+        setSelectedWhatsappId(defaultConnection.id);
+      }
+    }
+  }, [whatsApps, selectedWhatsappId]);
 
   const processImport = async () => {
     setUploading(true);
@@ -133,6 +147,12 @@ const ContactImport = () => {
 
     if (Object.keys(selectedRows).length === 0) {
       toastError("Nenhum contato selecionado");
+      setUploading(false);
+      return;
+    }
+
+    if (!selectedWhatsappId) {
+      toastError("Selecione una connessione prima di importare");
       setUploading(false);
       return;
     }
@@ -163,6 +183,7 @@ const ContactImport = () => {
             const data = await api.post('/contactsImport', {
               ...contactData,
               validateContact: validateContact ? "true" : "false",
+              whatsappId: selectedWhatsappId,
             });
 
             if (data.status === 200) {
@@ -344,11 +365,44 @@ const ContactImport = () => {
     }
   };
 
+  const handleImportFromPhone = async () => {
+    if (!selectedWhatsappId) {
+      toastError("Selecione una connessione prima di importare");
+      return;
+    }
+
+    try {
+      setUploading(true);
+      await api.post("/contacts/import", { whatsappId: selectedWhatsappId });
+      toast.success("Importação do telefone concluída");
+      history.push("/contacts");
+    } catch (err) {
+      toastError(err);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const renderContent = () => {
     return (
       <div>
         <div className={classes.importOptions}>
-          <FormGroup row style={{ width: '100%', display: 'flex', justifyContent: 'space-around' }}>
+          <FormGroup row style={{ width: '100%', display: 'flex', justifyContent: 'space-around', gap: 16, alignItems: "center" }}>
+            <FormControl variant="outlined" className={classes.select}>
+              <InputLabel id="contact-import-whatsapp-label">Connessione</InputLabel>
+              <Select
+                labelId="contact-import-whatsapp-label"
+                value={selectedWhatsappId}
+                onChange={(event) => setSelectedWhatsappId(event.target.value)}
+                label="Connessione"
+              >
+                {whatsApps.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    {item.name || item.number || `Connessione ${item.id}`}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <FormControlLabel
               control={
                 <Switch checked={validateContact} onChange={(event) => setValidateContact(event.target.checked)} color="primary" />
@@ -368,6 +422,15 @@ const ContactImport = () => {
             onClick={() => processImport()}
           >
             Importar contatos
+          </Button>
+          <Button
+            variant="contained"
+            color="default"
+            disabled={uploading}
+            className={classes.buttonImport}
+            onClick={handleImportFromPhone}
+          >
+            Importar dal telefono
           </Button>
           <Button
             variant="contained"
@@ -405,6 +468,29 @@ const ContactImport = () => {
       {invalidFile && <div>Arquivo inválido!</div>}
       {!imported && rows && columns ? renderContent() : (
         <>
+          <div className={classes.importOptions}>
+            <FormGroup row style={{ width: "100%", display: "flex", justifyContent: "center", gap: 16, alignItems: "center" }}>
+              <FormControl variant="outlined" className={classes.select}>
+                <InputLabel id="contact-import-phone-whatsapp-label">Connessione</InputLabel>
+                <Select
+                  labelId="contact-import-phone-whatsapp-label"
+                  value={selectedWhatsappId}
+                  onChange={(event) => setSelectedWhatsappId(event.target.value)}
+                  label="Connessione"
+                >
+                  {whatsApps.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      {item.name || item.number || `Connessione ${item.id}`}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <Button variant="contained" color="primary" disabled={uploading} onClick={handleImportFromPhone}>
+                Importar dal telefono
+              </Button>
+            </FormGroup>
+          </div>
+
           <div
             {...getRootProps()}
             className="uploaderDrop"

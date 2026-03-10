@@ -15,6 +15,7 @@ interface Request {
   profilePicUrl?: string;
   extraInfo?: ExtraInfo[];
   companyId: number;
+  whatsappId?: number;
 }
 
 const CreateOrUpdateContactServiceForImport = async ({
@@ -24,7 +25,9 @@ const CreateOrUpdateContactServiceForImport = async ({
   isGroup,
   email = "",
   commandBot = "",
-  extraInfo = [], companyId
+  extraInfo = [],
+  companyId,
+  whatsappId
 }: Request): Promise<Contact> => {
   const number = isGroup ? rawNumber : rawNumber.replace(/[^0-9]/g, "");
 
@@ -34,10 +37,12 @@ const CreateOrUpdateContactServiceForImport = async ({
   contact = await Contact.findOne({ where: { number , companyId } });
 
   if (contact) {
+    const nextWhatsappId = contact.whatsappId || whatsappId;
+
     if (contact.companyId === null)
-      await contact.update({ name ,profilePicUrl, companyId })
+      await contact.update({ name ,profilePicUrl, companyId, whatsappId: nextWhatsappId })
     else
-      await contact.update({ name , profilePicUrl });
+      await contact.update({ name , profilePicUrl, whatsappId: nextWhatsappId });
 
       io.of(String(companyId))
   .emit(`company-${companyId}-contact`, {
@@ -53,7 +58,8 @@ const CreateOrUpdateContactServiceForImport = async ({
       email,
       commandBot,
       isGroup,
-      extraInfo
+      extraInfo,
+      whatsappId
     });
 
     io.of(String(companyId))

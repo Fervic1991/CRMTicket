@@ -24,6 +24,7 @@ interface Request {
   acceptAudioMessage?: boolean;
   active?: boolean;
   companyId: number;
+  whatsappId?: number;
   extraInfo?: ExtraInfo[];
   remoteJid?: string;
   wallets?: null | number[] | string[];
@@ -38,6 +39,7 @@ const CreateContactService = async ({
   acceptAudioMessage,
   active,
   companyId,
+  whatsappId,
   extraInfo = [],
   remoteJid = "",
   wallets
@@ -88,6 +90,7 @@ const CreateContactService = async ({
       acceptAudioMessage: acceptAudioMessageContact,
       active,
       companyId,
+      whatsappId,
       remoteJid
     },
     {

@@ -91,6 +91,9 @@ export const importXls = async (
 ): Promise<Response> => {
   const { companyId } = req.user;
   const { number, name, email, validateContact, tags, carteira } = req.body;
+  const requestedWhatsappId = req.body.whatsappId
+    ? Number(req.body.whatsappId)
+    : undefined;
   const simpleNumber = String(number).replace(/[^\d.-]+/g, "");
   let validNumber: any = simpleNumber;
 
@@ -99,7 +102,9 @@ export const importXls = async (
   }
 
   const profilePicPromise = GetProfilePicUrl(validNumber.jid, companyId);
-  const whatsappPromise = GetDefaultWhatsApp(companyId);
+  const whatsappPromise = requestedWhatsappId
+    ? Promise.resolve({ id: requestedWhatsappId })
+    : GetDefaultWhatsApp(companyId);
 
   let profilePicUrl = "";
   let whatsappId = null;

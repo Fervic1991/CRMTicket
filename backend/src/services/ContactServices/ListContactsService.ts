@@ -3,6 +3,7 @@ import Contact from "../../models/Contact";
 import ContactTag from "../../models/ContactTag";
 import Tag from "../../models/Tag";
 import ContactCustomField from "../../models/ContactCustomField";
+import Whatsapp from "../../models/Whatsapp";
 import removeAccents from "remove-accents";
 import { intersection } from "lodash";
 import ContactWallet from "../../models/ContactWallet";
@@ -132,11 +133,17 @@ const ListContactsService = async ({
       "urlPicture",
       "active",
       "companyId",
-      "channel"
+      "channel",
+      "whatsappId"
     ],
     limit,
     offset,
     include: [
+      {
+        model: Whatsapp,
+        as: "whatsapp",
+        attributes: ["id", "name", "number", "channel"]
+      },
       {
         model: Tag,
         as: "tags",

@@ -24,7 +24,7 @@ const ContactImportPage = () => {
     const classes = useStyles();
     return <MainContainer className={classes.mainContainer}>
         <MainHeader>
-            <Title>Importar contatos de arquivo</Title>
+            <Title>Importar contatti e scegliere la connessione</Title>
         </MainHeader>
         <Paper
             className={classes.mainPaper}
