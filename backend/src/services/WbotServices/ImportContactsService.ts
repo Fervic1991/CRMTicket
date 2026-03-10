@@ -9,6 +9,35 @@ import { isString, isArray } from "lodash";
 import path from "path";
 import fs from 'fs';
 import Whatsapp from "../../models/Whatsapp";
+import { Op } from "sequelize";
+
+const normalizeNumber = (value: string): string => value.replace(/\D/g, "");
+
+const getNumberVariants = (rawNumber: string): string[] => {
+  const normalized = normalizeNumber(rawNumber);
+
+  if (!normalized) {
+    return [];
+  }
+
+  const variants = new Set<string>([normalized]);
+
+  if (normalized.startsWith("39") && normalized.length > 10) {
+    variants.add(normalized.slice(2));
+  } else {
+    variants.add(`39${normalized}`);
+  }
+
+  if (normalized.length > 10) {
+    variants.add(normalized.slice(-10));
+  }
+
+  if (normalized.length > 8) {
+    variants.add(normalized.slice(-8));
+  }
+
+  return Array.from(variants).filter(Boolean);
+};
 
 const ImportContactsService = async (
   companyId: number,
@@ -60,23 +89,41 @@ const ImportContactsService = async (
     : phoneContacts;
 
   if (isArray(phoneContactsList)) {
-    phoneContactsList.forEach(async ({ id, name, notify }) => {
-      if (id === "status@broadcast" || id.includes("g.us")) return;
-      const number = id.replace(/\D/g, "");
+    let updatedContacts = 0;
+    let createdContacts = 0;
+    let skippedContacts = 0;
+
+    for (const { id, name, notify } of phoneContactsList) {
+      if (id === "status@broadcast" || id.includes("g.us")) {
+        skippedContacts += 1;
+        continue;
+      }
+      const number = normalizeNumber(id);
+      const numberVariants = getNumberVariants(number);
+
+      if (!numberVariants.length) {
+        skippedContacts += 1;
+        continue;
+      }
 
       const existingContact = await Contact.findOne({
-        where: { number, companyId }
+        where: {
+          companyId,
+          number: {
+            [Op.in]: numberVariants
+          }
+        },
+        order: [["updatedAt", "DESC"]]
       });
 
       if (existingContact) {
-        // Atualiza o nome do contato existente
         existingContact.name = name || notify;
         if (!existingContact.whatsappId) {
           existingContact.whatsappId = selectedWhatsapp.id;
         }
         await existingContact.save();
+        updatedContacts += 1;
       } else {
-        // Criar um novo contato
         try {
           await CreateContactService({
             number,
@@ -84,14 +131,20 @@ const ImportContactsService = async (
             companyId,
             whatsappId: selectedWhatsapp.id
           });
+          createdContacts += 1;
         } catch (error) {
           Sentry.captureException(error);
           logger.warn(
             `Could not get whatsapp contacts from phone. Err: ${error}`
           );
+          skippedContacts += 1;
         }
       }
-    });
+    }
+
+    logger.info(
+      `[ImportContactsService] company=${companyId} whatsapp=${selectedWhatsapp.id} updated=${updatedContacts} created=${createdContacts} skipped=${skippedContacts}`
+    );
   }
 };
 
