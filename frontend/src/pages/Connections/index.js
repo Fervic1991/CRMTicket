@@ -1098,7 +1098,7 @@ const Connections = () => {
                 autoLoad={false}
                 fields="name,email,picture"
                 version="25.0"
-                scope={process.env.REACT_APP_REQUIRE_BUSINESS_MANAGEMENT?.toUpperCase() === "TRUE" ? "public_profile,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management" : "public_profile,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement"}
+                scope={process.env.REACT_APP_REQUIRE_BUSINESS_MANAGEMENT?.toUpperCase() === "TRUE" ? "public_profile,pages_messaging,pages_show_list,pages_manage_metadata,business_management" : "public_profile,pages_messaging,pages_show_list,pages_manage_metadata"}
                 callback={responseFacebook}
                 render={(renderProps) => (
                   <Card className={classes.channelCard} onClick={renderProps.onClick}>
@@ -1135,7 +1135,7 @@ const Connections = () => {
                 autoLoad={false}
                 fields="name,email,picture"
                 version="25.0"
-                scope={process.env.REACT_APP_REQUIRE_BUSINESS_MANAGEMENT?.toUpperCase() === "TRUE" ? "public_profile,instagram_basic,instagram_manage_messages,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management" : "public_profile,instagram_basic,instagram_manage_messages,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement"}
+                scope={process.env.REACT_APP_REQUIRE_BUSINESS_MANAGEMENT?.toUpperCase() === "TRUE" ? "public_profile,instagram_basic,instagram_manage_messages,pages_messaging,pages_show_list,pages_manage_metadata,business_management" : "public_profile,instagram_basic,instagram_manage_messages,pages_messaging,pages_show_list,pages_manage_metadata"}
                 callback={responseInstagram}
                 render={(renderProps) => (
                   <Card className={classes.channelCard} onClick={renderProps.onClick}>
