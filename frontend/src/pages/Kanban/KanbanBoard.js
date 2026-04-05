@@ -8,8 +8,9 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     overflowX: 'auto',
     ...theme.scrollbarStyles,
-    padding: theme.spacing(1.5),
-    gap: theme.spacing(1.5),
+    padding: theme.spacing(1.75),
+    gap: theme.spacing(2),
+    alignItems: 'flex-start',
   },
 }));
 

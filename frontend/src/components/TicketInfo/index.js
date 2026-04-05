@@ -30,8 +30,12 @@ const useStyles = makeStyles((theme) => ({
     },
     clickableAvatar: {
         cursor: "pointer",
+        width: 46,
+        height: 46,
+        borderRadius: "50%",
+        boxShadow: "0 10px 22px rgba(15, 23, 42, 0.12)",
         "&:hover": {
-            opacity: 0.8,
+            opacity: 0.88,
         },
     },
     headerWrap: {
@@ -64,20 +68,20 @@ const useStyles = makeStyles((theme) => ({
     statusPill: {
         padding: "6px 14px",
         borderRadius: 999,
-        fontSize: "0.75rem",
+        fontSize: "0.74rem",
         fontWeight: 700,
         letterSpacing: "0.03em",
         textTransform: "uppercase",
-        border: "1px solid rgba(148, 163, 184, 0.5)",
-        background: "rgba(255, 255, 255, 0.7)",
-        color: "rgba(15, 23, 42, 0.8)",
-        boxShadow: "0 6px 14px rgba(15, 23, 42, 0.08)",
+        border: "1px solid rgba(245, 158, 11, 0.25)",
+        background: "rgba(254, 243, 199, 0.95)",
+        color: "#92400E",
+        boxShadow: "none",
         marginRight: theme.spacing(1),
         marginTop: theme.spacing(0.5),
     },
     headerTitle: {
-        fontWeight: 700,
-        color: "rgba(15, 23, 42, 0.9)",
+        fontWeight: 800,
+        color: "rgba(15, 23, 42, 0.95)",
     },
     headerSub: {
         color: "rgba(71, 85, 105, 0.85)",

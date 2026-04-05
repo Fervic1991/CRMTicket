@@ -14,15 +14,10 @@ import {
   Tab,
   Tabs,
   TextField,
-  Chip,
   Typography,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Badge,
   Avatar,
   IconButton,
+  InputAdornment,
 } from "@material-ui/core";
 import ChatList from "./ChatList";
 import ChatMessages from "./ChatMessages";
@@ -37,6 +32,9 @@ import { AuthContext } from "../../context/Auth/AuthContext";
 import { i18n } from "../../translate/i18n";
 import { toast } from "react-hot-toast";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import AddIcon from "@material-ui/icons/Add";
+import PhotoCameraOutlinedIcon from "@material-ui/icons/PhotoCameraOutlined";
+import SearchIcon from "@material-ui/icons/Search";
 
 // FIXME checkout https://mui.com/components/use-media-query/#migrating-from-withwidth
 const withWidth = () => (WrappedComponent) => (props) =>
@@ -71,6 +69,154 @@ const useStyles = makeStyles((theme) => ({
     height: "92%",
     width: "100%",
   },
+  segmentedBar: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: theme.spacing(1.5),
+    padding: theme.spacing(2),
+    background: "rgba(255,255,255,0.92)",
+    borderBottom: "1px solid #E2E8F0",
+    position: "sticky",
+    top: 0,
+    zIndex: 100,
+  },
+  segmentedControl: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 4,
+    padding: 4,
+    borderRadius: 999,
+    background: "#F1F5F9",
+    border: "1px solid #E2E8F0",
+    boxShadow: "inset 0 1px 2px rgba(15,23,42,0.04)",
+  },
+  segmentedTab: {
+    minHeight: 36,
+    minWidth: 92,
+    padding: "0 16px",
+    borderRadius: 999,
+    textTransform: "none",
+    fontWeight: 600,
+    color: "#64748B",
+    transition: "all 0.2s ease",
+    '&.Mui-selected': {
+      color: "#fff",
+      background: "linear-gradient(135deg, #2563EB 0%, #38BDF8 100%)",
+      boxShadow: "0 8px 18px rgba(37,99,235,0.22)",
+    },
+  },
+  segmentedIndicator: {
+    display: "none",
+  },
+  createGroupButton: {
+    minHeight: 40,
+    borderRadius: 12,
+    padding: theme.spacing(1, 2),
+    fontWeight: 700,
+    textTransform: "none",
+    color: "#fff",
+    background: "linear-gradient(135deg, #2563EB 0%, #38BDF8 100%)",
+    boxShadow: "0 12px 24px rgba(37,99,235,0.22)",
+    '&:hover': {
+      background: "linear-gradient(135deg, #1D4ED8 0%, #0EA5E9 100%)",
+    },
+  },
+  modalPaper: {
+    borderRadius: 24,
+    overflow: "hidden",
+    background: "linear-gradient(180deg, #ffffff 0%, #f8fbff 100%)",
+    border: "1px solid rgba(226,232,240,0.95)",
+    boxShadow: "0 30px 70px rgba(15,23,42,0.12)",
+  },
+  modalTitle: {
+    padding: theme.spacing(3, 4, 2.5),
+    background: "linear-gradient(135deg, rgba(59,130,246,0.12), rgba(14,165,233,0.08))",
+  },
+  modalTitleText: {
+    fontSize: 24,
+    fontWeight: 700,
+    color: "#0F172A",
+  },
+  modalSubtitle: {
+    marginTop: theme.spacing(0.75),
+    fontSize: 13,
+    lineHeight: 1.6,
+    color: "#64748B",
+  },
+  modalContent: {
+    padding: theme.spacing(3.5, 4),
+  },
+  dropZone: {
+    width: 120,
+    height: 120,
+    margin: "0 auto",
+    borderRadius: "50%",
+    border: "1.5px dashed #93C5FD",
+    background: "linear-gradient(135deg, rgba(59,130,246,0.10), rgba(14,165,233,0.06))",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
+    gap: theme.spacing(1),
+    color: "#2563EB",
+    cursor: "pointer",
+    overflow: "hidden",
+  },
+  dropZoneText: {
+    fontSize: 12,
+    fontWeight: 600,
+    color: "#1E40AF",
+    textAlign: "center",
+    maxWidth: 82,
+    lineHeight: 1.4,
+  },
+  modalFieldLabel: {
+    marginBottom: theme.spacing(0.75),
+    fontSize: 12,
+    fontWeight: 700,
+    color: "#334155",
+  },
+  modalField: {
+    width: "100%",
+    '& .MuiOutlinedInput-root': {
+      borderRadius: 10,
+      background: "#FFFFFF",
+      '& fieldset': {
+        borderColor: "#E2E8F0",
+      },
+      '&:hover fieldset': {
+        borderColor: "#CBD5E1",
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: "#2563EB",
+      },
+    },
+  },
+  modalActions: {
+    padding: theme.spacing(2.5, 4),
+    borderTop: "1px solid rgba(226,232,240,0.95)",
+    background: "rgba(248,250,252,0.92)",
+  },
+  ghostButton: {
+    borderRadius: 12,
+    textTransform: "none",
+    color: "#475569",
+    background: "transparent",
+    boxShadow: "none",
+    '&:hover': {
+      background: "rgba(148,163,184,0.12)",
+    },
+  },
+  primaryButton: {
+    borderRadius: 12,
+    padding: theme.spacing(1.1, 2.8),
+    fontWeight: 700,
+    textTransform: "none",
+    color: "#fff",
+    background: "linear-gradient(135deg, #2563EB 0%, #38BDF8 100%)",
+    boxShadow: "0 12px 24px rgba(37,99,235,0.22)",
+  },
   btnContainer: {
     textAlign: "right",
     padding: 10,
@@ -89,6 +235,7 @@ export function ChatModal({
   chats,
   loggedInUserId,
 }) {
+  const classes = useStyles();
   const [users, setUsers] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -212,15 +359,23 @@ export function ChatModal({
       onClose={handleClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
+      maxWidth="sm"
+      fullWidth
+      classes={{ paper: classes.modalPaper }}
     >
-      <DialogTitle id="alert-dialog-title">
-        {type === "edit"
-          ? i18n.t("chatIndex.modal.editTitle") || "Editar Grupo"
-          : i18n.t("chatIndex.modal.title") || "Criar Grupo"}
+      <DialogTitle id="alert-dialog-title" className={classes.modalTitle}>
+        <Typography className={classes.modalTitleText} component="div">
+          {type === "edit"
+            ? i18n.t("chatIndex.modal.editTitle") || "Modifica Gruppo"
+            : i18n.t("chatIndex.modal.title") || "Crea Gruppo"}
+        </Typography>
+        <Typography className={classes.modalSubtitle} component="div">
+          {i18n.t("chatIndex.modal.subtitle")}
+        </Typography>
       </DialogTitle>
-      <DialogContent>
-        <Grid spacing={2} container>
-          <Grid xs={12} style={{ padding: 18, textAlign: "center" }} item>
+      <DialogContent className={classes.modalContent}>
+        <Grid spacing={3} container>
+          <Grid xs={12} item style={{ textAlign: "center" }}>
             <input
               accept="image/*"
               style={{ display: "none" }}
@@ -228,78 +383,78 @@ export function ChatModal({
               type="file"
               onChange={handleImageChange}
             />
-            <label htmlFor="group-image-upload">
-              <Button variant="outlined" color="primary" component="span">
-                {groupImage
-                  ? "Alterar Foto do Grupo"
-                  : "Adicionar Foto do Grupo"}
-              </Button>
-            </label>
-            {groupImage && (
-              <>
-                <div style={{ marginTop: 10 }}>
+            <label htmlFor="group-image-upload" style={{ display: "inline-block" }}>
+              <div className={classes.dropZone}>
+                {groupImage ? (
                   <img
                     src={
                       typeof groupImage === "string"
-                        ? groupImage.startsWith("http") ||
-                          groupImage.startsWith("blob:")
+                        ? groupImage.startsWith("http") || groupImage.startsWith("blob:")
                           ? groupImage
                           : `${getBackendUrl()}${groupImage}`
                         : URL.createObjectURL(groupImage)
                     }
                     alt="Group"
-                    style={{
-                      width: 80,
-                      height: 80,
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                    }}
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
                   />
-                </div>
-              </>
-            )}
+                ) : (
+                  <>
+                    <PhotoCameraOutlinedIcon style={{ fontSize: 30 }} />
+                    <span className={classes.dropZoneText}>
+                      {i18n.t("chatIndex.addGroupPhoto") || "Carica foto del gruppo"}
+                    </span>
+                  </>
+                )}
+              </div>
+            </label>
           </Grid>
-          <Grid xs={12} style={{ padding: 18 }} item>
+          <Grid xs={12} item>
+            <Typography className={classes.modalFieldLabel}>
+              {i18n.t("chatIndex.modal.name") || "Nome del gruppo"}
+            </Typography>
             <TextField
-              label="Título"
-              placeholder="Título"
+              placeholder={i18n.t("chatIndex.modal.name") || "Nome del gruppo"}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               variant="outlined"
               size="small"
               fullWidth
+              className={classes.modalField}
             />
           </Grid>
-          <Grid xs={12} style={{ padding: 18 }} item>
+          <Grid xs={12} item>
+            <Typography className={classes.modalFieldLabel}>
+              {i18n.t("chatIndex.modal.description") || "Descrizione"}
+            </Typography>
             <TextField
-              label="Descrição"
-              placeholder="Descrição do grupo"
+              placeholder={i18n.t("chatIndex.modal.description") || "Descrizione"}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               variant="outlined"
               size="small"
               fullWidth
               multiline
-              rows={2}
+              rows={3}
+              className={classes.modalField}
             />
           </Grid>
-
           <Grid xs={12} item>
             <UsersFilter
               onFiltered={(users) => setUsers(users)}
               initialUsers={users}
+              label={i18n.t("chatIndex.modal.filterUsers") || "Cerca utenti da aggiungere"}
             />
           </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="primary">
+      <DialogActions className={classes.modalActions}>
+        <Button onClick={handleClose} className={classes.ghostButton}>
           {i18n.t("chatIndex.modal.cancel")}
         </Button>
         <Button
           onClick={handleSave}
-          color="primary"
           variant="contained"
+          className={classes.primaryButton}
           disabled={
             users === undefined ||
             users.length === 0 ||
@@ -810,31 +965,23 @@ function Chat(props) {
     return (
       <Grid className={classes.gridContainer} container>
         <Grid className={classes.gridItem} md={3} item>
-          <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
-            <Button
-              onClick={() => setShowGroupChats(false)}
-              color={!showGroupChats ? "primary" : "default"}
-              variant={!showGroupChats ? "contained" : "outlined"}
-              fullWidth
+          <div className={classes.segmentedBar}>
+            <Tabs
+              value={showGroupChats ? 1 : 0}
+              onChange={(e, value) => setShowGroupChats(value === 1)}
+              className={classes.segmentedControl}
+              TabIndicatorProps={{ className: classes.segmentedIndicator }}
             >
-              {i18n.t("chatIndex.chats")}
-            </Button>
-            <Button
-              onClick={() => setShowGroupChats(true)}
-              color={showGroupChats ? "primary" : "default"}
-              variant={showGroupChats ? "contained" : "outlined"}
-              fullWidth
-            >
-              {i18n.t("chatIndex.groups")}
-            </Button>
+              <Tab className={classes.segmentedTab} label={i18n.t("chatIndex.chats")} />
+              <Tab className={classes.segmentedTab} label={i18n.t("chatIndex.groups")} />
+            </Tabs>
             <Button
               onClick={() => {
                 setDialogType("new");
                 setShowDialog(true);
               }}
-              color="secondary"
-              variant="contained"
-              fullWidth
+              className={classes.createGroupButton}
+              startIcon={<AddIcon />}
             >
               {i18n.t("chatIndex.createGroup")}
             </Button>
@@ -885,48 +1032,26 @@ function Chat(props) {
       <Grid className={classes.gridContainer} container>
         {!currentChat.id ? (
           <Grid item xs={12}>
-            {/* Cabeçalho da lista com botão Criar grupo */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
-                padding: "16px 16px 0 16px",
-                background: "#fff",
-                borderBottom: "1px solid #eee",
-                position: "sticky",
-                top: 0,
-                zIndex: 100,
-              }}
-            >
-              <Button
-                onClick={() => setShowDialog(true)}
-                color="primary"
-                variant="contained"
-                style={{ minWidth: 120 }}
-              >
-                {i18n.t("chatIndex.createGroup") || "Criar grupo"}
-              </Button>
-            </div>
-            {/* Abas de Chats e Grupos */}
-            <div
-              style={{
-                background: "#fff",
-                position: "sticky",
-                top: 56,
-                zIndex: 99,
-              }}
-            >
+            <div className={classes.segmentedBar}>
               <Tabs
                 value={tab}
                 onChange={(e, v) => setTab(v)}
-                indicatorColor="primary"
-                textColor="primary"
-                variant="fullWidth"
+                className={classes.segmentedControl}
+                TabIndicatorProps={{ className: classes.segmentedIndicator }}
               >
-                <Tab label={i18n.t("chatIndex.chats") || "Chats"} />
-                <Tab label={i18n.t("chatIndex.groups") || "Grupos"} />
+                <Tab className={classes.segmentedTab} label={i18n.t("chatIndex.chats") || "Chats"} />
+                <Tab className={classes.segmentedTab} label={i18n.t("chatIndex.groups") || "Gruppi"} />
               </Tabs>
+              <Button
+                onClick={() => {
+                  setDialogType("new");
+                  setShowDialog(true);
+                }}
+                className={classes.createGroupButton}
+                startIcon={<AddIcon />}
+              >
+                {i18n.t("chatIndex.createGroup") || "Crea Gruppo"}
+              </Button>
             </div>
             {tab === 0 && (
               <Grid className={classes.gridItemTab} md={12} item>

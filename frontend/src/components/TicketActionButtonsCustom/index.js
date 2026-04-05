@@ -14,6 +14,10 @@ import {
   AccountBalanceWallet,
   FileCopy as FileCopyIcon,
   FlashOn,
+  PersonAddOutlined,
+  LocalOfferOutlined,
+  CheckCircleOutline,
+  OpenInNewOutlined,
 } from "@material-ui/icons";
 import { v4 as uuidv4 } from "uuid";
 
@@ -67,17 +71,53 @@ const useStyles = makeStyles((theme) => ({
     gap: theme.spacing(1),
     paddingRight: theme.spacing(1),
   },
+  quickToolbar: {
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(1),
+    marginRight: theme.spacing(0.5),
+    [theme.breakpoints.down("md")]: {
+      display: "none",
+    },
+  },
+  quickToolbarButton: {
+    minHeight: 34,
+    borderRadius: 12,
+    padding: theme.spacing(0.5, 1.25),
+    textTransform: "none",
+    fontWeight: 700,
+    color: "#475569",
+    border: "1px solid rgba(148, 163, 184, 0.35)",
+    background: "rgba(255, 255, 255, 0.35)",
+    transition: "all 0.18s ease",
+    "& .MuiButton-startIcon": {
+      marginRight: theme.spacing(0.75),
+    },
+    "&:hover": {
+      background: "rgba(239, 246, 255, 0.95)",
+      borderColor: "rgba(59, 130, 246, 0.4)",
+      color: "#1D4ED8",
+      transform: "translateY(-1px)",
+    },
+  },
+  resolveQuickButton: {
+    "&:hover": {
+      background: "rgba(236, 253, 245, 0.95)",
+      borderColor: "rgba(16, 185, 129, 0.4)",
+      color: "#047857",
+    },
+  },
   bottomButtonVisibilityIcon: {
     padding: 1,
     color: theme.mode === "light" ? theme.palette.primary.main : "#FFF",
   },
   actionIconButton: {
-    height: 36,
-    width: 36,
+    height: 34,
+    width: 34,
     borderRadius: 12,
-    border: "1px solid rgba(148, 163, 184, 0.55)",
-    background: "rgba(255, 255, 255, 0.7)",
-    boxShadow: "0 6px 14px rgba(15, 23, 42, 0.08)",
+    border: "1px solid rgba(226, 232, 240, 0.9)",
+    background: "rgba(255, 255, 255, 0.72)",
+    boxShadow: "none",
     transition: "transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease",
     "&:hover": {
       transform: "translateY(-1px)",
@@ -87,8 +127,18 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   actionIcon: {
-    color: "rgba(30, 41, 59, 0.8)",
+    color: "rgba(51, 65, 85, 0.82)",
     fontSize: 18,
+  },
+  primaryActionButton: {
+    minHeight: 40,
+    borderRadius: 10,
+    textTransform: "none",
+    fontWeight: 700,
+    color: "#FFFFFF",
+    background: "linear-gradient(135deg, #2563EB, #60A5FA)",
+    boxShadow: "0 12px 24px rgba(37, 99, 235, 0.22)",
+    padding: theme.spacing(0.75, 1.8),
   },
   actionMenuButton: {
     height: 32,
@@ -186,6 +236,46 @@ const TicketActionButtonsCustom = ({
       isMounted.current = false;
     };
   }, []);
+
+  useEffect(() => {
+    const handleQuickShortcuts = (event) => {
+      const key = event.key?.toLowerCase();
+      const isModifierPressed = event.ctrlKey || event.metaKey;
+
+      if (!isModifierPressed || ticket.status === "closed") {
+        return;
+      }
+
+      if (key === "k") {
+        event.preventDefault();
+        handleClickResolver();
+        return;
+      }
+
+      if (key === "t") {
+        event.preventDefault();
+        handleFocusTags();
+        return;
+      }
+
+      if (event.shiftKey && key === "a") {
+        event.preventDefault();
+        handleAssignTicket();
+        return;
+      }
+
+      if (event.shiftKey && key === "x") {
+        event.preventDefault();
+        handleOpenTransferModal();
+      }
+    };
+
+    window.addEventListener("keydown", handleQuickShortcuts);
+
+    return () => {
+      window.removeEventListener("keydown", handleQuickShortcuts);
+    };
+  }, [ticket.status]);
 
   useEffect(() => {
     console.log("DEBUG openFinalizacaoVenda:", openFinalizacaoVenda);
@@ -360,6 +450,14 @@ const TicketActionButtonsCustom = ({
   const handleOpenTransferModal = (e) => {
     setTransferTicketModalOpen(true);
     if (typeof handleClose == "function") handleClose();
+  };
+
+  const handleAssignTicket = () => {
+    setTransferTicketModalOpen(true);
+  };
+
+  const handleFocusTags = () => {
+    window.dispatchEvent(new CustomEvent("focusTicketTags"));
   };
 
   const handleOpenConfirmationModal = (e) => {
@@ -756,6 +854,46 @@ const TicketActionButtonsCustom = ({
 )}
 
       <div className={classes.actionButtons}>
+        {(ticket.status === "open" || ticket.status === "group" || ticket.status === "pending") && (
+          <div className={classes.quickToolbar}>
+            <Tooltip title="Assegna rapidamente operatore o coda (Ctrl/Cmd + Shift + A)">
+              <Button
+                className={classes.quickToolbarButton}
+                startIcon={<PersonAddOutlined fontSize="small" />}
+                onClick={handleAssignTicket}
+              >
+                Assegna
+              </Button>
+            </Tooltip>
+            <Tooltip title="Aggiungi o rimuovi etichette al contatto (Ctrl/Cmd + T)">
+              <Button
+                className={classes.quickToolbarButton}
+                startIcon={<LocalOfferOutlined fontSize="small" />}
+                onClick={handleFocusTags}
+              >
+                Tag
+              </Button>
+            </Tooltip>
+            <Tooltip title="Risolvi rapidamente il ticket (Ctrl/Cmd + K)">
+              <Button
+                className={`${classes.quickToolbarButton} ${classes.resolveQuickButton}`}
+                startIcon={<CheckCircleOutline fontSize="small" />}
+                onClick={handleClickResolver}
+              >
+                Risolvi
+              </Button>
+            </Tooltip>
+            <Tooltip title="Trasferisci la conversazione a un altro reparto (Ctrl/Cmd + Shift + X)">
+              <Button
+                className={classes.quickToolbarButton}
+                startIcon={<OpenInNewOutlined fontSize="small" />}
+                onClick={handleOpenTransferModal}
+              >
+                Trasferisci
+              </Button>
+            </Tooltip>
+          </div>
+        )}
         {ticket.status === "closed" &&
           (ticket.queueId === null || ticket.queueId === undefined) && (
             <ButtonWithSpinner
@@ -921,6 +1059,7 @@ const TicketActionButtonsCustom = ({
               loading={loading}
               size="small"
               variant="contained"
+              className={classes.primaryActionButton}
               onClick={(e) => handleOpenAcceptTicketWithouSelectQueue()}
             >
               {i18n.t("messagesList.header.buttons.accept")}
@@ -931,7 +1070,7 @@ const TicketActionButtonsCustom = ({
             loading={loading}
             size="small"
             variant="contained"
-            // color="primary"
+            className={classes.primaryActionButton}
             onClick={(e) => handleUpdateTicketStatus(e, "open", user?.id)}
           >
             {i18n.t("messagesList.header.buttons.accept")}

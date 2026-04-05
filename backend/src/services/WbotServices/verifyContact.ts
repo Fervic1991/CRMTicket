@@ -100,14 +100,16 @@ export async function verifyContact(
 
   const isLid = msgContact.id.includes("@lid");
   const isGroup = msgContact.id.includes("@g.us");
+  const normalizedLid = isLid ? msgContact.id : "";
+  const normalizedNumber = msgContact.id.substring(0, msgContact.id.indexOf("@"));
 
-  const number = isLid
-    ? msgContact.id
-    : msgContact.id.substring(0, msgContact.id.indexOf("@"));
+  const number = normalizedNumber;
 
   const contactData = {
     name: msgContact?.name || msgContact.id.replace(/\D/g, ""),
     number,
+    lid: normalizedLid,
+    remoteJid: msgContact.id,
     profilePicUrl,
     isGroup: msgContact.id.includes("g.us"),
     companyId

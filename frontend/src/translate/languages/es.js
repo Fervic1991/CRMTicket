@@ -284,6 +284,25 @@ const messages = {
         connections: "Conexiones:",
         channel: "Canal",
         whatsappOfficial: "WhatsApp Oficial",
+        connectNewAccount: "Conectar nueva cuenta",
+        selectChannel: "Seleccione el canal",
+        pageName: "Nombre de la página",
+        instagramHandle: "Usuario de Instagram",
+        badges: {
+          linked: "Vinculada",
+        },
+        channelDescriptions: {
+          whatsapp: "Código QR y gestión clásica de sesiones.",
+          facebook: "Conecta las páginas de Facebook y recibe mensajes de Messenger.",
+          instagram: "Conecta el perfil de empresa y centraliza los mensajes directos.",
+        },
+        steps: {
+          stepOne: "Paso 1",
+          stepTwo: "Paso 2",
+          loginFacebook: "Accede a Facebook",
+          selectPage: "Selecciona la página",
+          selectInstagram: "Selecciona el perfil de Instagram",
+        },
         facebook: {
           success: "¡Conexión de Facebook establecida exitosamente!",
         },
@@ -347,6 +366,9 @@ const messages = {
           processed: "Procesado",
           in: "de",
           connecting: "Conectando",
+          connect: "Conectar",
+          disconnectSocial: "Desvincular",
+          loginWithFacebook: "Login with Facebook",
         },
         typography: {
           processed: "Procesado",
@@ -892,6 +914,19 @@ const messages = {
           message: "Mensaje",
           sendError: "Error de Envío",
         },
+        subtitle: "Completa el mensaje, define el destino y programa el envío.",
+        sections: {
+          messageInfo: "Información del Mensaje",
+          messageInfoDescription: "Escribe el contenido e inserta variables disponibles rápidamente.",
+          destinationStatus: "Destino y Estado",
+          destinationStatusDescription: "Define conexión, apertura del ticket, agente y estado final.",
+          planning: "Planificación / Recurrencia",
+          planningDescription: "Configura fecha, recurrencia y comportamiento en días festivos.",
+        },
+        variables: {
+          title: "Variables disponibles",
+          helper: "Haz clic para insertar una variable",
+        },
         validation: {
           messageTooShort: "Mensaje muy corto",
           required: "Requerido",
@@ -902,6 +937,8 @@ const messages = {
           sendAt: "Fecha Programada",
           sentAt: "Fecha Enviada",
           assinar: "Enviar Firma",
+          assinarDescription: "Agrega automáticamente la firma al mensaje programado.",
+          holidayMode: "Días",
         },
         buttons: {
           okAdd: "Agregar",
@@ -1366,6 +1403,7 @@ const messages = {
           add: "Nuevo",
           lists: "Listas",
           import: "Importar",
+          importFromContacts: "Importar desde contactos",
         },
         status: {
           valid: "WhatsApp válido",
@@ -2397,9 +2435,9 @@ const messages = {
         description:
           "Puedes elegir enviar el mensaje recurrentemente y seleccionar el intervalo. Si es un mensaje único, no cambies nada en esta sección.",
         labelInterval: "Intervalo",
-        intervalFilterValue: "Valor del filtro de intervalo",
+        intervalFilterValue: "Valor",
         sendAsManyTimes: "Enviar tantas veces",
-        shipNormallyOnNonbusinessDays: "Enviar normalmente en días no laborales",
+        shipNormallyOnNonbusinessDays: "Enviar también en días festivos",
         sendOneBusinessDayBefore: "Enviar un día hábil antes",
         sendOneBusinessDayLater: "Enviar un día hábil después",
         options: {
@@ -2587,10 +2625,12 @@ const messages = {
         modal: {
           title: "Crear Grupo",
           editTitle: "Editar Grupo",
+          subtitle: "Crea un grupo interno y agrega rápidamente a los participantes",
           save: "Guardar",
           cancel: "Cancelar",
-          name: "Nombre del Grupo",
-          description: "Descripción del Grupo",
+          name: "Nombre del grupo",
+          description: "Descripción",
+          filterUsers: "Buscar usuarios para agregar",
           create: "Crear",
           edit: "Editar",
         },

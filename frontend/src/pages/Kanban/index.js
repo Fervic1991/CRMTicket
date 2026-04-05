@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { i18n } from '../../translate/i18n';
 import { useHistory } from 'react-router-dom';
 import { Button, TextField, Paper, FormControl, InputLabel, Select } from '@material-ui/core';
+import SearchIcon from '@material-ui/icons/Search';
 import { format } from 'date-fns';
 import { Can } from '../../components/Can';
 import MainContainer from '../../components/MainContainer';
@@ -15,6 +16,20 @@ import Title from '../../components/Title';
 import KanbanBoard from './KanbanBoard';
 
 const useStyles = makeStyles(theme => ({
+  filterBar: {
+    width: "100%",
+    display: "flex",
+    alignItems: "flex-end",
+    justifyContent: "space-between",
+    gap: theme.spacing(2),
+    flexWrap: "wrap",
+    padding: theme.spacing(2.25),
+    marginBottom: theme.spacing(2),
+    borderRadius: 16,
+    background: "rgba(255, 255, 255, 0.94)",
+    border: "1px solid rgba(226, 232, 240, 0.95)",
+    boxShadow: "0 10px 28px rgba(15, 23, 42, 0.06)",
+  },
   mainPaper: {
     flex: 1,
     display: 'flex',
@@ -28,26 +43,60 @@ const useStyles = makeStyles(theme => ({
     backdropFilter: "blur(10px)",
   },
   button: {
-    borderRadius: 12,
+    borderRadius: 8,
     textTransform: "none",
-    fontWeight: 600,
-    boxShadow: "0 10px 20px rgba(15, 23, 42, 0.10)",
+    fontWeight: 700,
+    minHeight: 40,
+  },
+  searchButton: {
+    color: "#FFFFFF",
+    background: "linear-gradient(135deg, #2563EB, #60A5FA)",
+    boxShadow: "0 12px 24px rgba(37, 99, 235, 0.22)",
+    "&:hover": {
+      background: "linear-gradient(135deg, #2563EB, #60A5FA)",
+      boxShadow: "0 14px 28px rgba(37, 99, 235, 0.28)",
+    },
+  },
+  addColumnsButton: {
+    color: "#2563EB",
+    background: "transparent",
+    border: "1px solid rgba(37, 99, 235, 0.38)",
+    boxShadow: "none",
+    "&:hover": {
+      background: "rgba(37, 99, 235, 0.06)",
+      borderColor: "#2563EB",
+    },
   },
   dateInput: {
     '& .MuiOutlinedInput-root': {
-      borderRadius: 12,
-      background: "rgba(255, 255, 255, 0.9)",
-      boxShadow: "0 8px 18px rgba(15, 23, 42, 0.06)",
+      borderRadius: 8,
+      background: "#F8FAFC",
+      "& fieldset": {
+        borderColor: "#E2E8F0",
+      },
+      "&:hover fieldset": {
+        borderColor: "#CBD5E1",
+      },
+      "&.Mui-focused": {
+        background: "#FFFFFF",
+      },
     },
-    marginRight: theme.spacing(1),
+    minWidth: 170,
   },
   sortSelect: {
-    minWidth: 150,
-    marginRight: theme.spacing(1),
+    minWidth: 170,
     '& .MuiOutlinedInput-root': {
-      borderRadius: 12,
-      background: "rgba(255, 255, 255, 0.9)",
-      boxShadow: "0 8px 18px rgba(15, 23, 42, 0.06)",
+      borderRadius: 8,
+      background: "#F8FAFC",
+      "& fieldset": {
+        borderColor: "#E2E8F0",
+      },
+      "&:hover fieldset": {
+        borderColor: "#CBD5E1",
+      },
+      "&.Mui-focused": {
+        background: "#FFFFFF",
+      },
     },
   },
 }));
@@ -229,6 +278,8 @@ const Kanban = () => {
     <MainContainer>
       <MainHeader>
         <Title>{i18n.t('Kanban')}</Title>
+      </MainHeader>
+      <Paper className={classes.filterBar} elevation={0}>
         <MainHeaderButtonsWrapper>
           <FormControl
             variant="outlined"
@@ -279,7 +330,8 @@ const Kanban = () => {
             variant="contained"
             color="primary"
             onClick={handleSearchClick}
-            className={classes.button}
+            className={`${classes.button} ${classes.searchButton}`}
+            startIcon={<SearchIcon />}
           >
             {i18n.t('kanban.search')}
           </Button>
@@ -291,14 +343,14 @@ const Kanban = () => {
                 variant="contained"
                 color="primary"
                 onClick={handleAddColumnClick}
-                className={classes.button}
+                className={`${classes.button} ${classes.addColumnsButton}`}
               >
                 {i18n.t('kanban.addColumns')}
               </Button>
             )}
           />
         </MainHeaderButtonsWrapper>
-      </MainHeader>
+      </Paper>
       <Paper variant="outlined" className={classes.mainPaper}>
         <KanbanBoard
           lanes={lanes}

@@ -60,6 +60,24 @@ import toastError from "../errors/toastError";
 import usePlans from "../hooks/usePlans";
 import { i18n } from "../translate/i18n";
 import { Campaign, ShapeLine, Webhook } from "@mui/icons-material";
+import {
+  LuBadgeHelp,
+  LuBarChart3,
+  LuClock3,
+  LuContact,
+  LuContact2,
+  LuFileText,
+  LuKanbanSquare,
+  LuLayoutDashboard,
+  LuMegaphone,
+  LuMessageCircle,
+  LuMessagesSquare,
+  LuSettings2,
+  LuTags,
+  LuWallet,
+  LuWorkflow,
+  LuZap
+} from "react-icons/lu";
 
 import useCompanySettings from "../hooks/useSettings/companySettings";
 
@@ -67,11 +85,17 @@ const useStyles = makeStyles((theme) => ({
   listItem: {
     height: "46px",
     width: "auto",
-    margin: "4px 8px",
+    margin: "6px 10px",
+    paddingLeft: 6,
+    paddingRight: 8,
     borderRadius: 12,
-    transition: "all 0.25s ease",
+    transition: "background-color 0.28s ease, transform 0.28s ease, box-shadow 0.28s ease",
+    position: "relative",
     "&:hover": {
-      backgroundColor: "rgba(63,81,181,0.08)",
+      backgroundColor: theme.mode === "light"
+        ? "rgba(248,250,252,0.1)"
+        : "rgba(63,81,181,0.08)",
+      transform: "translateX(2px)",
     },
     "&:hover $iconHoverActive": {
       background: "linear-gradient(135deg, rgba(63,81,181,0.9), rgba(33,150,243,0.95))",
@@ -85,21 +109,45 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   listItemActive: {
-    backgroundColor: "rgba(63,81,181,0.12)",
+    background: theme.mode === "light"
+      ? "linear-gradient(180deg, rgba(15,23,42,0.92), rgba(30,58,138,0.88))"
+      : "linear-gradient(180deg, rgba(15,23,42,0.92), rgba(30,64,175,0.28))",
+    border: "1px solid rgba(255,255,255,0.1)",
+    boxShadow: theme.mode === "light"
+      ? "0 8px 20px rgba(15,23,42,0.16)"
+      : "0 10px 22px rgba(15,23,42,0.18)",
     "& $listItemText": {
-      color: theme.palette.primary.main,
-      fontWeight: 700,
+      color: "#F1F5F9",
+      fontWeight: 600,
     },
+    "&::before": {
+      content: '""',
+      position: "absolute",
+      left: -6,
+      top: 8,
+      bottom: 8,
+      width: 3,
+      borderRadius: 999,
+      background: "linear-gradient(180deg, #60a5fa 0%, #38bdf8 100%)",
+      boxShadow: "0 0 12px rgba(96,165,250,0.45)",
+    }
   },
 
   listItemText: {
     fontSize: "13.5px",
-    color: theme.mode === "light" ? "#666" : "#FFF",
-    transition: "color 0.3s ease", // Só transição de cor
+    color: theme.mode === "light" ? "rgba(226,232,240,0.86)" : "#FFF",
+    transition: "color 0.3s ease",
     fontWeight: 500,
     "& .MuiTypography-root": {
       fontFamily: "'Inter', 'Roboto', sans-serif",
     }
+  },
+  listItemTextCollapsed: {
+    opacity: 0,
+    width: 0,
+    margin: 0,
+    overflow: "hidden",
+    transition: "opacity 0.18s ease, width 0.18s ease",
   },
 
   avatarActive: {
@@ -119,16 +167,24 @@ const useStyles = makeStyles((theme) => ({
     width: 38,
     backgroundColor:
       theme.mode === "light"
-        ? "rgba(120,120,120,0.08)"
+        ? "rgba(248,250,252,0.08)"
         : "rgba(120,120,120,0.35)",
-    border: `1px solid ${theme.appTokens?.colors?.border || "rgba(120,130,160,0.2)"}`,
-    color: theme.appTokens?.colors?.textMuted || (theme.mode === "light" ? "#5b6475" : "#FFF"),
-    transition: "all 0.25s ease",
+    border: theme.mode === "light"
+      ? "1px solid rgba(226,232,240,0.12)"
+      : `1px solid ${theme.appTokens?.colors?.border || "rgba(120,130,160,0.2)"}`,
+    color: theme.mode === "light"
+      ? "#e2e8f0"
+      : theme.appTokens?.colors?.textMuted || "#FFF",
+    transition: "all 0.28s ease",
     "&.active": {
-      background: theme.appTokens?.glass?.background || "linear-gradient(135deg, rgba(63,81,181,0.9), rgba(33,150,243,0.95))",
-      color: "#fff",
-      boxShadow: theme.appTokens?.shadows?.md || `0 10px 22px ${theme.palette.primary.main}30`,
-      borderColor: theme.palette.primary.main,
+      background: theme.mode === "light"
+        ? "linear-gradient(135deg, rgba(37,99,235,0.96), rgba(56,189,248,0.9))"
+        : "linear-gradient(135deg, rgba(37,99,235,0.88), rgba(56,189,248,0.78))",
+      color: "#FFFFFF",
+      boxShadow: theme.mode === "light"
+        ? "0 10px 22px rgba(15,23,42,0.2)"
+        : theme.appTokens?.shadows?.md || `0 10px 22px ${theme.palette.primary.main}30`,
+      borderColor: "rgba(255,255,255,0.14)",
     },
     "& .MuiSvgIcon-root": {
       fontSize: "1.25rem",
@@ -137,8 +193,9 @@ const useStyles = makeStyles((theme) => ({
       transition: "transform 0.3s ease",
     },
     "& svg": {
-      width: 20,
-      height: 20,
+      width: 18,
+      height: 18,
+      strokeWidth: 1.85,
     },
     "&:hover .MuiSvgIcon-root": {
       transform: "scale(1.1)", // Pequena animação no hover
@@ -168,8 +225,15 @@ const useStyles = makeStyles((theme) => ({
   // Melhorias para submenus mantendo estrutura original
   submenuContainer: {
     backgroundColor: theme.mode === "light"
-      ? "rgba(0, 0, 0, 0.02)"
+      ? "rgba(248,250,252,0.04)"
       : "rgba(255, 255, 255, 0.02)",
+    borderRadius: 12,
+    margin: "2px 8px 6px",
+    overflow: "hidden",
+    transition: "all 0.28s ease",
+  },
+  submenuCollapse: {
+    transition: "all 0.32s ease",
   },
 
   // Tooltip melhorado
@@ -209,8 +273,8 @@ const useStyles = makeStyles((theme) => ({
 
   // Efeitos suaves para expand/collapse
   expandIcon: {
-    transition: "transform 0.3s ease",
-    color: theme.palette.primary.main, // Usa cor do tema
+    transition: "transform 0.32s ease, color 0.28s ease",
+    color: theme.mode === "light" ? "rgba(226,232,240,0.82)" : theme.palette.primary.main,
     "&.expanded": {
       transform: "rotate(180deg)",
     }
@@ -227,7 +291,7 @@ const useStyles = makeStyles((theme) => ({
     },
     "&::-webkit-scrollbar-thumb": {
       background: theme.mode === "light"
-        ? "rgba(0, 0, 0, 0.1)"
+        ? "rgba(226,232,240,0.22)"
         : "rgba(255, 255, 255, 0.1)",
       borderRadius: "3px",
       "&:hover": {
@@ -252,7 +316,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ListItemLink(props) {
-  const { icon, primary, to, tooltip, showBadge } = props;
+  const { icon, primary, to, tooltip, showBadge, collapsed } = props;
   const classes = useStyles();
   const { activeMenu } = useActiveMenu();
   const location = useLocation();
@@ -310,6 +374,7 @@ function ListItemLink(props) {
             </ListItemIcon>
           ) : null}
           <ListItemText
+            className={collapsed ? classes.listItemTextCollapsed : ""}
             primary={
               <Typography className={classes.listItemText}>
                 {primary}
@@ -644,23 +709,25 @@ useEffect(() => {
                     className={`${classes.iconHoverActive} ${isManagementActive || managementHover ? "active" : ""
                       }`}
                   >
-                    <Dashboard />
+                    <LuLayoutDashboard />
                   </Avatar>
                 </ListItemIcon>
                 <ListItemText
+                  className={collapsed ? classes.listItemTextCollapsed : ""}
                   primary={
                     <Typography className={classes.listItemText}>
                       {i18n.t("mainDrawer.listItems.management")}
                     </Typography>
                   }
                 />
-                {openDashboardSubmenu ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                {!collapsed && (openDashboardSubmenu ? <ExpandLessIcon className={classes.expandIcon} /> : <ExpandMoreIcon className={classes.expandIcon} />)}
               </ListItem>
             </Tooltip>
             <Collapse
               in={openDashboardSubmenu}
               timeout="auto"
               unmountOnExit
+              className={classes.submenuCollapse}
               style={{
                 backgroundColor:
                   theme.mode === "light"
@@ -681,15 +748,17 @@ useEffect(() => {
                       small
                       to="/"
                       primary={i18n.t("mainDrawer.listItems.dashboard")}
-                      icon={<DashboardOutlinedIcon />}
+                      icon={<LuLayoutDashboard />}
                       tooltip={collapsed}
+                      collapsed={collapsed}
                     />
                     <ListItemLink
                       small
                       to="/reports"
                       primary={i18n.t("mainDrawer.listItems.reports")}
-                      icon={<Description />}
+                      icon={<LuBarChart3 />}
                       tooltip={collapsed}
+                      collapsed={collapsed}
                     />
                   </>
                 )}
@@ -707,6 +776,7 @@ useEffect(() => {
                     primary={i18n.t("mainDrawer.listItems.chatsTempoReal")}
                     icon={<GridOn />}
                     tooltip={collapsed}
+                    collapsed={collapsed}
                   />
                 )}
               />
@@ -715,8 +785,9 @@ useEffect(() => {
                   <ListItemLink
                     to="/wallets"
                     primary={i18n.t("mainDrawer.listItems.wallets")}
-                    icon={<AccountBalanceWalletIcon />}
+                    icon={<LuWallet />}
                     tooltip={collapsed}
+                    collapsed={collapsed}
                   />
                 </>
               )}
@@ -727,15 +798,17 @@ useEffect(() => {
       <ListItemLink
         to="/tickets"
         primary={i18n.t("mainDrawer.listItems.tickets")}
-        icon={<WhatsAppIcon />}
+        icon={<LuMessagesSquare />}
         tooltip={collapsed}
+        collapsed={collapsed}
       />
 
       <ListItemLink
         to="/quick-messages"
         primary={i18n.t("mainDrawer.listItems.quickMessages")}
-        icon={<FlashOnIcon />}
+        icon={<LuZap />}
         tooltip={collapsed}
+        collapsed={collapsed}
       />
 
       {showKanban && (
@@ -743,8 +816,9 @@ useEffect(() => {
           <ListItemLink
             to="/kanban"
             primary={i18n.t("mainDrawer.listItems.kanban")}
-            icon={<ViewKanban />}
+            icon={<LuKanbanSquare />}
             tooltip={collapsed}
+            collapsed={collapsed}
           />
         </>
       )}
@@ -753,8 +827,9 @@ useEffect(() => {
         <ListItemLink
           to="/contacts"
           primary={i18n.t("mainDrawer.listItems.contacts")}
-          icon={<ContactPhoneOutlinedIcon />}
+          icon={<LuContact2 />}
           tooltip={collapsed}
+          collapsed={collapsed}
         />
       )}
 
@@ -763,8 +838,9 @@ useEffect(() => {
           <ListItemLink
             to="/schedules"
             primary={i18n.t("mainDrawer.listItems.schedules")}
-            icon={<Schedule />}
+            icon={<LuClock3 />}
             tooltip={collapsed}
+            collapsed={collapsed}
           />
         </>
       )}
@@ -772,8 +848,9 @@ useEffect(() => {
       <ListItemLink
         to="/tags"
         primary={i18n.t("mainDrawer.listItems.tags")}
-        icon={<LocalOfferIcon />}
+        icon={<LuTags />}
         tooltip={collapsed}
+        collapsed={collapsed}
       />
 
       {showInternalChat && (
@@ -783,10 +860,11 @@ useEffect(() => {
             primary={i18n.t("mainDrawer.listItems.chats")}
             icon={
               <Badge color="secondary" variant="dot" invisible={invisible}>
-                <ForumIcon />
+                <LuMessageCircle />
               </Badge>
             }
             tooltip={collapsed}
+            collapsed={collapsed}
           />
         </>
       )}
@@ -803,8 +881,9 @@ useEffect(() => {
         <ListItemLink
           to="/helps"
           primary={i18n.t("mainDrawer.listItems.helps")}
-          icon={<HelpOutlineIcon />}
+          icon={<LuBadgeHelp />}
           tooltip={collapsed}
+          collapsed={collapsed}
         />
       )}
 
@@ -825,23 +904,25 @@ useEffect(() => {
                 <Avatar
                   className={`${classes.iconHoverActive} ${isCampaignRouteActive || campaignHover ? "active" : ""}`}
                 >
-                  <EventAvailableIcon />
+                  <LuMegaphone />
                 </Avatar>
               </ListItemIcon>
               <ListItemText
+                className={collapsed ? classes.listItemTextCollapsed : ""}
                 primary={
                   <Typography className={classes.listItemText}>
                     {i18n.t("mainDrawer.listItems.campaigns")}
                   </Typography>
                 }
               />
-              {openCampaignSubmenu ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+              {!collapsed && (openCampaignSubmenu ? <ExpandLessIcon className={classes.expandIcon} /> : <ExpandMoreIcon className={classes.expandIcon} />)}
             </ListItem>
           </Tooltip>
           <Collapse
             in={openCampaignSubmenu}
             timeout="auto"
             unmountOnExit
+            className={classes.submenuCollapse}
             style={{
               backgroundColor:
                 theme.mode === "light"
@@ -853,20 +934,23 @@ useEffect(() => {
               <ListItemLink
                 to="/campaigns"
                 primary={i18n.t("campaigns.subMenus.list")}
-                icon={<ListIcon />}
+                icon={<LuMegaphone />}
                 tooltip={collapsed}
+                collapsed={collapsed}
               />
               <ListItemLink
                 to="/contact-lists"
                 primary={i18n.t("campaigns.subMenus.listContacts")}
-                icon={<PeopleIcon />}
+                icon={<LuContact />}
                 tooltip={collapsed}
+                collapsed={collapsed}
               />
               <ListItemLink
                 to="/campaigns-config"
                 primary={i18n.t("campaigns.subMenus.settings")}
-                icon={<SettingsOutlinedIcon />}
+                icon={<LuSettings2 />}
                 tooltip={collapsed}
+                collapsed={collapsed}
               />
               <Can
                 role={user.profile}
@@ -875,8 +959,9 @@ useEffect(() => {
                   <ListItemLink
                     to="/files"
                     primary={i18n.t("mainDrawer.listItems.files")}
-                    icon={<AttachFile />}
+                    icon={<LuFileText />}
                     tooltip={collapsed}
+                    collapsed={collapsed}
                   />
                 )}
               />
@@ -908,21 +993,22 @@ useEffect(() => {
                     : ""
                     }`}
                 >
-                  <Webhook />
+                  <LuWorkflow />
                 </Avatar>
               </ListItemIcon>
               <ListItemText
+                className={collapsed ? classes.listItemTextCollapsed : ""}
                 primary={
                   <Typography className={classes.listItemText}>
                     {i18n.t("mainDrawer.submenuLabels.flowbuilder")}
                   </Typography>
                 }
               />
-              {openFlowSubmenu ? (
-                <ExpandLessIcon />
+              {!collapsed && (openFlowSubmenu ? (
+                <ExpandLessIcon className={classes.expandIcon} />
               ) : (
-                <ExpandMoreIcon />
-              )}
+                <ExpandMoreIcon className={classes.expandIcon} />
+              ))}
             </ListItem>
           </Tooltip>
 
@@ -930,6 +1016,7 @@ useEffect(() => {
             in={openFlowSubmenu}
             timeout="auto"
             unmountOnExit
+            className={classes.submenuCollapse}
             style={{
               backgroundColor:
                 theme.mode === "light"
@@ -941,15 +1028,17 @@ useEffect(() => {
               <ListItemLink
                 to="/phrase-lists"
                 primary={i18n.t("mainDrawer.submenuLabels.flowCampaign")}
-                icon={<EventAvailableIcon />}
+                icon={<LuMegaphone />}
                 tooltip={collapsed}
+                collapsed={collapsed}
               />
 
               <ListItemLink
                 to="/flowbuilders"
                 primary={i18n.t("mainDrawer.submenuLabels.flowConversation")}
-                icon={<ShapeLine />}
+                icon={<LuWorkflow />}
                 tooltip={collapsed}
+                collapsed={collapsed}
               />
             </List>
           </Collapse>
@@ -976,6 +1065,7 @@ useEffect(() => {
                 primary={i18n.t("mainDrawer.listItems.annoucements")}
                 icon={<AnnouncementIcon />}
                 tooltip={collapsed}
+                collapsed={collapsed}
               />
             )}
 
@@ -985,12 +1075,13 @@ useEffect(() => {
                   role={user.profile}
                   perform="dashboard:view"
                   yes={() => (
-                    <ListItemLink
-                      to="/messages-api"
-                      primary={i18n.t("mainDrawer.listItems.messagesAPI")}
-                      icon={<CodeRoundedIcon />}
-                      tooltip={collapsed}
-                    />
+                  <ListItemLink
+                    to="/messages-api"
+                    primary={i18n.t("mainDrawer.listItems.messagesAPI")}
+                    icon={<CodeRoundedIcon />}
+                    tooltip={collapsed}
+                    collapsed={collapsed}
+                  />
                   )}
                 />
               </>
@@ -1005,6 +1096,7 @@ useEffect(() => {
                   primary={i18n.t("mainDrawer.listItems.users")}
                   icon={<PeopleAltOutlinedIcon />}
                   tooltip={collapsed}
+                  collapsed={collapsed}
                 />
               )}
             />
@@ -1018,6 +1110,7 @@ useEffect(() => {
                   primary={i18n.t("mainDrawer.listItems.queues")}
                   icon={<AccountTreeOutlinedIcon />}
                   tooltip={collapsed}
+                  collapsed={collapsed}
                 />
               )}
             />
@@ -1032,6 +1125,7 @@ useEffect(() => {
                     primary={i18n.t("mainDrawer.listItems.prompts")}
                     icon={<AllInclusive />}
                     tooltip={collapsed}
+                    collapsed={collapsed}
                   />
                 )}
               />
@@ -1047,6 +1141,7 @@ useEffect(() => {
                     primary={i18n.t("mainDrawer.listItems.queueIntegration")}
                     icon={<DeviceHubOutlined />}
                     tooltip={collapsed}
+                    collapsed={collapsed}
                   />
                 )}
               />
@@ -1065,6 +1160,7 @@ useEffect(() => {
                   icon={<SyncAltIcon />}
                   showBadge={connectionWarning}
                   tooltip={collapsed}
+                  collapsed={collapsed}
                 />
               )}
             />
@@ -1074,6 +1170,7 @@ useEffect(() => {
                 primary={i18n.t("mainDrawer.listItems.allConnections")}
                 icon={<PhonelinkSetup />}
                 tooltip={collapsed}
+                collapsed={collapsed}
               />
             )}
             <Can
@@ -1085,6 +1182,7 @@ useEffect(() => {
                   primary={i18n.t("mainDrawer.listItems.financeiro")}
                   icon={<LocalAtmIcon />}
                   tooltip={collapsed}
+                  collapsed={collapsed}
                 />
               )}
             />
@@ -1097,6 +1195,7 @@ useEffect(() => {
                   primary={i18n.t("mainDrawer.listItems.settings")}
                   icon={<SettingsOutlinedIcon />}
                   tooltip={collapsed}
+                  collapsed={collapsed}
                 />
               )}
             />
@@ -1106,6 +1205,7 @@ useEffect(() => {
                 primary={i18n.t("mainDrawer.listItems.companies")}
                 icon={<BusinessIcon />}
                 tooltip={collapsed}
+                collapsed={collapsed}
               />
             )}
           </>

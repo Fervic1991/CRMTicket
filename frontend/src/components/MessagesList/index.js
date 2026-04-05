@@ -30,8 +30,6 @@ import VcardPreview from "../VcardPreview";
 import LocationPreview from "../LocationPreview";
 import ModalImageCors from "../ModalImageCors";
 import MessageOptionsMenu from "../MessageOptionsMenu";
-import whatsBackground from "../../assets/wa-background.png";
-import whatsBackgroundDark from "../../assets/wa-background-dark.png";
 import YouTubePreview from "../ModalYoutubeCors";
 import PdfPreview from "../PdfPreview";
 import { ReplyMessageContext } from "../../context/ReplyingMessage/ReplyingMessageContext";
@@ -84,6 +82,14 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     minWidth: 300,
     minHeight: 200,
+    borderRadius: 16,
+    boxShadow: theme.mode === "light"
+      ? "0 18px 42px rgba(15, 23, 42, 0.08)"
+      : "0 14px 32px rgba(0, 0, 0, 0.28)",
+    background: theme.mode === "light"
+      ? "rgba(248, 250, 252, 0.72)"
+      : "rgba(15, 23, 42, 0.62)",
+    backdropFilter: "blur(14px)",
   },
 
   currentTick: {
@@ -106,17 +112,14 @@ const useStyles = makeStyles((theme) => ({
   },
 
   messagesList: {
-    backgroundImage: theme.mode === 'light'
-      ? `linear-gradient(180deg, rgba(241, 245, 249, 0.96), rgba(226, 232, 240, 0.92)), url(${whatsBackground})`
-      : `linear-gradient(180deg, rgba(8, 11, 16, 0.88), rgba(2, 6, 12, 0.92)), url(${whatsBackgroundDark})`,
-    backgroundBlendMode: theme.mode === "light" ? "multiply" : "multiply",
-    backgroundColor: theme.mode === 'light' ? "#eef2f7" : "#0b0b0d",
+    background: theme.mode === 'light' ? "#F8FAFC" : "#0F172A",
     display: "flex",
     flexDirection: "column",
     flexGrow: 1,
     padding: "24px 24px 36px 24px",
     overflowY: "scroll",
     ...theme.scrollbarStyles,
+    borderRadius: 16,
   },
   dragElement: {
     background: 'rgba(255, 255, 255, 0.8)',
@@ -157,20 +160,17 @@ const useStyles = makeStyles((theme) => ({
     },
 
     whiteSpace: "pre-wrap",
-    backgroundColor: theme.mode === 'light' ? "rgba(255, 255, 255, 0.96)" : "#1f2937",
-    color: theme.mode === 'light' ? "#1f2937" : "#f8fafc",
+    backgroundColor: theme.mode === 'light' ? "rgba(255, 255, 255, 0.98)" : "#1E293B",
+    color: theme.mode === 'light' ? "#1E293B" : "#F8FAFC",
     border: theme.mode === 'light' ? "1px solid rgba(148, 163, 184, 0.25)" : "1px solid rgba(15, 23, 42, 0.6)",
     alignSelf: "flex-start",
-    borderTopLeftRadius: 6,
-    borderTopRightRadius: 14,
-    borderBottomLeftRadius: 14,
-    borderBottomRightRadius: 14,
+    borderRadius: 16,
     paddingLeft: 10,
     paddingRight: 12,
     paddingTop: 8,
     paddingBottom: 6,
     boxShadow: theme.mode === 'light'
-      ? "0 8px 18px rgba(15, 23, 42, 0.08)"
+      ? "0 10px 24px rgba(15, 23, 42, 0.10)"
       : "0 6px 12px rgba(0, 0, 0, 0.35)"
   },
 
@@ -213,20 +213,17 @@ const useStyles = makeStyles((theme) => ({
       right: 0,
     },
     whiteSpace: "pre-wrap",
-    backgroundColor: theme.mode === 'light' ? "rgba(134, 239, 172, 0.92)" : "#0f766e",
-    color: theme.mode === 'light' ? "#0f172a" : "#ecfeff",
-    border: theme.mode === 'light' ? "1px solid rgba(34, 197, 94, 0.3)" : "1px solid rgba(15, 118, 110, 0.6)",
+    backgroundColor: theme.mode === 'light' ? "#007AFF" : "#1D4ED8",
+    color: "#FFFFFF",
+    border: "1px solid rgba(37, 99, 235, 0.25)",
     alignSelf: "flex-end",
-    borderTopLeftRadius: 14,
-    borderTopRightRadius: 14,
-    borderBottomLeftRadius: 14,
-    borderBottomRightRadius: 6,
+    borderRadius: 16,
     paddingLeft: 10,
     paddingRight: 12,
     paddingTop: 8,
     paddingBottom: 6,
     boxShadow: theme.mode === 'light'
-      ? "0 8px 18px rgba(15, 23, 42, 0.08)"
+      ? "0 10px 24px rgba(15, 23, 42, 0.10)"
       : "0 6px 12px rgba(0, 0, 0, 0.35)"
   },
 
@@ -245,13 +242,10 @@ const useStyles = makeStyles((theme) => ({
       right: 0,
     },
     whiteSpace: "pre-wrap",
-    backgroundColor: "rgba(251, 191, 36, 0.2)",
-    color: "#1f2937",
+    backgroundColor: "rgba(254, 249, 195, 0.92)",
+    color: "#854D0E",
     alignSelf: "flex-end",
-    borderTopLeftRadius: 14,
-    borderTopRightRadius: 14,
-    borderBottomLeftRadius: 14,
-    borderBottomRightRadius: 6,
+    borderRadius: 16,
     paddingLeft: 10,
     paddingRight: 12,
     paddingTop: 8,
@@ -265,7 +259,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "-3px -80px 6px -6px",
     overflowY: "hidden",
     backgroundColor: theme.mode === 'light' ? "rgba(187, 247, 208, 0.6)" : "#0f766e",
-    borderRadius: 12,
+    borderRadius: 14,
     display: "flex",
     position: "relative",
   },

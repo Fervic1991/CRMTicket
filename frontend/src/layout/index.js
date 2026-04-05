@@ -55,6 +55,10 @@ import DynamicLogo from "../components/DynamicLogo";
 
 const backendUrl = getBackendUrl();
 const drawerWidth = 240;
+const drawerRailWidth = 84;
+const offWhite = "#F8FAFC";
+const deepNavy = "#0F172A";
+const deepNavySoft = "#162033";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -64,11 +68,13 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       height: "calc(100vh - 56px)",
     },
-    backgroundColor: theme.palette.fancyBackground,
+    background: theme.mode === "light"
+      ? "linear-gradient(180deg, #f8fafc 0%, #eef3f9 100%)"
+      : "radial-gradient(1200px 720px at 0% 0%, rgba(56,189,248,0.12), transparent 58%), radial-gradient(900px 520px at 100% 10%, rgba(59,130,246,0.08), transparent 60%), linear-gradient(180deg, rgba(15,23,42,0.98) 0%, rgba(17,28,49,0.98) 100%)",
     "& .MuiButton-outlinedPrimary": {
       color: theme.palette.primary.main, // Usa cor do tema
       border: `1px solid ${theme.palette.primary.main}40`,
-      borderRadius: "8px",
+      borderRadius: 12,
       fontWeight: 600,
       textTransform: "none",
       transition: "all 0.3s ease",
@@ -96,11 +102,14 @@ const useStyles = makeStyles((theme) => ({
 
   toolbar: {
     paddingRight: 24,
-    color: theme.palette.dark.main,
-    // Usa a cor primária do tema para o fundo do AppBar
-    background: "linear-gradient(135deg, rgba(63,81,181,0.95), rgba(33,150,243,0.95))",
-    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)", // Sombra sutil
+    color: "#e2e8f0",
+    background: theme.mode === "light"
+      ? "linear-gradient(135deg, rgba(15,23,42,0.96), rgba(22,32,51,0.94))"
+      : "linear-gradient(135deg, rgba(15,23,42,0.88), rgba(22,32,51,0.78))",
+    boxShadow: theme.mode === "light" ? "0 14px 34px rgba(15, 23, 42, 0.16)" : "0 14px 34px rgba(15, 23, 42, 0.3)",
     transition: "all 0.3s ease",
+    borderBottomLeftRadius: 12,
+    borderBottom: theme.mode === "light" ? "none" : `1px solid ${theme.appTokens?.colors?.borderStrong || "rgba(56,189,248,0.28)"}`,
   },
 
   toolbarIcon: {
@@ -113,8 +122,10 @@ const useStyles = makeStyles((theme) => ({
       height: "48px",
     },
     // ALTERAÇÃO: Fundo adaptativo baseado no tema
-    backgroundColor: theme.mode === "light" ? "#ffffff" : theme.palette.background.paper,
-    borderBottom: `1px solid ${theme.palette.divider}`, // Linha sutil para separação
+    backgroundColor: theme.mode === "light" ? deepNavy : "rgba(15,23,42,0.88)",
+    borderBottom: theme.mode === "light"
+      ? "1px solid rgba(226,232,240,0.08)"
+      : `1px solid ${theme.appTokens?.colors?.borderStrong || "rgba(56,189,248,0.28)"}`,
   },
 
   appBar: {
@@ -144,7 +155,7 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
     fontSize: 14,
-    color: "white",
+    color: "#f8fafc",
     fontWeight: 600,
     letterSpacing: "0.025em",
   },
@@ -153,30 +164,36 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     whiteSpace: "nowrap",
     width: drawerWidth,
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
+    transition: theme.transitions.create("width, box-shadow, border-radius", {
+      easing: theme.transitions.easing.easeOut,
+      duration: 260,
     }),
     overflowX: "hidden",
     overflowY: "hidden",
-    // Melhorias sutis no drawer
-    borderRight: `1px solid ${theme.mode === "light" ? "#e0e0e0" : "#424242"}`,
+    background: theme.mode === "light"
+      ? `linear-gradient(180deg, ${deepNavy} 0%, ${deepNavySoft} 100%)`
+      : "linear-gradient(180deg, rgba(15,23,42,0.92) 0%, rgba(22,32,51,0.84) 100%)",
+    borderRight: theme.mode === "light"
+      ? "1px solid rgba(148,163,184,0.14)"
+      : `1px solid ${theme.appTokens?.colors?.borderStrong || "rgba(56,189,248,0.22)"}`,
     boxShadow:
       theme.mode === "light"
-        ? "2px 0 8px rgba(0, 0, 0, 0.1)"
-        : "2px 0 8px rgba(0, 0, 0, 0.3)",
+        ? "10px 0 30px rgba(15, 23, 42, 0.18)"
+        : "10px 0 30px rgba(15, 23, 42, 0.28)",
+    borderTopRightRadius: 12,
+    borderBottomRightRadius: 12,
   },
 
   drawerPaperClose: {
     overflowX: "hidden",
     overflowY: "hidden",
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
+    transition: theme.transitions.create("width, box-shadow, border-radius", {
+      easing: theme.transitions.easing.easeOut,
+      duration: 220,
     }),
-    width: theme.spacing(7),
+    width: drawerRailWidth,
     [theme.breakpoints.up("sm")]: {
-      width: theme.spacing(9),
+      width: drawerRailWidth,
     },
   },
 
@@ -189,6 +206,9 @@ const useStyles = makeStyles((theme) => ({
     overflow: "auto",
     padding: 0,
     margin: 0,
+    background: theme.mode === "light"
+      ? `linear-gradient(180deg, ${offWhite} 0%, #eef3f9 100%)`
+      : "radial-gradient(1200px 720px at 0% 0%, rgba(56,189,248,0.12), transparent 58%), radial-gradient(900px 520px at 100% 10%, rgba(59,130,246,0.08), transparent 60%), linear-gradient(180deg, rgba(15,23,42,0.98) 0%, rgba(17,28,49,0.98) 100%)",
   },
 
   container: {
@@ -203,7 +223,7 @@ const useStyles = makeStyles((theme) => ({
     overflowY: "scroll",
     overflowX: "hidden",
     ...theme.scrollbarStyles,
-    borderRadius: "8px",
+    borderRadius: 12,
     border: "2px solid transparent",
     "&::-webkit-scrollbar": {
       display: "none",
@@ -247,7 +267,7 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(4),
     cursor: "pointer",
     borderRadius: "50%",
-    border: "2px solid #ccc",
+    border: "2px solid rgba(226, 232, 240, 0.45)",
     transition: "all 0.3s ease",
     "&:hover": {
       transform: "scale(1.05)",
@@ -265,7 +285,7 @@ const useStyles = makeStyles((theme) => ({
   // Botões da toolbar melhorados
   toolbarButton: {
     color: "rgba(255, 255, 255, 0.9)",
-    borderRadius: "8px",
+    borderRadius: 12,
     padding: "8px",
     margin: "0 2px",
     transition: "all 0.3s ease",
@@ -281,6 +301,7 @@ const useStyles = makeStyles((theme) => ({
   // Menu hambúrguer com animação sutil
   menuButton: {
     color: "white",
+    borderRadius: 12,
     "&:hover": {
       backgroundColor: "rgba(255, 255, 255, 0.1)",
     },
@@ -579,6 +600,18 @@ useEffect(() => {
     window.location.reload(false);
   };
 
+  const handleDrawerMouseEnter = () => {
+    if (drawerVariant === "permanent") {
+      setDrawerOpen(true);
+    }
+  };
+
+  const handleDrawerMouseLeave = () => {
+    if (drawerVariant === "permanent") {
+      setDrawerOpen(false);
+    }
+  };
+
   const handleMenuItemClick = () => {
     const { innerWidth: width } = window;
     if (width <= 600) {
@@ -655,6 +688,8 @@ useEffect(() => {
           ),
         }}
         open={drawerOpen}
+        onMouseEnter={handleDrawerMouseEnter}
+        onMouseLeave={handleDrawerMouseLeave}
       >
         <div className={classes.toolbarIcon}>
           <DynamicLogo
@@ -673,7 +708,6 @@ useEffect(() => {
           </IconButton>
         </div>
         <List className={classes.containerWithScroll}>
-          {/* {mainListItems} */}
           <MainListItems collapsed={!drawerOpen} />
         </List>
         <Divider />

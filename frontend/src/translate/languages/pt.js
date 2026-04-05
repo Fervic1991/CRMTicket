@@ -292,6 +292,25 @@ const messages = {
         connections: "Conexões de:",
         channel: "Canal",
         whatsappOfficial: "WhatsApp Oficial",
+        connectNewAccount: "Conectar nova conta",
+        selectChannel: "Selecione o canal",
+        pageName: "Nome da página",
+        instagramHandle: "Usuário do Instagram",
+        badges: {
+          linked: "Vinculada",
+        },
+        channelDescriptions: {
+          whatsapp: "QR code e gestão clássica de sessões.",
+          facebook: "Conecte páginas do Facebook e receba mensagens do Messenger.",
+          instagram: "Conecte o perfil comercial e centralize os directs.",
+        },
+        steps: {
+          stepOne: "Passo 1",
+          stepTwo: "Passo 2",
+          loginFacebook: "Acesse o Facebook",
+          selectPage: "Selecione a página",
+          selectInstagram: "Selecione o perfil do Instagram",
+        },
         facebook: {
           success: "Conexão com Facebook estabelecida com sucesso!",
         },
@@ -357,6 +376,9 @@ const messages = {
           processed: "Processado",
           in: "de",
           connecting: "Conectando",
+          connect: "Conectar",
+          disconnectSocial: "Desvincular",
+          loginWithFacebook: "Login with Facebook",
         },
         typography: {
           processed: "Processado",
@@ -911,6 +933,19 @@ const messages = {
           message: "Mensagem",
           sendError: "Erro de Envio",
         },
+        subtitle: "Preencha a mensagem, defina o destino e programe o envio.",
+        sections: {
+          messageInfo: "Informações da Mensagem",
+          messageInfoDescription: "Escreva o conteúdo e insira rapidamente as variáveis disponíveis.",
+          destinationStatus: "Destino e Status",
+          destinationStatusDescription: "Defina conexão, abertura do ticket, atendente e status final.",
+          planning: "Planejamento / Recorrência",
+          planningDescription: "Configure data, recorrência e comportamento em feriados.",
+        },
+        variables: {
+          title: "Variáveis disponíveis",
+          helper: "Clique para inserir uma variável",
+        },
         validation: {
           messageTooShort: "Mensagem muito curta",
           required: "Obrigatório",
@@ -921,6 +956,8 @@ const messages = {
           sendAt: "Data de Agendamento",
           sentAt: "Data de Envio",
           assinar: "Enviar Assinatura",
+          assinarDescription: "Adiciona automaticamente a assinatura à mensagem agendada.",
+          holidayMode: "Dias",
         },
         buttons: {
           okAdd: "Adicionar",
@@ -1422,6 +1459,7 @@ const messages = {
           add: "Novo",
           lists: "Listas",
           import: "Importar",
+          importFromContacts: "Importar de contatos",
         },
         status: {
           valid: "WhatsApp válido",
@@ -2465,7 +2503,7 @@ const messages = {
         labelInterval: "Intervalo",
         intervalFilterValue: "Valor do Intervalo",
         sendAsManyTimes: " Enviar quantas vezes",
-        shipNormallyOnNonbusinessDays: " Enviar normalmente em dias não úteis",
+        shipNormallyOnNonbusinessDays: "Enviar também em feriados",
         sendOneBusinessDayBefore: "Enviar um dia útil antes",
         sendOneBusinessDayLater: "Enviar um dia útil depois",
         options: {
@@ -2664,19 +2702,16 @@ const messages = {
         title: "Título",
         description: "Descrição",
         modal: {
-          title: "Criar grupo",
-          name: "Nome do grupo",
-          description: "Descrição do grupo",
-          create: "Criar",
-          cancel: "Cancelar",
-          save: "Salvar",
-          edit: "Editar",
-        },
-        modal: {
           title: "Criar Grupo",
           editTitle: "Editar Grupo",
+          subtitle: "Crie um grupo interno e adicione rapidamente os participantes",
           save: "Salvar",
           cancel: "Cancelar",
+          name: "Nome do grupo",
+          description: "Descrição",
+          filterUsers: "Buscar usuários para adicionar",
+          create: "Criar",
+          edit: "Editar",
         },
       },
       flowBuilder: {

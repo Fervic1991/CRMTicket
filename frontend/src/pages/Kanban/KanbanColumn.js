@@ -8,23 +8,22 @@ import { i18n } from '../../translate/i18n';
 
 const useStyles = makeStyles(theme => ({
   column: props => ({
-    backgroundColor: "rgba(255, 255, 255, 0.78)",
-    borderRadius: 16,
+    backgroundColor: "#F4F7F9",
+    borderRadius: 12,
     minWidth: 280,
     maxWidth: 280,
     padding: theme.spacing(1.2),
     display: 'flex',
     flexDirection: 'column',
     flexShrink: 0,
-    border: "1px solid rgba(148, 163, 184, 0.35)",
-    boxShadow: "0 12px 24px rgba(15, 23, 42, 0.08)",
-    backdropFilter: "blur(10px)",
+    border: "1px solid rgba(226, 232, 240, 0.95)",
+    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)",
   }),
   columnTitle: {
-    marginBottom: theme.spacing(1),
-    fontWeight: 'bold',
+    marginBottom: theme.spacing(0.75),
+    fontWeight: 800,
     fontSize: '1rem',
-    color: "rgba(15, 23, 42, 0.9)",
+    color: "#0F172A",
   },
   cardList: {
     flexGrow: 1,
@@ -33,17 +32,22 @@ const useStyles = makeStyles(theme => ({
     maxHeight: 'calc(100vh - 200px)',
   },
   totalValue: {
-    fontSize: '1rem',
-    color: "rgba(71, 85, 105, 0.9)",
-    fontWeight: 600,
+    display: "inline-flex",
+    alignSelf: "flex-start",
+    fontSize: '0.75rem',
+    color: "#64748B",
+    fontWeight: 700,
+    padding: "4px 10px",
+    borderRadius: 999,
+    background: "rgba(255,255,255,0.8)",
+    border: "1px solid rgba(226, 232, 240, 0.95)",
   },
   columnHeader: {
     marginBottom: theme.spacing(1),
-    padding: theme.spacing(0.75, 1),
+    padding: theme.spacing(1, 1.1),
     borderRadius: 12,
-    background: (props) =>
-      `linear-gradient(135deg, ${props.color || "#94a3b8"}22, ${props.color || "#94a3b8"}08)`,
-    border: "1px solid rgba(148, 163, 184, 0.35)",
+    background: "rgba(255,255,255,0.55)",
+    border: "1px solid rgba(226, 232, 240, 0.92)",
   },
 }));
 

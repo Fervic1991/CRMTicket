@@ -285,6 +285,25 @@ const messages = {
         connections: " Connections:",
         channel: "Channel",
         whatsappOfficial: "Official WhatsApp",
+        connectNewAccount: "Connect new account",
+        selectChannel: "Select the channel",
+        pageName: "Page name",
+        instagramHandle: "Instagram handle",
+        badges: {
+          linked: "Linked",
+        },
+        channelDescriptions: {
+          whatsapp: "QR code and classic session management.",
+          facebook: "Connect Facebook Pages and receive Messenger messages.",
+          instagram: "Connect your business profile and centralize direct messages.",
+        },
+        steps: {
+          stepOne: "Step 1",
+          stepTwo: "Step 2",
+          loginFacebook: "Log in to Facebook",
+          selectPage: "Select the Page",
+          selectInstagram: "Select the Instagram profile",
+        },
         facebook: {
           success: "Facebook connection established successfully!",
         },
@@ -348,6 +367,9 @@ const messages = {
           processed: "Processed",
           in: "of",
           connecting: "Connecting",
+          connect: "Connect",
+          disconnectSocial: "Disconnect",
+          loginWithFacebook: "Login with Facebook",
         },
         typography: {
           processed: "Processed",
@@ -890,6 +912,19 @@ const messages = {
           message: "Message",
           sendError: "Send Error",
         },
+        subtitle: "Fill out the message, choose the destination, and schedule the send.",
+        sections: {
+          messageInfo: "Message Info",
+          messageInfoDescription: "Write the message and quickly insert available variables.",
+          destinationStatus: "Destination & Status",
+          destinationStatusDescription: "Choose connection, ticket handling, assignee, and final status.",
+          planning: "Scheduling / Recurrence",
+          planningDescription: "Set the date, recurrence, and holiday behavior.",
+        },
+        variables: {
+          title: "Available variables",
+          helper: "Click to insert a variable",
+        },
         validation: {
           messageTooShort: "Message too short",
           required: "Required",
@@ -900,6 +935,8 @@ const messages = {
           sendAt: "Scheduled Date",
           sentAt: "Sent Date",
           assinar: "Send Signature",
+          assinarDescription: "Automatically append the signature to the scheduled message.",
+          holidayMode: "Days",
         },
         buttons: {
           okAdd: "Add",
@@ -924,6 +961,7 @@ const messages = {
           editKanban: "Edit Lane",
           backToKanban: "BACK TO KANBAN",
         },
+        subtitle: "Create clean, recognizable tags to organize contacts and flows.",
         form: {
           name: "Name",
           color: "Color",
@@ -1375,6 +1413,7 @@ const messages = {
           add: "New",
           lists: "Lists",
           import: "Import",
+          importFromContacts: "Import from contacts",
         },
         status: {
           valid: "WhatsApp valid",
@@ -2407,9 +2446,9 @@ const messages = {
         description:
           "You can choose to send the message recurrently and select the interval. If it is a one-time message, do not change anything in this section.",
         labelInterval: "Interval",
-        intervalFilterValue: "Interval filter value",
-        sendAsManyTimes: " Send as many times",
-        shipNormallyOnNonbusinessDays: "Ship normally on non-business days",
+        intervalFilterValue: "Value",
+        sendAsManyTimes: "Send as many times",
+        shipNormallyOnNonbusinessDays: "Send also on holidays",
         sendOneBusinessDayBefore: "Send one business day before",
         sendOneBusinessDayLater: "Send one business day later",
         options: {
@@ -2598,10 +2637,12 @@ const messages = {
         modal: {
           title: "Create Group",
           editTitle: "Edit Group",
+          subtitle: "Create an internal group and quickly add participants",
           save: "Save",
           cancel: "Cancel",
-          name: "Group Name",
-          description: "Group Description",
+          name: "Group name",
+          description: "Description",
+          filterUsers: "Search users to add",
           create: "Create",
           edit: "Edit",
         },

@@ -5,8 +5,6 @@ import React, {
   useContext,
   useRef,
 } from "react";
-import { toast } from "react-toastify";
-
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
@@ -22,6 +20,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
+import LabelOutlinedIcon from "@material-ui/icons/LabelOutlined";
 
 import MainContainer from "../../components/MainContainer";
 import MainHeader from "../../components/MainHeader";
@@ -34,7 +33,6 @@ import TableRowSkeleton from "../../components/TableRowSkeleton";
 import TagModal from "../../components/TagModal";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import toastError from "../../errors/toastError";
-import { Chip } from "@material-ui/core";
 import { AuthContext } from "../../context/Auth/AuthContext";
 import { MoreHoriz } from "@material-ui/icons";
 import ContactTagListModal from "../../components/ContactTagListModal";
@@ -75,6 +73,7 @@ const useStyles = makeStyles((theme) => ({
   headerTitle: {
     fontWeight: 700,
     letterSpacing: 0.2,
+    color: "#1E293B",
   },
   searchField: {
     "& .MuiOutlinedInput-root": {
@@ -140,12 +139,15 @@ const useStyles = makeStyles((theme) => ({
   },
   tableHeader: {
     fontWeight: 700,
-    backgroundColor: "rgba(243,246,252,0.9)",
-    color: theme.palette.text.secondary,
-    borderBottom: "1px solid rgba(120,130,160,0.2)",
+    backgroundColor: "#F8FAFC",
+    color: "#94A3B8",
+    borderBottom: "1px solid #E2E8F0",
+    fontSize: 11,
+    textTransform: "uppercase",
+    letterSpacing: "0.08em",
   },
   tableRow: {
-    backgroundColor: "rgba(255,255,255,0.85)",
+    backgroundColor: "rgba(255,255,255,0.92)",
     boxShadow: "0 8px 18px rgba(31,45,61,0.06)",
     transition: "transform 0.2s ease, box-shadow 0.2s ease",
     "&:hover": {
@@ -164,11 +166,20 @@ const useStyles = makeStyles((theme) => ({
       borderBottomRightRadius: 14,
     },
   },
-  tagChip: {
-    fontWeight: 700,
-    color: "#fff",
-    textShadow: "0 1px 2px rgba(0,0,0,0.25)",
-    border: "none",
+  nameCell: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: theme.spacing(1),
+    fontWeight: 600,
+    color: "#1E293B",
+  },
+  colorDot: {
+    width: 12,
+    height: 12,
+    borderRadius: "50%",
+    boxShadow: "0 0 0 3px rgba(148,163,184,0.12)",
+    flexShrink: 0,
   },
   actionButton: {
     borderRadius: 10,
@@ -182,9 +193,31 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   emptyState: {
-    padding: theme.spacing(3),
+    padding: theme.spacing(6, 3),
     textAlign: "center",
     color: theme.palette.text.secondary,
+  },
+  emptyStateIcon: {
+    width: 72,
+    height: 72,
+    borderRadius: 24,
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: theme.spacing(2),
+    background: "linear-gradient(135deg, rgba(59,130,246,0.12), rgba(14,165,233,0.1))",
+    color: "#2563EB",
+  },
+  emptyStateTitle: {
+    fontWeight: 700,
+    color: "#1E293B",
+    marginBottom: theme.spacing(1),
+  },
+  emptyStateDescription: {
+    color: "#64748B",
+    lineHeight: 1.6,
+    maxWidth: 440,
+    margin: "0 auto",
   },
   emptyStateButton: {
     marginTop: theme.spacing(2),
@@ -413,14 +446,10 @@ const Tags = () => {
                 <TableRow key={tag.id} className={classes.tableRow}>
                   <TableCell align="center">{tag.id}</TableCell>
                   <TableCell align="center">
-                    <Chip
-                      style={{
-                        backgroundColor: tag.color,
-                      }}
-                      className={classes.tagChip}
-                      label={tag.name}
-                      size="small"
-                    />
+                    <div className={classes.nameCell}>
+                      <span className={classes.colorDot} style={{ backgroundColor: tag.color }} />
+                      <span>{tag.name}</span>
+                    </div>
                   </TableCell>
                   <TableCell align="center">
                     {tag?.contacts?.length}
@@ -457,10 +486,13 @@ const Tags = () => {
               {!loading && tags.length === 0 && (
                 <TableRow>
                   <TableCell align="center" colSpan={4} className={classes.emptyState}>
-                    <div style={{ fontWeight: 600, marginBottom: 6 }}>
+                    <div className={classes.emptyStateIcon}>
+                      <LabelOutlinedIcon style={{ fontSize: 34 }} />
+                    </div>
+                    <div className={classes.emptyStateTitle}>
                       {i18n.t("tags.emptyState.title")}
                     </div>
-                    <div>{i18n.t("tags.emptyState.description")}</div>
+                    <div className={classes.emptyStateDescription}>{i18n.t("tags.emptyState.description")}</div>
                     <Button
                       variant="contained"
                       color="primary"

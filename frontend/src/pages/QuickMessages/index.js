@@ -1,37 +1,42 @@
-import React, { useState, useEffect, useReducer, useContext, useCallback } from "react";
+import React, { useState, useEffect, useReducer, useContext } from "react";
 import { toast } from "react-toastify";
+import { isArray } from "lodash";
 
 import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Button from "@material-ui/core/Button";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import IconButton from "@material-ui/core/IconButton";
-import SearchIcon from "@material-ui/icons/Search";
-import TextField from "@material-ui/core/TextField";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import Chip from '@material-ui/core/Chip';
-import Box from '@material-ui/core/Box';
-
+import {
+  Button,
+  Chip,
+  IconButton,
+  InputAdornment,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Tooltip,
+} from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-import EditIcon from "@material-ui/icons/Edit";
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import InsertDriveFileOutlinedIcon from "@material-ui/icons/InsertDriveFileOutlined";
+import ImageOutlinedIcon from "@material-ui/icons/ImageOutlined";
+import MusicNoteOutlinedIcon from "@material-ui/icons/MusicNoteOutlined";
+import SearchIcon from "@material-ui/icons/Search";
+import VideocamOutlinedIcon from "@material-ui/icons/VideocamOutlined";
 
 import MainContainer from "../../components/MainContainer";
 import MainHeader from "../../components/MainHeader";
 import Title from "../../components/Title";
-
 import api from "../../services/api";
 import { i18n } from "../../translate/i18n";
 import TableRowSkeleton from "../../components/TableRowSkeleton";
 import QuickMessageDialog from "../../components/QuickMessageDialog";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import toastError from "../../errors/toastError";
-import { Grid } from "@material-ui/core";
-import { isArray } from "lodash";
 import { AuthContext } from "../../context/Auth/AuthContext";
 
 const reducer = (state, action) => {
@@ -62,18 +67,19 @@ const reducer = (state, action) => {
     if (quickemessageIndex !== -1) {
       state[quickemessageIndex] = quickemessage;
       return [...state];
-    } else {
-      return [quickemessage, ...state];
     }
+
+    return [quickemessage, ...state];
   }
 
   if (action.type === "DELETE_QUICKMESSAGE") {
     const quickemessageId = action.payload;
-
     const quickemessageIndex = state.findIndex((u) => u.id === quickemessageId);
+
     if (quickemessageIndex !== -1) {
       state.splice(quickemessageIndex, 1);
     }
+
     return [...state];
   }
 
@@ -83,119 +89,228 @@ const reducer = (state, action) => {
 };
 
 const useStyles = makeStyles((theme) => ({
-  headerCard: {
+  pageHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    gap: theme.spacing(2),
+    flexWrap: "wrap",
+    width: "100%",
+  },
+  titleBlock: {
+    display: "flex",
+    flexDirection: "column",
+    gap: theme.spacing(0.75),
+  },
+  pageTitle: {
+    fontSize: "1.95rem",
+    fontWeight: 800,
+    letterSpacing: "-0.03em",
+    color: "#1E293B",
+    lineHeight: 1.1,
+  },
+  pageDescription: {
+    fontSize: "0.92rem",
+    color: "#64748B",
+    lineHeight: 1.6,
+  },
+  toolbar: {
     width: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
     gap: theme.spacing(2),
-    padding: theme.spacing(2),
-    borderRadius: 18,
+    flexWrap: "wrap",
+    padding: theme.spacing(2.25),
+    borderRadius: 20,
     background:
       theme.palette.mode === "dark"
-        ? "linear-gradient(135deg, rgba(59,130,246,0.28), rgba(16,185,129,0.18))"
-        : "linear-gradient(135deg, rgba(59,130,246,0.18), rgba(16,185,129,0.16))",
-    border:
-      theme.palette.mode === "dark"
-        ? "1px solid rgba(148, 163, 184, 0.2)"
-        : "1px solid rgba(148, 163, 184, 0.35)",
+        ? "rgba(15, 23, 42, 0.78)"
+        : "rgba(255, 255, 255, 0.96)",
     boxShadow:
       theme.palette.mode === "dark"
-        ? "0 18px 40px rgba(0,0,0,0.4)"
-        : "0 18px 40px rgba(15,23,42,0.08)",
-  },
-  headerMeta: {
-    fontSize: 12,
-    color: theme.palette.mode === "dark" ? "rgba(226,232,240,0.7)" : "#64748b",
+        ? "0 20px 44px rgba(0,0,0,0.28)"
+        : "0 12px 32px rgba(15, 23, 42, 0.06)",
+    border:
+      theme.palette.mode === "dark"
+        ? "1px solid rgba(148, 163, 184, 0.12)"
+        : "1px solid rgba(226, 232, 240, 0.9)",
   },
   searchField: {
-    "& .MuiInputBase-root": {
-      borderRadius: 12,
-      background:
-        theme.palette.mode === "dark"
-          ? "rgba(15, 23, 42, 0.7)"
-          : "rgba(255, 255, 255, 0.9)",
-      boxShadow:
-        theme.palette.mode === "dark"
-          ? "0 12px 24px rgba(0,0,0,0.35)"
-          : "0 12px 24px rgba(15,23,42,0.08)",
+    minWidth: 280,
+    maxWidth: 420,
+    flex: 1,
+    "& .MuiOutlinedInput-root": {
+      borderRadius: 999,
+      background: "#F1F5F9",
+      boxShadow: "none",
+      minHeight: 46,
+      "& fieldset": {
+        borderColor: "transparent",
+      },
+      "&:hover fieldset": {
+        borderColor: "#CBD5E1",
+      },
+      "&.Mui-focused": {
+        background: "#FFFFFF",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#BFDBFE",
+      },
+    },
+    "& .MuiOutlinedInput-input": {
+      paddingTop: 13,
+      paddingBottom: 13,
     },
   },
+  searchIcon: {
+    color: "#94A3B8",
+    fontSize: 20,
+  },
   addButton: {
+    minHeight: 44,
     borderRadius: 12,
     textTransform: "none",
-    fontWeight: 600,
+    fontWeight: 700,
+    padding: theme.spacing(0.9, 2),
+    color: "#FFFFFF",
+    background: "linear-gradient(135deg, #2563EB, #60A5FA)",
+    boxShadow: "0 14px 28px rgba(37, 99, 235, 0.22)",
+    transition: "transform 0.18s ease, box-shadow 0.18s ease",
+    "&:hover": {
+      transform: "scale(1.02)",
+      boxShadow: "0 18px 34px rgba(37, 99, 235, 0.28)",
+      background: "linear-gradient(135deg, #2563EB, #60A5FA)",
+    },
   },
   mainPaper: {
     flex: 1,
-    padding: theme.spacing(2),
-    overflowY: "scroll",
-    borderRadius: 18,
+    display: "flex",
+    flexDirection: "column",
+    padding: theme.spacing(1.5),
+    overflow: "hidden",
+    borderRadius: 20,
     background:
       theme.palette.mode === "dark"
-        ? "rgba(15, 23, 42, 0.7)"
-        : "rgba(255, 255, 255, 0.82)",
+        ? "rgba(15, 23, 42, 0.78)"
+        : "rgba(255, 255, 255, 0.96)",
     border:
       theme.palette.mode === "dark"
-        ? "1px solid rgba(148, 163, 184, 0.2)"
-        : "1px solid rgba(148, 163, 184, 0.35)",
+        ? "1px solid rgba(148, 163, 184, 0.12)"
+        : "1px solid rgba(226, 232, 240, 0.9)",
     boxShadow:
       theme.palette.mode === "dark"
-        ? "0 18px 40px rgba(0,0,0,0.4)"
-        : "0 18px 40px rgba(15,23,42,0.08)",
-    backdropFilter: "blur(10px)",
+        ? "0 20px 44px rgba(0,0,0,0.28)"
+        : "0 12px 32px rgba(15, 23, 42, 0.06)",
     ...theme.scrollbarStyles,
   },
+  tableContainer: {
+    flex: 1,
+    overflowX: "auto",
+    borderRadius: 18,
+  },
+  table: {
+    minWidth: 760,
+  },
   tableHeadCell: {
-    fontWeight: 700,
+    background: "#F8FAFC",
+    color: "#64748B",
     fontSize: 12,
+    fontWeight: 700,
     textTransform: "uppercase",
-    letterSpacing: 0.4,
-    color: theme.palette.mode === "dark" ? "#e2e8f0" : "#0f172a",
-    borderBottom:
-      theme.palette.mode === "dark"
-        ? "1px solid rgba(148, 163, 184, 0.2)"
-        : "1px solid rgba(148, 163, 184, 0.35)",
-    background:
-      theme.palette.mode === "dark"
-        ? "rgba(30, 41, 59, 0.7)"
-        : "rgba(248, 250, 252, 0.9)",
+    letterSpacing: "0.08em",
+    borderBottom: "1px solid #E2E8F0",
+    paddingTop: 14,
+    paddingBottom: 14,
   },
   tableRow: {
+    transition: "background-color 0.18s ease",
     "&:hover": {
-      background:
-        theme.palette.mode === "dark"
-          ? "rgba(30, 41, 59, 0.5)"
-          : "rgba(226, 232, 240, 0.6)",
+      background: theme.palette.mode === "dark" ? "rgba(30, 41, 59, 0.48)" : "#F8FAFC",
     },
   },
   tableCell: {
-    borderBottom:
-      theme.palette.mode === "dark"
-        ? "1px solid rgba(148, 163, 184, 0.15)"
-        : "1px solid rgba(148, 163, 184, 0.25)",
+    borderBottom: "1px solid #F1F5F9",
+    paddingTop: 16,
+    paddingBottom: 16,
+    color: theme.palette.mode === "dark" ? "#E2E8F0" : "#334155",
   },
-  actionButton: {
-    borderRadius: 12,
-    padding: 6,
-    marginLeft: 6,
-    background:
-      theme.palette.mode === "dark"
-        ? "rgba(15, 23, 42, 0.7)"
-        : "rgba(255, 255, 255, 0.85)",
-    border:
-      theme.palette.mode === "dark"
-        ? "1px solid rgba(148, 163, 184, 0.2)"
-        : "1px solid rgba(148, 163, 184, 0.35)",
-    boxShadow:
-      theme.palette.mode === "dark"
-        ? "0 10px 24px rgba(0,0,0,0.35)"
-        : "0 10px 24px rgba(15,23,42,0.08)",
+  shortcodeBadge: {
+    display: "inline-flex",
+    alignItems: "center",
+    padding: "6px 12px",
+    borderRadius: 999,
+    background: "#DBEAFE",
+    color: "#1E3A8A",
+    fontFamily: "'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace",
+    fontSize: "0.78rem",
+    fontWeight: 700,
+    letterSpacing: "0.01em",
+  },
+  messagePreview: {
+    color: theme.palette.mode === "dark" ? "#CBD5E1" : "#475569",
+    lineHeight: 1.55,
+  },
+  mediaWrap: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 8,
   },
   mediaChip: {
-    fontSize: '0.75rem',
-    height: 24
-  }
+    fontSize: "0.72rem",
+    height: 26,
+    borderRadius: 999,
+    fontWeight: 700,
+    background: "#F8FAFC",
+    color: "#334155",
+    border: "1px solid #E2E8F0",
+  },
+  statusIcon: {
+    color: "#10B981",
+  },
+  actionGroup: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 10,
+  },
+  actionButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    color: "#64748B",
+    border: "1px solid #E2E8F0",
+    background: "rgba(255,255,255,0.92)",
+    transition: "transform 0.16s ease, background-color 0.16s ease, color 0.16s ease",
+    "&:hover": {
+      transform: "translateY(-1px)",
+      background: "#F8FAFC",
+      color: "#1E293B",
+    },
+  },
+  emptyState: {
+    minHeight: 420,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
+    gap: theme.spacing(2),
+    padding: theme.spacing(5, 2),
+  },
+  emptyTitle: {
+    fontSize: "1.15rem",
+    fontWeight: 700,
+    color: "#1E293B",
+  },
+  emptyDescription: {
+    maxWidth: 420,
+    color: "#64748B",
+    lineHeight: 1.65,
+  },
+  emptyArt: {
+    width: 180,
+    height: 140,
+  },
 }));
 
 const Quickemessages = () => {
@@ -211,8 +326,6 @@ const Quickemessages = () => {
   const [searchParam, setSearchParam] = useState("");
   const [quickemessages, dispatch] = useReducer(reducer, []);
   const { user, socket } = useContext(AuthContext);
-
-  const { profile } = user;
 
   useEffect(() => {
     dispatch({ type: "RESET" });
@@ -234,20 +347,21 @@ const Quickemessages = () => {
       if (data.action === "update" || data.action === "create") {
         dispatch({ type: "UPDATE_QUICKMESSAGES", payload: data.record });
       }
+
       if (data.action === "delete") {
         dispatch({ type: "DELETE_QUICKMESSAGE", payload: +data.id });
       }
     };
+
     socket.on(`company-${companyId}-quickemessage`, onQuickMessageEvent);
 
     return () => {
       socket.off(`company-${companyId}-quickemessage`, onQuickMessageEvent);
     };
-  }, [socket]);
+  }, [socket, user.companyId]);
 
   const fetchQuickemessages = async () => {
     try {
-      const companyId = user.companyId;
       const { data } = await api.get("/quick-messages", {
         params: { searchParam, pageNumber },
       });
@@ -256,6 +370,7 @@ const Quickemessages = () => {
       setHasMore(data.hasMore);
       setLoading(false);
     } catch (err) {
+      setLoading(false);
       toastError(err);
     }
   };
@@ -287,6 +402,7 @@ const Quickemessages = () => {
     } catch (err) {
       toastError(err);
     }
+
     setDeletingQuickemessage(null);
     setSearchParam("");
     setPageNumber(1);
@@ -306,53 +422,89 @@ const Quickemessages = () => {
     }
   };
 
-  const getMediaTypeDisplay = (quickmessage) => {
+  const getMediaMeta = (quickmessage) => {
     if (!quickmessage.mediaName) {
-      return i18n.t("quickMessages.noAttachment");
+      return {
+        icon: <InsertDriveFileOutlinedIcon fontSize="small" />,
+        label: i18n.t("quickMessages.noAttachment"),
+      };
     }
 
-    const mediaType = quickmessage.mediaType || 'document';
-    const getIcon = (type) => {
-      switch (type) {
-        case 'audio': return '🎵';
-        case 'image': return '🖼️';
-        case 'video': return '🎥';
-        default: return '📎';
-      }
+    const mediaType = quickmessage.mediaType || "document";
+
+    const byType = {
+      audio: {
+        icon: <MusicNoteOutlinedIcon fontSize="small" />,
+        label: mediaType,
+      },
+      image: {
+        icon: <ImageOutlinedIcon fontSize="small" />,
+        label: mediaType,
+      },
+      video: {
+        icon: <VideocamOutlinedIcon fontSize="small" />,
+        label: mediaType,
+      },
+      document: {
+        icon: <InsertDriveFileOutlinedIcon fontSize="small" />,
+        label: mediaType,
+      },
     };
 
-    const getColor = (type) => {
-      switch (type) {
-        case 'audio': return 'secondary';
-        case 'image': return 'primary';
-        case 'video': return 'default';
-        default: return 'default';
-      }
-    };
-
-    return (
-      <Box display="flex" alignItems="center" gap={1}>
-        <span>{getIcon(mediaType)}</span>
-        <Chip 
-          size="small" 
-          label={mediaType} 
-          color={getColor(mediaType)}
-          className={classes.mediaChip}
-        />
-      </Box>
-    );
+    return byType[mediaType] || byType.document;
   };
+
+  const renderEmptyState = () => (
+    <div className={classes.emptyState}>
+      <svg
+        viewBox="0 0 220 160"
+        className={classes.emptyArt}
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect x="34" y="36" width="152" height="92" rx="20" fill="#F8FAFC" />
+        <rect x="54" y="56" width="70" height="12" rx="6" fill="#DBEAFE" />
+        <rect x="54" y="78" width="104" height="10" rx="5" fill="#E2E8F0" />
+        <rect x="54" y="96" width="88" height="10" rx="5" fill="#E2E8F0" />
+        <rect x="148" y="94" width="22" height="22" rx="11" fill="#BFDBFE" />
+        <path
+          d="M159 99V111M153 105H165"
+          stroke="#2563EB"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+        />
+        <circle cx="72" cy="30" r="10" fill="#EFF6FF" />
+        <circle cx="154" cy="24" r="6" fill="#DBEAFE" />
+      </svg>
+      <div className={classes.emptyTitle}>Ancora nessuna risposta rapida</div>
+      <div className={classes.emptyDescription}>
+        Crea scorciatoie riutilizzabili per rispondere più velocemente alle domande frequenti e mantenere il team allineato.
+      </div>
+      <Button
+        variant="contained"
+        className={classes.addButton}
+        startIcon={<AddIcon />}
+        onClick={handleOpenQuickMessageDialog}
+      >
+        Crea la tua prima risposta rapida
+      </Button>
+    </div>
+  );
 
   return (
     <MainContainer>
       <ConfirmationModal
-        title={deletingQuickemessage && `${i18n.t("quickMessages.confirmationModal.deleteTitle")} ${deletingQuickemessage.shortcode}?`}
+        title={
+          deletingQuickemessage &&
+          `${i18n.t("quickMessages.confirmationModal.deleteTitle")} ${deletingQuickemessage.shortcode}?`
+        }
         open={confirmModalOpen}
         onClose={setConfirmModalOpen}
         onConfirm={() => handleDeleteQuickemessage(deletingQuickemessage.id)}
       >
         {i18n.t("quickMessages.confirmationModal.deleteMessage")}
       </ConfirmationModal>
+
       <QuickMessageDialog
         resetPagination={() => {
           setPageNumber(1);
@@ -363,109 +515,148 @@ const Quickemessages = () => {
         aria-labelledby="form-dialog-title"
         quickemessageId={selectedQuickemessage && selectedQuickemessage.id}
       />
+
       <MainHeader>
-        <div className={classes.headerCard}>
-          <div>
-            <Title>{i18n.t("quickMessages.title")}</Title>
-            <div className={classes.headerMeta}>
-              {i18n.t("quickMessages.searchPlaceholder")}
+        <div className={classes.pageHeader}>
+          <div className={classes.titleBlock}>
+            <Title className={classes.pageTitle}>
+              {i18n.t("quickMessages.title")}
+            </Title>
+            <div className={classes.pageDescription}>
+              Gestisci e crea scorciatoie per i messaggi frequenti
             </div>
           </div>
-          <Grid container spacing={2} style={{ maxWidth: 420 }}>
-            <Grid xs={12} sm={7} item>
-              <TextField
-                fullWidth
-                className={classes.searchField}
-                placeholder={i18n.t("quickMessages.searchPlaceholder")}
-                type="search"
-                value={searchParam}
-                onChange={handleSearch}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon style={{ color: "gray" }} />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Grid>
-            <Grid xs={12} sm={5} item>
-              <Button
-                fullWidth
-                variant="contained"
-                onClick={handleOpenQuickMessageDialog}
-                color="primary"
-                className={classes.addButton}
-              >
-                {i18n.t("quickMessages.buttons.add")}
-              </Button>
-            </Grid>
-          </Grid>
         </div>
       </MainHeader>
-      <Paper
-        className={classes.mainPaper}
-        variant="outlined"
-        onScroll={handleScroll}
-      >
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell align="center" className={classes.tableHeadCell}>
-                {i18n.t("quickMessages.table.shortcode")}
-              </TableCell>
-              <TableCell align="center" className={classes.tableHeadCell}>
-                {i18n.t("quickMessages.table.media")}
-              </TableCell>
-              <TableCell align="center" className={classes.tableHeadCell}>
-                {i18n.t("quickMessages.table.status")}
-              </TableCell>
-              <TableCell align="center" className={classes.tableHeadCell}>
-                {i18n.t("quickMessages.table.actions")}
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <>
-              {quickemessages.map((quickemessage) => (
-                <TableRow key={quickemessage.id} className={classes.tableRow}>
-                  <TableCell align="center" className={classes.tableCell}>{quickemessage.shortcode}</TableCell>
-                  <TableCell align="center" className={classes.tableCell}>
-                    {getMediaTypeDisplay(quickemessage)}
-                  </TableCell>
-                  <TableCell align="center" className={classes.tableCell}>
-                    {quickemessage.geral === true ? (
-                      <CheckCircleIcon style={{ color: 'green' }} />
-                    ) : (
-                      ''
-                    )}
-                  </TableCell>
-                  <TableCell align="center" className={classes.tableCell}>
-                    <IconButton
-                      size="small"
-                      onClick={() => handleEditQuickemessage(quickemessage)}
-                      className={classes.actionButton}
-                    >
-                      <EditIcon />
-                    </IconButton>
 
-                    <IconButton
-                      size="small"
-                      onClick={(e) => {
-                        setConfirmModalOpen(true);
-                        setDeletingQuickemessage(quickemessage);
-                      }}
-                      className={classes.actionButton}
-                    >
-                      <DeleteOutlineIcon />
-                    </IconButton>
+      <Paper className={classes.toolbar} elevation={0}>
+        <TextField
+          fullWidth
+          variant="outlined"
+          className={classes.searchField}
+          placeholder={i18n.t("quickMessages.searchPlaceholder")}
+          type="search"
+          value={searchParam}
+          onChange={handleSearch}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon className={classes.searchIcon} />
+              </InputAdornment>
+            ),
+          }}
+        />
+
+        <Button
+          variant="contained"
+          onClick={handleOpenQuickMessageDialog}
+          className={classes.addButton}
+          startIcon={<AddIcon />}
+        >
+          {i18n.t("quickMessages.buttons.add")}
+        </Button>
+      </Paper>
+
+      <Paper className={classes.mainPaper} variant="outlined" onScroll={handleScroll}>
+        {quickemessages.length === 0 && !loading ? (
+          renderEmptyState()
+        ) : (
+          <TableContainer className={classes.tableContainer}>
+            <Table size="small" className={classes.table}>
+              <TableHead>
+                <TableRow>
+                  <TableCell align="left" className={classes.tableHeadCell}>
+                    {i18n.t("quickMessages.table.shortcode")}
+                  </TableCell>
+                  <TableCell align="left" className={classes.tableHeadCell}>
+                    Messaggio
+                  </TableCell>
+                  <TableCell align="left" className={classes.tableHeadCell}>
+                    {i18n.t("quickMessages.table.media")}
+                  </TableCell>
+                  <TableCell align="center" className={classes.tableHeadCell}>
+                    {i18n.t("quickMessages.table.status")}
+                  </TableCell>
+                  <TableCell align="center" className={classes.tableHeadCell}>
+                    {i18n.t("quickMessages.table.actions")}
                   </TableCell>
                 </TableRow>
-              ))}
-              {loading && <TableRowSkeleton columns={4} />}
-            </>
-          </TableBody>
-        </Table>
+              </TableHead>
+
+              <TableBody>
+                {quickemessages.map((quickemessage) => {
+                  const mediaMeta = getMediaMeta(quickemessage);
+
+                  return (
+                    <TableRow key={quickemessage.id} className={classes.tableRow}>
+                      <TableCell align="left" className={classes.tableCell}>
+                        <span className={classes.shortcodeBadge}>
+                          /{String(quickemessage.shortcode || "").replace(/^\//, "")}
+                        </span>
+                      </TableCell>
+
+                      <TableCell align="left" className={classes.tableCell}>
+                        <div className={classes.messagePreview}>
+                          {quickemessage.message || "—"}
+                        </div>
+                      </TableCell>
+
+                      <TableCell align="left" className={classes.tableCell}>
+                        <div className={classes.mediaWrap}>
+                          {mediaMeta.icon}
+                          <Chip
+                            size="small"
+                            label={mediaMeta.label}
+                            className={classes.mediaChip}
+                          />
+                        </div>
+                      </TableCell>
+
+                      <TableCell align="center" className={classes.tableCell}>
+                        {quickemessage.geral === true ? (
+                          <Tooltip title="Disponibile">
+                            <CheckCircleIcon className={classes.statusIcon} />
+                          </Tooltip>
+                        ) : (
+                          "—"
+                        )}
+                      </TableCell>
+
+                      <TableCell align="center" className={classes.tableCell}>
+                        <div className={classes.actionGroup}>
+                          <Tooltip title="Modifica">
+                            <IconButton
+                              size="small"
+                              onClick={() => handleEditQuickemessage(quickemessage)}
+                              className={classes.actionButton}
+                            >
+                              <EditOutlinedIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+
+                          <Tooltip title="Elimina">
+                            <IconButton
+                              size="small"
+                              onClick={() => {
+                                setConfirmModalOpen(true);
+                                setDeletingQuickemessage(quickemessage);
+                              }}
+                              className={classes.actionButton}
+                            >
+                              <DeleteOutlineIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+
+                {loading && <TableRowSkeleton columns={5} />}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
       </Paper>
     </MainContainer>
   );

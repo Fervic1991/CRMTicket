@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
 			theme.palette.mode === "dark"
 				? "radial-gradient(1200px 600px at 10% -10%, rgba(59,130,246,0.16), transparent 55%), radial-gradient(900px 500px at 110% 10%, rgba(16,185,129,0.14), transparent 60%), linear-gradient(180deg, rgba(2,6,23,0.98), rgba(15,23,42,0.98))"
 				: "radial-gradient(1200px 600px at 10% -10%, rgba(59,130,246,0.14), transparent 55%), radial-gradient(900px 500px at 110% 10%, rgba(16,185,129,0.12), transparent 60%), linear-gradient(180deg, rgba(248, 250, 252, 0.98), rgba(241, 245, 249, 0.98))",
-		fontFamily: "'Poppins', sans-serif",
+		fontFamily: '"Inter", sans-serif',
 		padding: theme.appTokens?.spacing?.lg || theme.padding,
 		height: `calc(100% - 48px)`,
 		overflowY: "hidden",

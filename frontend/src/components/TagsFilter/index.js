@@ -8,6 +8,10 @@ import { i18n } from "../../translate/i18n";
 export function TagsFilter({ onFiltered }) {
   const [tags, setTags] = useState([]);
   const [selecteds, setSelecteds] = useState([]);
+  const placeholderText =
+    i18n.t("placeholders.filterByTags") !== "placeholders.filterByTags"
+      ? i18n.t("placeholders.filterByTags")
+      : "Filtra per tag";
 
   useEffect(() => {
     async function fetchData() {
@@ -31,7 +35,7 @@ export function TagsFilter({ onFiltered }) {
   };
 
   return (
-    <Box style={{ padding: 10 }}>
+    <Box style={{ padding: 0, width: "100%" }}>
       <Autocomplete
         multiple
         size="small"
@@ -58,7 +62,8 @@ export function TagsFilter({ onFiltered }) {
           <TextField
             {...params}
             variant="outlined"
-            placeholder={i18n.t('placeholders.filterByTags')}
+            placeholder={placeholderText}
+            fullWidth
           />
         )}
       />

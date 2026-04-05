@@ -22,6 +22,7 @@ import "./styles/animations.css";
 const queryClient = new QueryClient();
 
 const App = () => {
+  const darkElectricBlue = "#38BDF8";
   const [locale, setLocale] = useState();
   const appColorLocalStorage =
     localStorage.getItem("primaryColorLight") ||
@@ -71,9 +72,11 @@ const App = () => {
     () =>
       createTheme(
         (() => {
+          const resolvedPrimary =
+            mode === "light" ? primaryColorLight : darkElectricBlue;
           const tokens = getAppTokens(
             mode,
-            mode === "light" ? primaryColorLight : primaryColorDark
+            resolvedPrimary
           );
           return {
           appTokens: tokens,
@@ -86,11 +89,11 @@ const App = () => {
             "&::-webkit-scrollbar-thumb": {
               boxShadow: "inset 0 0 6px rgba(0, 0, 0, 0.3)",
               backgroundColor:
-                mode === "light" ? primaryColorLight : primaryColorDark, // Usa cores do tema
+                mode === "light" ? primaryColorLight : resolvedPrimary,
               borderRadius: "4px", // Bordas arredondadas
             },
             "&::-webkit-scrollbar-track": {
-              backgroundColor: mode === "light" ? "#f5f5f5" : "#2a2a2a",
+              backgroundColor: mode === "light" ? "#f5f5f5" : "rgba(15,23,42,0.72)",
               borderRadius: "4px",
             },
           },
@@ -114,13 +117,13 @@ const App = () => {
           palette: {
             type: mode,
             primary: {
-              main: mode === "light" ? primaryColorLight : primaryColorDark, // Usa cores dinâmicas
+              main: resolvedPrimary,
               light: mode === "light"
                 ? `${primaryColorLight}80`
-                : `${primaryColorDark}80`,
+                : `${resolvedPrimary}80`,
               dark: mode === "light"
                 ? `${primaryColorLight}CC`
-                : `${primaryColorDark}CC`,
+                : `${resolvedPrimary}CC`,
               contrastText: "#ffffff",
             },
             background: {
@@ -128,27 +131,30 @@ const App = () => {
               paper: tokens.colors.surfaceElevated
             },
             divider: tokens.colors.border,
-            textPrimary:
-              mode === "light" ? primaryColorLight : primaryColorDark,
+            text: {
+              primary: tokens.colors.text,
+              secondary: tokens.colors.textMuted,
+            },
+            textPrimary: tokens.colors.text,
             borderPrimary:
-              mode === "light" ? primaryColorLight : primaryColorDark,
+              resolvedPrimary,
             dark: { main: mode === "light" ? "#333333" : "#F3F3F3" },
             light: { main: mode === "light" ? "#F3F3F3" : "#333333" },
-            fontColor: mode === "light" ? primaryColorLight : primaryColorDark,
-            tabHeaderBackground: mode === "light" ? "#EEE" : "#666",
-            optionsBackground: mode === "light" ? "#fafafa" : "#333",
-            fancyBackground: mode === "light" ? "#fafafa" : "#333",
-            total: mode === "light" ? "#fff" : "#222",
-            messageIcons: mode === "light" ? "grey" : "#F3F3F3",
-            inputBackground: mode === "light" ? "#FFFFFF" : "#333",
-            barraSuperior: mode === "light" ? primaryColorLight : "#666", // Usa cor do tema
+            fontColor: tokens.colors.text,
+            tabHeaderBackground: mode === "light" ? "#EEE" : "rgba(22,32,51,0.82)",
+            optionsBackground: mode === "light" ? "#fafafa" : "rgba(15,23,42,0.82)",
+            fancyBackground: mode === "light"
+              ? "#fafafa"
+              : "radial-gradient(1200px 680px at 0% 0%, rgba(56,189,248,0.12), transparent 55%), radial-gradient(900px 520px at 100% 10%, rgba(59,130,246,0.1), transparent 60%), linear-gradient(180deg, rgba(15,23,42,0.98), rgba(17,28,49,0.98))",
+            total: mode === "light" ? "#fff" : "rgba(22,32,51,0.92)",
+            messageIcons: mode === "light" ? "grey" : "#CBD5E1",
+            inputBackground: mode === "light" ? "#FFFFFF" : "rgba(22,32,51,0.86)",
+            barraSuperior: mode === "light" ? primaryColorLight : resolvedPrimary,
           },
 
           typography: {
             fontFamily: [
-              'Space Grotesk',
               'Inter',
-              'Manrope',
               '-apple-system',
               'BlinkMacSystemFont',
               '"Segoe UI"',
@@ -157,26 +163,32 @@ const App = () => {
               'sans-serif',
             ].join(','),
             h1: {
+              fontFamily: '"Plus Jakarta Sans", "Inter", sans-serif',
               fontWeight: 700,
               letterSpacing: '-0.025em',
             },
             h2: {
+              fontFamily: '"Plus Jakarta Sans", "Inter", sans-serif',
               fontWeight: 700,
               letterSpacing: '-0.025em',
             },
             h3: {
+              fontFamily: '"Plus Jakarta Sans", "Inter", sans-serif',
               fontWeight: 600,
               letterSpacing: '-0.025em',
             },
             h4: {
+              fontFamily: '"Plus Jakarta Sans", "Inter", sans-serif',
               fontWeight: 600,
               letterSpacing: '-0.025em',
             },
             h5: {
+              fontFamily: '"Plus Jakarta Sans", "Inter", sans-serif',
               fontWeight: 600,
               letterSpacing: '-0.025em',
             },
             h6: {
+              fontFamily: '"Plus Jakarta Sans", "Inter", sans-serif',
               fontWeight: 600,
               letterSpacing: '-0.025em',
             },
@@ -303,7 +315,7 @@ const App = () => {
                   },
                   '&.Mui-focused': {
                     '& .MuiOutlinedInput-notchedOutline': {
-                      borderColor: mode === "light" ? primaryColorLight : primaryColorDark,
+                      borderColor: mode === "light" ? primaryColorLight : resolvedPrimary,
                       borderWidth: 2,
                     }
                   }
@@ -322,10 +334,10 @@ const App = () => {
                 '&:hover': {
                   backgroundColor: mode === "light"
                     ? `${primaryColorLight}08`
-                    : `${primaryColorDark}08`,
+                    : `${resolvedPrimary}12`,
                 },
                 '&.Mui-selected': {
-                  color: mode === "light" ? primaryColorLight : primaryColorDark,
+                  color: mode === "light" ? primaryColorLight : resolvedPrimary,
                 }
               }
             },
@@ -478,9 +490,9 @@ const App = () => {
     const root = document.documentElement;
     root.style.setProperty(
       "--primaryColor",
-      mode === "light" ? primaryColorLight : primaryColorDark
+      mode === "light" ? primaryColorLight : darkElectricBlue
     );
-  }, [primaryColorLight, primaryColorDark, mode]);
+  }, [primaryColorLight, mode]);
 
   useEffect(() => {
     async function fetchVersionData() {

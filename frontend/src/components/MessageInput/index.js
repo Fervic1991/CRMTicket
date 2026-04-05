@@ -99,7 +99,7 @@ const isMobileDevice = () => {
 
 const useStyles = makeStyles((theme) => ({
   mainWrapper: {
-    background: "linear-gradient(180deg, rgba(248, 250, 252, 0.92), rgba(241, 245, 249, 0.92))",
+    background: "linear-gradient(180deg, rgba(248, 250, 252, 0.96), rgba(248, 250, 252, 0.98))",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -133,18 +133,18 @@ const useStyles = makeStyles((theme) => ({
     overflow: "scroll",
   },
   newMessageBox: {
-    background: "rgba(248, 250, 252, 0.9)",
+    background: "rgba(248, 250, 252, 0.94)",
     width: "100%",
     display: "flex",
-    padding: "10px 12px",
+    padding: "10px 12px 12px",
     alignItems: "center",
   },
   messageInputWrapper: {
     padding: 8,
     marginRight: 10,
-    background: "rgba(255, 255, 255, 0.9)",
+    background: "rgba(255, 255, 255, 0.98)",
     display: "flex",
-    borderRadius: 18,
+    borderRadius: 24,
     flex: 1,
     position: "relative", // ✅ Essencial para o position absolute funcionar
     zIndex: 1, // ✅ Z-index base
@@ -153,25 +153,25 @@ const useStyles = makeStyles((theme) => ({
   },
 
   messageInputWrapperPrivate: {
-    padding: 6,
-    marginRight: 7,
-    background: "#F0E68C",
+    padding: 8,
+    marginRight: 10,
+    background: "rgba(254, 249, 195, 0.7)",
     display: "flex",
-    borderRadius: 20,
+    borderRadius: 24,
     flex: 1,
     position: "relative", // ✅ Essencial para o position absolute funcionar
     zIndex: 1, // ✅ Z-index base
   },
 
   messageInputWrapperPending: {
-    padding: 6,
-    marginRight: 7,
-    background: "#FFE0B2",
+    padding: 8,
+    marginRight: 10,
+    background: "rgba(254, 249, 195, 0.82)",
     display: "flex",
-    borderRadius: 20,
+    borderRadius: 24,
     flex: 1,
-    position: "relative", // ✅ Essencial para o position absolute funcionar
-    border: "2px solid #FF9800",
+    position: "relative",
+    border: "1px solid rgba(245, 158, 11, 0.22)",
     zIndex: 1, // ✅ Z-index base
   },
   messageInput: {
@@ -512,16 +512,16 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
   },
   pendingAlert: {
-    marginBottom: theme.spacing(1),
-    padding: theme.spacing(1, 2),
-    backgroundColor: "#E3F2FD",
-    border: "1px solid #2196F3",
-    borderRadius: 4,
+    marginBottom: theme.spacing(0.75),
+    padding: theme.spacing(0.65, 1.5),
+    backgroundColor: "rgba(254, 249, 195, 0.88)",
+    border: "1px solid rgba(245, 158, 11, 0.18)",
+    borderRadius: 10,
     display: "flex",
     alignItems: "center",
     gap: theme.spacing(1),
-    color: "#1976D2",
-    fontSize: "0.875rem",
+    color: "#92400E",
+    fontSize: "0.8rem",
   },
 }));
 
@@ -1793,9 +1793,22 @@ const MessageInput = ({
 
     return (
       <Box className={classes.pendingAlert}>
-        <Info style={{ fontSize: 20 }} />
+        <Info style={{ fontSize: 16 }} />
         <span>
           <strong>{i18n.t("tickets.status.pending")}</strong> {i18n.t("queueIntegrationModal.messages.errors.onlyInternalAllowed")}
+        </span>
+      </Box>
+    );
+  };
+
+  const renderPrivateModeHint = () => {
+    if (!privateMessageInputVisible || isTicketPending()) return null;
+
+    return (
+      <Box className={classes.pendingAlert}>
+        <Comment style={{ fontSize: 16 }} />
+        <span>
+          <strong>{i18n.t("messagesInput.placeholderPrivateMessage")}</strong>
         </span>
       </Box>
     );
@@ -1868,6 +1881,7 @@ const MessageInput = ({
           onDrop={(e) => handleInputDrop(e)}
         >
           {renderPendingAlert()}
+          {renderPrivateModeHint()}
           {renderFlowProcessingAlert()}
 
           {(replyingMessage && renderReplyingMessage(replyingMessage)) ||

@@ -5,7 +5,6 @@ import {
   Button,
   Tooltip,
   Typography,
-  Divider,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -15,6 +14,7 @@ import {
 } from '@material-ui/core';
 import { WhatsApp, Instagram, Facebook } from "@material-ui/icons";
 import CloseIcon from '@material-ui/icons/Close';
+import VisibilityOutlinedIcon from '@material-ui/icons/VisibilityOutlined';
 import { format, parseISO, isSameDay } from 'date-fns';
 import { useHistory } from 'react-router-dom';
 import { Draggable } from 'react-beautiful-dnd';
@@ -24,22 +24,22 @@ import { i18n } from '../../translate/i18n';
 
 const useStyles = makeStyles(theme => ({
   card: (props) => ({
-    padding: theme.spacing(1),
-    background: 'rgba(255, 255, 255, 0.9)',
-    borderRadius: 14,
-    border: "1px solid rgba(148, 163, 184, 0.3)",
-    boxShadow: '0 10px 20px rgba(15, 23, 42, 0.10)',
+    padding: theme.spacing(1.5),
+    background: 'rgba(255, 255, 255, 0.96)',
+    borderRadius: 16,
+    border: "1px solid rgba(226, 232, 240, 0.92)",
+    boxShadow: '0 6px 18px rgba(15, 23, 42, 0.06)',
     marginBottom: theme.spacing(1.2),
-    cursor: 'grab',
+    cursor: 'pointer',
     display: 'flex',
     flexDirection: 'column',
     position: 'relative',
-    paddingLeft: theme.spacing(1.5),
+    paddingLeft: theme.spacing(2),
     overflow: "hidden",
     transition: "transform 0.15s ease, box-shadow 0.15s ease",
     "&:hover": {
       transform: "translateY(-2px)",
-      boxShadow: "0 16px 28px rgba(15, 23, 42, 0.16)",
+      boxShadow: "0 14px 28px rgba(15, 23, 42, 0.12)",
     },
     "&::before": {
       content: '""',
@@ -47,14 +47,14 @@ const useStyles = makeStyles(theme => ({
       left: 0,
       top: 0,
       height: "100%",
-      width: 4,
-      background: props?.color || "rgba(148, 163, 184, 0.8)",
+      width: 5,
+      background: props?.indicatorColor || props?.color || "rgba(148, 163, 184, 0.8)",
     },
   }),
   header: {
     display: 'flex',
-    alignItems: 'center',
-    marginBottom: theme.spacing(0.5),
+    alignItems: 'flex-start',
+    marginBottom: theme.spacing(1),
     justifyContent: 'space-between',
     gap: theme.spacing(1),
   },
@@ -69,27 +69,39 @@ const useStyles = makeStyles(theme => ({
   },
   avatar: {
     marginRight: theme.spacing(1),
-    width: theme.spacing(3.5),
-    height: theme.spacing(3.5),
+    width: theme.spacing(4.5),
+    height: theme.spacing(4.5),
     border: "2px solid rgba(255, 255, 255, 0.9)",
     boxShadow: "0 6px 12px rgba(15, 23, 42, 0.12)",
+    borderRadius: "50%",
   },
   cardTitle: {
-    fontSize: '0.95rem',
+    fontSize: '0.98rem',
     fontWeight: 700,
-    color: "rgba(15, 23, 42, 0.9)",
-    maxWidth: 140,
+    color: "#1E3A8A",
+    maxWidth: 155,
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
   },
+  viewAction: {
+    opacity: 0,
+    transform: "translateY(-2px)",
+    transition: "opacity 0.16s ease, transform 0.16s ease",
+    color: "#64748B",
+    padding: 6,
+    borderRadius: 10,
+    background: "rgba(248, 250, 252, 0.92)",
+    border: "1px solid rgba(226, 232, 240, 0.95)",
+    "$card:hover &": {
+      opacity: 1,
+      transform: "translateY(0)",
+    },
+  },
   ticketNumber: {
-    fontSize: '0.8rem',
+    fontSize: '0.76rem',
     fontWeight: 700,
     color: "rgba(100, 116, 139, 0.9)",
-  },
-  divider: {
-    background: "rgba(148, 163, 184, 0.35)",
   },
   lastMessageTime: {
     fontSize: '0.75rem',
@@ -118,7 +130,11 @@ const useStyles = makeStyles(theme => ({
     color: "rgba(71, 85, 105, 0.9)",
     flexGrow: 1,
     marginRight: theme.spacing(1),
-    lineHeight: 1.35,
+    lineHeight: 1.45,
+    display: "-webkit-box",
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: "vertical",
+    overflow: "hidden",
   },
   valueRow: {
     display: 'flex',
@@ -129,38 +145,34 @@ const useStyles = makeStyles(theme => ({
   descriptionRow: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginBottom: theme.spacing(1),
+    gap: theme.spacing(1),
   },
   footer: {
     display: 'flex',
     alignItems: 'center',
     marginTop: 'auto',
   },
-  cardButton: {
-    fontSize: '0.7rem',
-    padding: '4px 8px',
-    color: '#fff',
-    backgroundColor: theme.palette.primary.main,
-    borderRadius: 10,
-    textTransform: "none",
-    '&:hover': {
-      backgroundColor: theme.palette.primary.dark,
-    },
-  },
   connectionTag: {
-    background: "rgba(15, 23, 42, 0.85)",
-    color: '#FFF',
-    padding: '3px 8px',
+    background: "rgba(248, 250, 252, 0.94)",
+    color: '#475569',
+    padding: '4px 10px',
     fontWeight: 700,
     borderRadius: 999,
-    fontSize: '0.65rem',
+    fontSize: '0.68rem',
     marginLeft: 'auto',
+    border: "1px solid rgba(226, 232, 240, 0.95)",
   },
   channelIcon: {
     fontSize: 16,
-    marginLeft: theme.spacing(0.5),
     color: "rgba(71, 85, 105, 0.9)",
+  },
+  infoRow: {
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(0.75),
+    marginBottom: theme.spacing(0.5),
   },
   opportunityValue: {
     fontSize: '0.85rem',
@@ -188,7 +200,16 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const KanbanCard = ({ ticket, index, updateTicket, color }) => {
-  const classes = useStyles({ color });
+  const getIndicatorColor = () => {
+    const updatedAt = parseISO(ticket.updatedAt);
+    const diffHours = (Date.now() - updatedAt.getTime()) / (1000 * 60 * 60);
+
+    if (diffHours > 48) return "#F97316";
+    if (diffHours > 24) return "#EF4444";
+    return "#22C55E";
+  };
+
+  const classes = useStyles({ color, indicatorColor: getIndicatorColor() });
   const history = useHistory();
   const { formatCurrency } = useCurrency();
 
@@ -272,6 +293,7 @@ const KanbanCard = ({ ticket, index, updateTicket, color }) => {
       {(provided, snapshot) => (
         <div
           className={classes.card}
+          onClick={handleCardClick}
           style={{
             boxShadow: snapshot.isDragging
               ? "0 20px 34px rgba(15, 23, 42, 0.22)"
@@ -291,21 +313,35 @@ const KanbanCard = ({ ticket, index, updateTicket, color }) => {
                 </Typography>
               </Tooltip>
             </div>
-            <div className={classes.headerMeta}>
-              {ticket.channel === "whatsapp" && <WhatsApp className={classes.channelIcon} />}
-              {ticket.channel === "instagram" && <Instagram className={classes.channelIcon} />}
-              {ticket.channel === "facebook" && <Facebook className={classes.channelIcon} />}
-              <Typography className={classes.ticketNumber}>
-                {i18n.t('kanban.ticketPrefix')} {ticket.id}
-              </Typography>
-            </div>
+            <Tooltip title={i18n.t('kanban.viewTicket')}>
+              <IconButton
+                className={classes.viewAction}
+                size="small"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleCardClick();
+                }}
+              >
+                <VisibilityOutlinedIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
           </div>
-          <Divider className={classes.divider} />
+          <div className={classes.infoRow}>
+            {ticket.channel === "whatsapp" && <WhatsApp className={classes.channelIcon} />}
+            {ticket.channel === "instagram" && <Instagram className={classes.channelIcon} />}
+            {ticket.channel === "facebook" && <Facebook className={classes.channelIcon} />}
+            <Typography className={classes.ticketNumber}>
+              {i18n.t('kanban.ticketPrefix')} {ticket.id}
+            </Typography>
+          </div>
           <div className={classes.valueRow}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <Typography
                 className={classes.opportunityValue}
-                onClick={handleOpenModal}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpenModal();
+                }}
               >
                 {opportunityValue !== null
                   ? `${i18n.t('kanban.value')}: ${formatCurrency(opportunityValue)}`
@@ -315,7 +351,10 @@ const KanbanCard = ({ ticket, index, updateTicket, color }) => {
                 <Tooltip title={i18n.t('kanban.remove')}>
                   <IconButton
                     className={classes.removeValueButton}
-                    onClick={removeContactValue}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeContactValue();
+                    }}
                     size="small"
                   >
                     <CloseIcon fontSize="small" />
@@ -327,7 +366,7 @@ const KanbanCard = ({ ticket, index, updateTicket, color }) => {
           <div className={classes.descriptionRow}>
             <Tooltip title={ticket.lastMessage || ' '}>
               <Typography className={classes.cardDescription}>
-                {ticket.lastMessage?.substring(0, 20) || ' '}
+                {ticket.lastMessage?.substring(0, 120) || ' '}
               </Typography>
             </Tooltip>
             <Typography className={`${lastMessageTimeClass} ${timeChipClass}`}>
@@ -337,13 +376,6 @@ const KanbanCard = ({ ticket, index, updateTicket, color }) => {
             </Typography>
           </div>
           <div className={classes.footer}>
-            <Button
-              size="small"
-              className={classes.cardButton}
-              onClick={handleCardClick}
-            >
-              {i18n.t('kanban.viewTicket')}
-            </Button>
             {ticket.user && (
               <Typography className={classes.connectionTag}>
                 {ticket.user.name.toUpperCase()}
@@ -370,7 +402,10 @@ const KanbanCard = ({ ticket, index, updateTicket, color }) => {
             </DialogContent>
             <DialogActions>
               <Button
-                onClick={handleCloseModal}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleCloseModal();
+                }}
                 color="secondary"
                 variant="outlined"
                 className={classes.dialogButton}
@@ -378,7 +413,10 @@ const KanbanCard = ({ ticket, index, updateTicket, color }) => {
                 {i18n.t('kanban.cancel')}
               </Button>
               <Button
-                onClick={handleSaveValue}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSaveValue();
+                }}
                 color="primary"
                 variant="outlined"
                 className={classes.dialogButton}

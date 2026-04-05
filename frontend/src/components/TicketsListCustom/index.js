@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme) => ({
         overflow: "hidden",
         borderTopRightRadius: 0,
         borderBottomRightRadius: 0,
+        background: theme.palette.mode === "dark"
+            ? "linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(17, 24, 39, 0.88))"
+            : "linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(248, 250, 252, 0.94))",
     },
 
     ticketsList: {
@@ -28,7 +31,9 @@ const useStyles = makeStyles((theme) => ({
         maxHeight: "100%",
         overflowY: "scroll",
         ...theme.scrollbarStyles,
-        borderTop: "2px solid rgba(0, 0, 0, 0.12)",
+        borderTop: "1px solid rgba(148, 163, 184, 0.16)",
+        background: "transparent",
+        padding: theme.spacing(1.5, 1.5, 2),
     },
 
     ticketsListHeader: {
@@ -50,27 +55,63 @@ const useStyles = makeStyles((theme) => ({
 
     noTicketsText: {
         textAlign: "center",
-        color: "rgb(104, 121, 146)",
-        fontSize: "14px",
-        lineHeight: "1.4",
+        color: theme.palette.mode === "dark" ? "rgba(226, 232, 240, 0.74)" : "rgb(100, 116, 139)",
+        fontSize: "13px",
+        lineHeight: "1.85",
+        fontWeight: 500,
+        maxWidth: 320,
+        margin: theme.spacing(0.75, 0, 0),
     },
 
     noTicketsTitle: {
         textAlign: "center",
-        fontSize: "16px",
-        fontWeight: "600",
-        margin: "0px",
+        fontSize: "18px",
+        fontWeight: 700,
+        color: theme.palette.mode === "dark" ? "#F8FAFC" : "#0F172A",
+        margin: theme.spacing(2, 0, 0),
     },
 
     noTicketsDiv: {
         display: "flex",
-        // height: "190px",
-        margin: 40,
+        margin: "40px 16px",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
+        minHeight: 320,
+        borderRadius: 24,
+        padding: theme.spacing(4, 3),
+        background: theme.palette.mode === "dark"
+            ? "linear-gradient(180deg, rgba(30, 41, 59, 0.72), rgba(15, 23, 42, 0.86))"
+            : "linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(241, 245, 249, 0.96))",
+        border: "1px solid rgba(148, 163, 184, 0.18)",
+        boxShadow: "0 16px 36px rgba(15, 23, 42, 0.08)",
     },
 }));
+
+const EmptyTicketsIllustration = () => (
+    <svg width="220" height="160" viewBox="0 0 220 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+            <linearGradient id="ticketsEmptyBg" x1="34" y1="28" x2="185" y2="140" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#E0F2FE" />
+                <stop offset="1" stopColor="#F8FAFC" />
+            </linearGradient>
+            <linearGradient id="ticketsEmptyCard" x1="66" y1="42" x2="160" y2="124" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#FFFFFF" />
+                <stop offset="1" stopColor="#EFF6FF" />
+            </linearGradient>
+        </defs>
+        <circle cx="110" cy="80" r="64" fill="url(#ticketsEmptyBg)" />
+        <circle cx="52" cy="42" r="10" fill="#C7D2FE" opacity="0.6" />
+        <circle cx="174" cy="116" r="14" fill="#BFDBFE" opacity="0.7" />
+        <circle cx="188" cy="44" r="6" fill="#86EFAC" opacity="0.7" />
+        <rect x="58" y="40" width="104" height="82" rx="20" fill="url(#ticketsEmptyCard)" stroke="#DBEAFE" />
+        <rect x="78" y="58" width="64" height="10" rx="5" fill="#BFDBFE" />
+        <rect x="78" y="76" width="46" height="8" rx="4" fill="#E2E8F0" />
+        <rect x="78" y="90" width="54" height="8" rx="4" fill="#E2E8F0" />
+        <circle cx="143" cy="92" r="12" fill="#D1FAE5" />
+        <path d="M137 92L141 96L149 88" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+);
 
 const ticketSortAsc = (a, b) => {
     
@@ -448,6 +489,7 @@ const onCompanyTicketTicketsList = useCallback((data) => {
                 <List style={{ paddingTop: 0 }} >
                     {ticketsList.length === 0 && !loading ? (
                         <div className={classes.noTicketsDiv}>
+                            <EmptyTicketsIllustration />
                             <span className={classes.noTicketsTitle}>
                                 {i18n.t("ticketsList.noTicketsTitle")}
                             </span>

@@ -2,9 +2,6 @@ import React, { useState, useCallback, useContext, useEffect } from "react";
 import { toast } from "react-toastify";
 import { add, format, parseISO } from "date-fns";
 
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
 // import { SocketContext } from "../../context/Socket/SocketContext";
 import { makeStyles } from "@material-ui/core/styles";
 import { green } from "@material-ui/core/colors";
@@ -31,6 +28,9 @@ import {
   MenuItem as MuiMenuItem,
   FormControl,
   InputLabel,
+  Grid,
+  Chip,
+  Avatar,
 } from "@material-ui/core";
 import {
   Edit,
@@ -44,6 +44,7 @@ import {
   Instagram,
   WhatsApp,
   Sync,
+  LinkOff,
 } from "@material-ui/icons";
 import WebhookIcon from '@mui/icons-material/Webhook';
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
@@ -249,6 +250,191 @@ const useStyles = makeStyles((theme) => ({
   buttonProgress: {
     color: green[500],
   },
+
+  connectDialogPaper: {
+    borderRadius: 24,
+    overflow: "hidden",
+    background:
+      theme.palette.mode === "dark"
+        ? "linear-gradient(180deg, rgba(15,23,42,0.98), rgba(30,41,59,0.96))"
+        : "linear-gradient(180deg, #ffffff 0%, #f8fbff 100%)",
+    border:
+      theme.palette.mode === "dark"
+        ? "1px solid rgba(148,163,184,0.2)"
+        : "1px solid rgba(226,232,240,0.95)",
+    boxShadow: "0 30px 70px rgba(15,23,42,0.18)",
+  },
+  connectDialogTitle: {
+    padding: theme.spacing(3, 4, 2),
+    background: "linear-gradient(135deg, rgba(59,130,246,0.10), rgba(14,165,233,0.06))",
+  },
+  connectDialogSubtitle: {
+    color: "#64748B",
+    marginTop: theme.spacing(0.75),
+    fontSize: 13,
+  },
+  channelGrid: {
+    marginTop: theme.spacing(1),
+  },
+  channelCard: {
+    height: "100%",
+    borderRadius: 20,
+    padding: theme.spacing(2.25),
+    cursor: "pointer",
+    border: "1px solid rgba(226,232,240,0.9)",
+    boxShadow: "0 14px 30px rgba(15,23,42,0.06)",
+    background: "rgba(255,255,255,0.94)",
+    transition: "transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease",
+    "&:hover": {
+      transform: "translateY(-2px)",
+      boxShadow: "0 20px 36px rgba(15,23,42,0.10)",
+      borderColor: "rgba(59,130,246,0.28)",
+    },
+  },
+  channelCardHeader: {
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(1.25),
+    marginBottom: theme.spacing(1.5),
+  },
+  channelIconWrap: {
+    width: 52,
+    height: 52,
+    borderRadius: 16,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "#fff",
+    boxShadow: "0 16px 30px rgba(15,23,42,0.16)",
+  },
+  whatsappGradient: {
+    background: "linear-gradient(135deg, #16A34A, #22C55E)",
+  },
+  messengerGradient: {
+    background: "linear-gradient(135deg, #1877F2, #7C3AED)",
+  },
+  instagramGradient: {
+    background: "linear-gradient(135deg, #F58529, #DD2A7B, #8134AF)",
+  },
+  channelTitle: {
+    fontWeight: 700,
+    color: "#0F172A",
+  },
+  channelDescription: {
+    color: "#64748B",
+    lineHeight: 1.6,
+    fontSize: 13,
+  },
+  loginMetaButton: {
+    minHeight: 42,
+    borderRadius: 12,
+    textTransform: "none",
+    fontWeight: 700,
+    color: "#fff",
+    background: "#1877F2",
+    boxShadow: "0 12px 24px rgba(24,119,242,0.24)",
+    "&:hover": {
+      background: "#1666D8",
+    },
+  },
+  stepCard: {
+    marginTop: theme.spacing(2),
+    padding: theme.spacing(2),
+    borderRadius: 18,
+    background: "rgba(248,250,252,0.95)",
+    border: "1px solid rgba(226,232,240,0.95)",
+  },
+  stepTimeline: {
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(1),
+    marginBottom: theme.spacing(1.5),
+  },
+  stepDot: {
+    width: 28,
+    height: 28,
+    borderRadius: 999,
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: 12,
+    fontWeight: 800,
+    color: "#fff",
+    background: "linear-gradient(135deg, #2563EB, #38BDF8)",
+    boxShadow: "0 10px 20px rgba(37,99,235,0.2)",
+  },
+  stepConnector: {
+    flex: 1,
+    height: 2,
+    borderRadius: 999,
+    background: "linear-gradient(90deg, rgba(37,99,235,0.65), rgba(148,163,184,0.22))",
+  },
+  stepRow: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: theme.spacing(2),
+    padding: theme.spacing(1.5, 0),
+  },
+  stepBadge: {
+    minWidth: 84,
+    padding: "6px 10px",
+    borderRadius: 999,
+    fontSize: 11,
+    fontWeight: 800,
+    letterSpacing: "0.04em",
+    textTransform: "uppercase",
+    color: "#1D4ED8",
+    background: "rgba(219,234,254,0.9)",
+  },
+  linkedBadge: {
+    borderRadius: 999,
+    background: "rgba(220,252,231,0.9)",
+    color: "#166534",
+    fontWeight: 700,
+    marginRight: theme.spacing(1),
+    border: "1px solid rgba(134,239,172,0.9)",
+  },
+  disconnectGhost: {
+    borderRadius: 12,
+    textTransform: "none",
+    fontWeight: 700,
+    color: "#DC2626",
+    border: "1px solid rgba(248,113,113,0.28)",
+    background: "transparent",
+    "&:hover": {
+      background: "rgba(254,242,242,0.92)",
+    },
+  },
+  socialIdentityRow: {
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(1.25),
+    justifyContent: "center",
+  },
+  socialAvatar: {
+    width: 38,
+    height: 38,
+    fontSize: 13,
+    fontWeight: 800,
+    color: "#fff",
+    boxShadow: "0 10px 20px rgba(15,23,42,0.12)",
+  },
+  socialIdentity: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 4,
+    lineHeight: 1.2,
+    textAlign: "left",
+  },
+  socialIdentityLabel: {
+    fontWeight: 700,
+    color: "#0F172A",
+  },
+  socialIdentityMeta: {
+    fontSize: 12,
+    color: "#64748B",
+  },
 }));
 
 function CircularProgressWithLabel(props) {
@@ -314,6 +500,26 @@ const IconChannel = (channel) => {
   }
 };
 
+
+const getChannelIdentity = (whatsApp) => {
+  return whatsApp.pageName || whatsApp.instagramUser || whatsApp.name || "-";
+};
+
+const getInitials = (value = "") =>
+  value
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() || "")
+    .join("") || "--";
+
+const getSocialAvatarStyle = (channel) => ({
+  background:
+    channel === "facebook"
+      ? "linear-gradient(135deg, #1877F2, #7C3AED)"
+      : "linear-gradient(135deg, #F58529, #DD2A7B, #8134AF)",
+});
+
 const Connections = () => {
   const classes = useStyles();
 
@@ -341,6 +547,7 @@ const Connections = () => {
   const [whatsAppToDelete, setWhatsAppToDelete] = useState(null);
   const [transferProgressModalOpen, setTransferProgressModalOpen] = useState(false);
   const [transferProgress, setTransferProgress] = useState({ current: 0, total: 0, percentage: 0 });
+  const [connectDialogOpen, setConnectDialogOpen] = useState(false);
 
   //   const socketManager = useContext(SocketContext);
   const { user, socket } = useContext(AuthContext);
@@ -454,6 +661,7 @@ const Connections = () => {
     setChannel(channel)
     setSelectedWhatsApp(null);
     setWhatsAppModalOpen(true);
+    setConnectDialogOpen(false);
   };
 
   const handleCloseWhatsAppModal = useCallback(() => {
@@ -475,6 +683,7 @@ const Connections = () => {
     setChannel(whatsApp.channel)
     setSelectedWhatsApp(whatsApp);
     setWhatsAppModalOpen(true);
+    setConnectDialogOpen(false);
   };
 
   const handleSyncTemplates = async (whatsAppId) => {
@@ -603,6 +812,37 @@ const Connections = () => {
   };
 
   const renderActionButtons = (whatsApp) => {
+    if (whatsApp.channel === "facebook" || whatsApp.channel === "instagram") {
+      const isLinked = whatsApp.status === "CONNECTED";
+      return (
+        <>
+          {isLinked ? (
+            <>
+              <Chip
+                icon={<CheckCircle style={{ color: "#166534" }} />}
+                label={i18n.t("connections.badges.linked")}
+                size="small"
+                className={classes.linkedBadge}
+              />
+              <Button
+                size="small"
+                variant="outlined"
+                startIcon={<LinkOff fontSize="small" />}
+                className={classes.disconnectGhost}
+                onClick={() => handleOpenConfirmationModal("disconnect", whatsApp.id)}
+              >
+                {i18n.t("connections.buttons.disconnectSocial")}
+              </Button>
+            </>
+          ) : (
+            <Button size="small" variant="outlined" color="primary" onClick={handleOpenConnectDialog}>
+              {i18n.t("connections.buttons.connect")}
+            </Button>
+          )}
+        </>
+      );
+    }
+
     return (
       <>
         {whatsApp.channel === "whatsapp" && whatsApp.status === "qrcode" && (
@@ -733,6 +973,14 @@ const Connections = () => {
     setTransferModalOpen(true);
   };
 
+  const handleOpenConnectDialog = () => {
+    setConnectDialogOpen(true);
+  };
+
+  const handleCloseConnectDialog = () => {
+    setConnectDialogOpen(false);
+  };
+
   const handleCloseTransferModal = () => {
     setTransferModalOpen(false);
     setSourceConnection("");
@@ -816,6 +1064,116 @@ const Connections = () => {
         whatsAppId={!qrModalOpen && selectedWhatsApp?.id}
         channel={channel}
       />
+      <Dialog
+        open={connectDialogOpen}
+        onClose={handleCloseConnectDialog}
+        maxWidth="md"
+        fullWidth
+        classes={{ paper: classes.connectDialogPaper }}
+      >
+        <DialogTitle className={classes.connectDialogTitle}>
+          <Typography component="div" variant="h5" style={{ fontWeight: 800, color: "#0F172A" }}>
+            {i18n.t("connections.connectNewAccount")}
+          </Typography>
+          <Typography className={classes.connectDialogSubtitle}>
+            {i18n.t("connections.selectChannel")}
+          </Typography>
+        </DialogTitle>
+        <DialogContent dividers style={{ padding: 24 }}>
+          <Grid container spacing={3} className={classes.channelGrid}>
+            <Grid item xs={12} md={4}>
+              <Card className={classes.channelCard} onClick={() => handleOpenWhatsAppModal("whatsapp")}>
+                <div className={classes.channelCardHeader}>
+                  <div className={`${classes.channelIconWrap} ${classes.whatsappGradient}`}><WhatsApp /></div>
+                  <div>
+                    <Typography className={classes.channelTitle}>WhatsApp</Typography>
+                    <Typography className={classes.channelDescription}>{i18n.t("connections.channelDescriptions.whatsapp")}</Typography>
+                  </div>
+                </div>
+              </Card>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <FacebookLogin
+                appId={process.env.REACT_APP_FACEBOOK_APP_ID}
+                autoLoad={false}
+                fields="name,email,picture"
+                version="25.0"
+                scope={process.env.REACT_APP_REQUIRE_BUSINESS_MANAGEMENT?.toUpperCase() === "TRUE" ? "public_profile,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management" : "public_profile,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement"}
+                callback={responseFacebook}
+                render={(renderProps) => (
+                  <Card className={classes.channelCard} onClick={renderProps.onClick}>
+                    <div className={classes.channelCardHeader}>
+                      <div className={`${classes.channelIconWrap} ${classes.messengerGradient}`}><Facebook /></div>
+                      <div>
+                        <Typography className={classes.channelTitle}>Facebook Messenger</Typography>
+                        <Typography className={classes.channelDescription}>{i18n.t("connections.channelDescriptions.facebook")}</Typography>
+                      </div>
+                    </div>
+                    <div className={classes.stepCard}>
+                      <div className={classes.stepTimeline}>
+                        <span className={classes.stepDot}>1</span>
+                        <span className={classes.stepConnector} />
+                        <span className={classes.stepDot}>2</span>
+                      </div>
+                      <div className={classes.stepRow}>
+                        <span className={classes.stepBadge}>{i18n.t("connections.steps.stepOne")}</span>
+                        <Typography variant="body2">{i18n.t("connections.steps.loginFacebook")}</Typography>
+                      </div>
+                      <div className={classes.stepRow}>
+                        <span className={classes.stepBadge}>{i18n.t("connections.steps.stepTwo")}</span>
+                        <Typography variant="body2">{i18n.t("connections.steps.selectPage")}</Typography>
+                      </div>
+                      <Button fullWidth className={classes.loginMetaButton}>{i18n.t("connections.buttons.loginWithFacebook")}</Button>
+                    </div>
+                  </Card>
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <FacebookLogin
+                appId={process.env.REACT_APP_FACEBOOK_APP_ID}
+                autoLoad={false}
+                fields="name,email,picture"
+                version="25.0"
+                scope={process.env.REACT_APP_REQUIRE_BUSINESS_MANAGEMENT?.toUpperCase() === "TRUE" ? "public_profile,instagram_basic,instagram_manage_messages,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management" : "public_profile,instagram_basic,instagram_manage_messages,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement"}
+                callback={responseInstagram}
+                render={(renderProps) => (
+                  <Card className={classes.channelCard} onClick={renderProps.onClick}>
+                    <div className={classes.channelCardHeader}>
+                      <div className={`${classes.channelIconWrap} ${classes.instagramGradient}`}><Instagram /></div>
+                      <div>
+                        <Typography className={classes.channelTitle}>Instagram</Typography>
+                        <Typography className={classes.channelDescription}>{i18n.t("connections.channelDescriptions.instagram")}</Typography>
+                      </div>
+                    </div>
+                    <div className={classes.stepCard}>
+                      <div className={classes.stepTimeline}>
+                        <span className={classes.stepDot}>1</span>
+                        <span className={classes.stepConnector} />
+                        <span className={classes.stepDot}>2</span>
+                      </div>
+                      <div className={classes.stepRow}>
+                        <span className={classes.stepBadge}>{i18n.t("connections.steps.stepOne")}</span>
+                        <Typography variant="body2">{i18n.t("connections.steps.loginFacebook")}</Typography>
+                      </div>
+                      <div className={classes.stepRow}>
+                        <span className={classes.stepBadge}>{i18n.t("connections.steps.stepTwo")}</span>
+                        <Typography variant="body2">{i18n.t("connections.steps.selectInstagram")}</Typography>
+                      </div>
+                      <Button fullWidth className={classes.loginMetaButton}>{i18n.t("connections.buttons.loginWithFacebook")}</Button>
+                    </div>
+                  </Card>
+                )}
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions style={{ padding: 20 }}>
+          <Button onClick={handleCloseConnectDialog} className={classes.secondaryButton}>
+            {i18n.t("common.cancel")}
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Dialog
         open={transferModalOpen}
         onClose={handleCloseTransferModal}
@@ -978,127 +1336,20 @@ const Connections = () => {
               >
                 {i18n.t("connections.callSupport")}
               </Button>
-              <PopupState variant="popover" popupId="demo-popup-menu">
-                {(popupState) => (
-                  <React.Fragment>
-                    <Can
-                      role={user.profile}
-                      perform="connections-page:addConnection"
-                      yes={() => (
-                        <>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            {...bindTrigger(popupState)}
-                            className={classes.primaryButton}
-                          >
-                            {i18n.t("connections.newConnection")}
-                          </Button>
-                          <Menu
-                            {...bindMenu(popupState)}
-                            PaperProps={{ className: classes.menuPaper }}
-                          >
-                            {/* WHATSAPP */}
-                            <MenuItem
-                              disabled={planConfig?.plan?.useWhatsapp ? false : true}
-                              onClick={() => {
-                                handleOpenWhatsAppModal();
-                                popupState.close();
-                              }}
-                            >
-                              <div className={classes.menuItem}>
-                                <WhatsApp
-                                  fontSize="small"
-                                  style={{ color: "#25D366" }}
-                                />
-                                <div className={classes.menuItemText}>
-                                  <span className={classes.menuItemTitle}>WhatsApp</span>
-                                  <span className={classes.menuItemSubtitle}>{i18n.t("connections.whatsapp")}</span>
-                                </div>
-                              </div>
-                            </MenuItem>
-                            {/* WHATSAPP OFICIAL */}
-                            <MenuItem
-                              disabled={planConfig?.plan?.useWhatsappOfficial ? false : true}
-                              onClick={() => {
-                                handleOpenWhatsAppModal("whatsapp_oficial");
-                                popupState.close();
-                              }}
-                            >
-                              <div className={classes.menuItem}>
-                                <WhatsApp
-                                  fontSize="small"
-                                  style={{ color: "#25D366" }}
-                                />
-                                <div className={classes.menuItemText}>
-                                  <span className={classes.menuItemTitle}>{i18n.t("connections.whatsappOfficial")}</span>
-                                  <span className={classes.menuItemSubtitle}>{i18n.t("connections.whatsappOfficial")}</span>
-                                </div>
-                              </div>
-                            </MenuItem>
-                            {/* FACEBOOK */}
-                            <FacebookLogin
-                              appId={process.env.REACT_APP_FACEBOOK_APP_ID}
-                              autoLoad={false}
-                              fields="name,email,picture"
-                              version="9.0"
-                              scope={process.env.REACT_APP_REQUIRE_BUSINESS_MANAGEMENT?.toUpperCase() === "TRUE" ?
-                                "public_profile,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management"
-                                : "public_profile,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement"}
-                              callback={responseFacebook}
-                              render={(renderProps) => (
-                                <MenuItem
-                                  disabled={planConfig?.plan?.useFacebook ? false : true}
-                                  onClick={renderProps.onClick}
-                                >
-                                  <div className={classes.menuItem}>
-                                    <Facebook
-                                      fontSize="small"
-                                      style={{ color: "#3b5998" }}
-                                    />
-                                    <div className={classes.menuItemText}>
-                                      <span className={classes.menuItemTitle}>Facebook</span>
-                                      <span className={classes.menuItemSubtitle}>{i18n.t("connections.facebook")}</span>
-                                    </div>
-                                  </div>
-                                </MenuItem>
-                              )}
-                            />
-                            {/* INSTAGRAM */}
-                            <FacebookLogin
-                              appId={process.env.REACT_APP_FACEBOOK_APP_ID}
-                              autoLoad={false}
-                              fields="name,email,picture"
-                              version="9.0"
-                              scope={process.env.REACT_APP_REQUIRE_BUSINESS_MANAGEMENT?.toUpperCase() === "TRUE" ?
-                                "public_profile,instagram_basic,instagram_manage_messages,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management"
-                                : "public_profile,instagram_basic,instagram_manage_messages,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement"}
-                              callback={responseInstagram}
-                              render={(renderProps) => (
-                                <MenuItem
-                                  disabled={planConfig?.plan?.useInstagram ? false : true}
-                                  onClick={renderProps.onClick}
-                                >
-                                  <div className={classes.menuItem}>
-                                    <Instagram
-                                      fontSize="small"
-                                      style={{ color: "#e1306c" }}
-                                    />
-                                    <div className={classes.menuItemText}>
-                                      <span className={classes.menuItemTitle}>Instagram</span>
-                                      <span className={classes.menuItemSubtitle}>{i18n.t("connections.instagram")}</span>
-                                    </div>
-                                  </div>
-                                </MenuItem>
-                              )}
-                            />
-                          </Menu>
-                        </>
-                      )}
-                    />
-                  </React.Fragment>
+              <Can
+                role={user.profile}
+                perform="connections-page:addConnection"
+                yes={() => (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleOpenConnectDialog}
+                    className={classes.primaryButton}
+                  >
+                    {i18n.t("connections.connectNewAccount")}
+                  </Button>
                 )}
-              </PopupState>
+              />
             </MainHeaderButtonsWrapper>
           </MainHeader>
 
@@ -1183,8 +1434,31 @@ const Connections = () => {
                               />
                             </div>
                           </TableCell>
-                          <TableCell align="center">{whatsApp.name}</TableCell>
-                          <TableCell align="center">{whatsApp.number && whatsApp.channel === 'whatsapp' ? (<>{formatSerializedId(whatsApp.number)}</>) : whatsApp.number}</TableCell>
+                          <TableCell align="center">
+                            {(whatsApp.channel === "facebook" || whatsApp.channel === "instagram") ? (
+                              <div className={classes.socialIdentityRow}>
+                                <Avatar
+                                  className={classes.socialAvatar}
+                                  style={getSocialAvatarStyle(whatsApp.channel)}
+                                >
+                                  {getInitials(getChannelIdentity(whatsApp))}
+                                </Avatar>
+                                <div className={classes.socialIdentity}>
+                                  <span className={classes.socialIdentityLabel}>
+                                    {getChannelIdentity(whatsApp)}
+                                  </span>
+                                  <span className={classes.socialIdentityMeta}>
+                                    {whatsApp.channel === "facebook"
+                                      ? i18n.t("connections.pageName")
+                                      : i18n.t("connections.instagramHandle")}
+                                  </span>
+                                </div>
+                              </div>
+                            ) : (
+                              whatsApp.name
+                            )}
+                          </TableCell>
+                          <TableCell align="center">{(whatsApp.channel === 'whatsapp' || whatsApp.channel === 'whatsapp_oficial') ? (whatsApp.number ? formatSerializedId(whatsApp.number) : "-") : (whatsApp.instagramUser || whatsApp.pageName || whatsApp.number || "-")}</TableCell>
                           <TableCell align="center">{renderStatusToolTips(whatsApp)}</TableCell>
                           <TableCell align="center">{renderActionButtons(whatsApp)}</TableCell>
                           <TableCell align="center">{format(parseISO(whatsApp.updatedAt), "dd/MM/yy HH:mm")}</TableCell>

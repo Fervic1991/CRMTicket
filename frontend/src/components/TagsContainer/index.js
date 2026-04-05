@@ -10,6 +10,7 @@ export function TagsContainer({ contact }) {
     const [tags, setTags] = useState([]);
     const [selecteds, setSelecteds] = useState([]);
     const isMounted = useRef(true);
+    const inputRef = useRef(null);
 
     useEffect(() => {
         return () => {
@@ -28,6 +29,24 @@ export function TagsContainer({ contact }) {
             });
         }
     }, [contact]);
+
+    useEffect(() => {
+        const handleFocusTicketTags = () => {
+            const container = document.getElementById("ticket-tags-container");
+            if (container) {
+                container.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+            setTimeout(() => {
+                inputRef.current?.focus();
+            }, 180);
+        };
+
+        window.addEventListener("focusTicketTags", handleFocusTicketTags);
+
+        return () => {
+            window.removeEventListener("focusTicketTags", handleFocusTicketTags);
+        };
+    }, []);
 
     const createTag = async (data) => {
         try {
@@ -96,7 +115,7 @@ export function TagsContainer({ contact }) {
     }
 
     return (
-        <Paper style={{ padding: 2 }}>
+        <Paper id="ticket-tags-container" style={{ padding: 2 }}>
             <Autocomplete
                 multiple
                 size="small"
@@ -128,7 +147,12 @@ export function TagsContainer({ contact }) {
                     ))
                 }
                 renderInput={(params) => (
-                    <TextField {...params} variant="outlined" placeholder="Tags" />
+                    <TextField
+                        {...params}
+                        variant="outlined"
+                        placeholder="Tags"
+                        inputRef={inputRef}
+                    />
                 )}
                 PaperComponent={({ children }) => (
                     <Paper

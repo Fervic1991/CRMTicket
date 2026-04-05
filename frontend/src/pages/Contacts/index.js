@@ -24,6 +24,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { Facebook, Instagram, WhatsApp, Close } from "@material-ui/icons";
 import SearchIcon from "@material-ui/icons/Search";
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
@@ -147,6 +148,14 @@ const useStyles = makeStyles((theme) => ({
     width: '48px',
     padding: theme.spacing(0, 1),
   },
+  roundedCheckbox: {
+    "& .MuiIconButton-root": {
+      borderRadius: 10,
+    },
+    "& .MuiSvgIcon-root": {
+      borderRadius: 6,
+    },
+  },
   clickableAvatar: {
     cursor: 'pointer',
     transition: 'transform 0.2s ease-in-out',
@@ -210,8 +219,8 @@ const useStyles = makeStyles((theme) => ({
     color: "rgba(15, 23, 42, 0.75)",
     background: "rgba(248, 250, 252, 0.85)",
     borderBottom: "1px solid rgba(148, 163, 184, 0.35)",
-    paddingTop: theme.spacing(1.4),
-    paddingBottom: theme.spacing(1.4),
+    paddingTop: theme.spacing(1.6),
+    paddingBottom: theme.spacing(1.6),
   },
   tableRow: {
     transition: "background-color 0.15s ease",
@@ -221,8 +230,8 @@ const useStyles = makeStyles((theme) => ({
   },
   tableCell: {
     borderBottom: "1px solid rgba(148, 163, 184, 0.2)",
-    paddingTop: theme.spacing(1.2),
-    paddingBottom: theme.spacing(1.2),
+    paddingTop: theme.spacing(1.5),
+    paddingBottom: theme.spacing(1.5),
   },
   statusPill: {
     display: "inline-flex",
@@ -246,29 +255,18 @@ const useStyles = makeStyles((theme) => ({
     background: "rgba(239, 68, 68, 0.12)",
   },
   actionIconButton: {
-    height: 32,
-    width: 32,
+    height: 34,
+    width: 34,
     borderRadius: 10,
-    border: "1px solid rgba(148, 163, 184, 0.45)",
-    background: "rgba(255, 255, 255, 0.85)",
-    boxShadow: "0 6px 14px rgba(15, 23, 42, 0.08)",
-    transition: "transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease",
+    border: "1px solid rgba(226, 232, 240, 0.95)",
+    background: "rgba(255, 255, 255, 0.92)",
+    boxShadow: "none",
+    color: "#475569",
+    transition: "transform 0.15s ease, background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease",
     "&:hover": {
       transform: "translateY(-1px)",
-      boxShadow: "0 10px 18px rgba(15, 23, 42, 0.12)",
-      borderColor: "rgba(59, 130, 246, 0.5)",
-    },
-  },
-  columnDivider: {
-    position: "relative",
-    "&::after": {
-      content: '""',
-      position: "absolute",
-      right: 0,
-      top: "20%",
-      height: "60%",
-      width: 1,
-      background: "rgba(148, 163, 184, 0.25)",
+      backgroundColor: "#F8FAFC",
+      borderColor: "rgba(148, 163, 184, 0.45)",
     },
   },
   headerStats: {
@@ -294,10 +292,59 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: theme.spacing(1),
   },
   headerButton: {
-    borderRadius: 12,
+    borderRadius: 10,
     textTransform: "none",
-    fontWeight: 600,
-    boxShadow: "0 10px 20px rgba(15, 23, 42, 0.10)",
+    fontWeight: 700,
+    minHeight: 40,
+    boxShadow: "none",
+  },
+  primaryHeaderButton: {
+    color: "#FFFFFF",
+    background: "linear-gradient(135deg, #2563EB, #60A5FA)",
+    boxShadow: "0 12px 24px rgba(37, 99, 235, 0.22)",
+    "&:hover": {
+      background: "linear-gradient(135deg, #2563EB, #60A5FA)",
+      boxShadow: "0 14px 28px rgba(37, 99, 235, 0.28)",
+    },
+  },
+  secondaryHeaderButton: {
+    color: "#2563EB",
+    background: "rgba(255,255,255,0.95)",
+    border: "1px solid rgba(148, 163, 184, 0.35)",
+    "&:hover": {
+      background: "#F8FAFC",
+    },
+  },
+  headerActions: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    gap: theme.spacing(1.25),
+    flexWrap: "wrap",
+  },
+  titleWrap: {
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(1),
+  },
+  avatarFallback: {
+    background: "linear-gradient(135deg, #DBEAFE, #BFDBFE)",
+    color: "#1E3A8A",
+    fontWeight: 800,
+    width: 42,
+    height: 42,
+  },
+  moreActionsButton: {
+    color: "#475569",
+  },
+  rowMenuPaper: {
+    borderRadius: 14,
+    border: "1px solid rgba(226, 232, 240, 0.95)",
+    boxShadow: "0 14px 28px rgba(15, 23, 42, 0.10)",
+  },
+  rowMenuItem: {
+    minWidth: 180,
+    gap: theme.spacing(1.25),
   },
   headerMenuPaper: {
     borderRadius: 16,
@@ -363,6 +410,8 @@ const Contacts = () => {
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
   const [selectedContactName, setSelectedContactName] = useState('');
+  const [rowMenuAnchorEl, setRowMenuAnchorEl] = useState(null);
+  const [rowMenuContact, setRowMenuContact] = useState(null);
 
   const { getAll: getAllSettings } = useCompanySettings();
   const [hideNum, setHideNum] = useState(false);
@@ -619,6 +668,26 @@ const Contacts = () => {
     setSearchParam(event.target.value.toLowerCase());
   };
 
+  const getContactInitials = (name = "") => {
+    return name
+      .split(" ")
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase())
+      .join("");
+  };
+
+  const handleOpenRowMenu = (event, contact) => {
+    event.stopPropagation();
+    setRowMenuAnchorEl(event.currentTarget);
+    setRowMenuContact(contact);
+  };
+
+  const handleCloseRowMenu = () => {
+    setRowMenuAnchorEl(null);
+    setRowMenuContact(null);
+  };
+
   const handleOpenContactModal = () => {
     setSelectedContactId(null);
     setContactModalOpen(true);
@@ -836,124 +905,128 @@ const Contacts = () => {
       </ConfirmationModal>
 
       <MainHeader>
-        <Title>
-          {i18n.t("contacts.title")} ({totalContactsCount})
-          {isAnyContactSelected && (
-            <span style={{ color: '#f50057', marginLeft: 8 }}>
-              - {selectedCount} {i18n.t("contacts.bulk.selected")} {selectAllMode && i18n.t("contacts.bulk.allSelected")}
-            </span>
-          )}
-        </Title>
-        <MainHeaderButtonsWrapper>
-          <TagsFilter onFiltered={handleSelectedTags} />
-          <TextField
-            className={classes.searchField}
-            placeholder={i18n.t("contacts.searchPlaceholder")}
-            type="search"
-            value={searchParam}
-            onChange={handleSearch}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon color="secondary" />
-                </InputAdornment>
-              ),
-            }}
-          />
-          
-          {/* Botões de ação em lote */}
-          {isAnyContactSelected && (
-            <div className={classes.bulkActions}>
-              <Tooltip title={selectAllMode ? i18n.t("contacts.bulk.deleteAll") : i18n.t("contacts.bulk.deleteSelected")}>
-                <Button
-                  className={classes.bulkButton}
-                  variant="contained"
-                  color="secondary"
-                  startIcon={<DeleteOutlineIcon />}
-                  onClick={handleBulkDeleteClick}
-                >
-                  {getSelectionButtonText()}
-                </Button>
-              </Tooltip>
-            </div>
-          )}
-
-          <PopupState variant="popover" popupId="demo-popup-menu">
-            {(popupState) => (
-              <React.Fragment>
-                <Button
-                  className={classes.headerButton}
-                  variant="contained"
-                  color="primary"
-                  {...bindTrigger(popupState)}
-                >
-                  {i18n.t("contacts.menu.importexport")}
-                  <ArrowDropDown />
-                </Button>
-                <Menu
-                  {...bindMenu(popupState)}
-                  PaperProps={{ className: classes.headerMenuPaper }}
-                >
-                  <MenuItem
-                    className={classes.headerMenuItem}
-                    onClick={() => {
-                      history.push("/contacts/import");
-                      popupState.close();
-                    }}
-                  >
-                    <ContactPhone
-                      fontSize="small"
-                      color="primary"
-                      style={{ marginRight: 10 }}
-                    />
-                    {i18n.t("contacts.menu.importYourPhone")}
-                  </MenuItem>
-                  <MenuItem
-                    className={classes.headerMenuItem}
-                    onClick={() => {
-                      setImportContactModalOpen(true);
-                    }}
-                  >
-                    <Backup
-                      fontSize="small"
-                      color="primary"
-                      style={{ marginRight: 10 }}
-                    />
-                    {i18n.t("contacts.menu.importToExcel")}
-                  </MenuItem>
-                  <Can
-                    role={user.profile}
-                    perform="contacts-page:deleteAllContacts"
-                      yes={() => (
-                      <MenuItem
-                        className={classes.headerMenuItem}
-                        onClick={() => {
-                          handleDeleteAllClick();
-                          popupState.close();
-                        }}
-                        style={{ color: '#f44336' }}
-                      >
-                        <DeleteSweep
-                          fontSize="small"
-                          style={{ marginRight: 10, color: '#f44336' }}
-                        />
-                        {i18n.t("contacts.menu.deleteAllContacts")}
-                      </MenuItem>
-                    )}
-                  />
-                </Menu>
-              </React.Fragment>
+        <div className={classes.titleWrap}>
+          <Title>
+            {i18n.t("contacts.title")} ({totalContactsCount})
+            {isAnyContactSelected && (
+              <span style={{ color: '#f50057', marginLeft: 8 }}>
+                - {selectedCount} {i18n.t("contacts.bulk.selected")} {selectAllMode && i18n.t("contacts.bulk.allSelected")}
+              </span>
             )}
-          </PopupState>
+          </Title>
+        </div>
+        <MainHeaderButtonsWrapper>
+          <div className={classes.headerActions}>
+            <TagsFilter onFiltered={handleSelectedTags} />
+            <TextField
+              className={classes.searchField}
+              placeholder={i18n.t("contacts.searchPlaceholder")}
+              type="search"
+              value={searchParam}
+              onChange={handleSearch}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon color="secondary" />
+                  </InputAdornment>
+                ),
+              }}
+            />
           
-          <Button
-            className={classes.headerButton}
-            variant="contained"
-            color="primary"
-            onClick={handleOpenContactModal}
-          >
-            {i18n.t("contacts.buttons.add")}
-          </Button>
+            {isAnyContactSelected && (
+              <div className={classes.bulkActions}>
+                <Tooltip title={selectAllMode ? i18n.t("contacts.bulk.deleteAll") : i18n.t("contacts.bulk.deleteSelected")}>
+                  <Button
+                    className={classes.bulkButton}
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<DeleteOutlineIcon />}
+                    onClick={handleBulkDeleteClick}
+                  >
+                    {getSelectionButtonText()}
+                  </Button>
+                </Tooltip>
+              </div>
+            )}
+
+            <PopupState variant="popover" popupId="demo-popup-menu">
+              {(popupState) => (
+                <React.Fragment>
+                  <Button
+                    className={`${classes.headerButton} ${classes.secondaryHeaderButton}`}
+                    variant="contained"
+                    color="primary"
+                    {...bindTrigger(popupState)}
+                  >
+                    {i18n.t("contacts.menu.importexport")}
+                    <ArrowDropDown />
+                  </Button>
+                  <Menu
+                    {...bindMenu(popupState)}
+                    PaperProps={{ className: classes.headerMenuPaper }}
+                  >
+                    <MenuItem
+                      className={classes.headerMenuItem}
+                      onClick={() => {
+                        history.push("/contacts/import");
+                        popupState.close();
+                      }}
+                    >
+                      <ContactPhone
+                        fontSize="small"
+                        color="primary"
+                        style={{ marginRight: 10 }}
+                      />
+                      {i18n.t("contacts.menu.importYourPhone")}
+                    </MenuItem>
+                    <MenuItem
+                      className={classes.headerMenuItem}
+                      onClick={() => {
+                        setImportContactModalOpen(true);
+                        popupState.close();
+                      }}
+                    >
+                      <Backup
+                        fontSize="small"
+                        color="primary"
+                        style={{ marginRight: 10 }}
+                      />
+                      {i18n.t("contacts.menu.importToExcel")}
+                    </MenuItem>
+                    <Can
+                      role={user.profile}
+                      perform="contacts-page:deleteAllContacts"
+                      yes={() => (
+                        <MenuItem
+                          className={classes.headerMenuItem}
+                          onClick={() => {
+                            handleDeleteAllClick();
+                            popupState.close();
+                          }}
+                          style={{ color: '#f44336' }}
+                        >
+                          <DeleteSweep
+                            fontSize="small"
+                            style={{ marginRight: 10, color: '#f44336' }}
+                          />
+                          {i18n.t("contacts.menu.deleteAllContacts")}
+                        </MenuItem>
+                      )}
+                    />
+                  </Menu>
+                </React.Fragment>
+              )}
+            </PopupState>
+          
+            <Button
+              className={`${classes.headerButton} ${classes.primaryHeaderButton}`}
+              variant="contained"
+              color="primary"
+              onClick={handleOpenContactModal}
+            >
+              {i18n.t("contacts.buttons.add")}
+            </Button>
+          </div>
         </MainHeaderButtonsWrapper>
       </MainHeader>
 
@@ -973,6 +1046,77 @@ const Contacts = () => {
         variant="outlined"
         onScroll={handleScroll}
       >
+        <Menu
+          anchorEl={rowMenuAnchorEl}
+          keepMounted
+          open={Boolean(rowMenuAnchorEl)}
+          onClose={handleCloseRowMenu}
+          PaperProps={{ className: classes.rowMenuPaper }}
+        >
+          <MenuItem
+            className={classes.rowMenuItem}
+            disabled={!rowMenuContact?.active}
+            onClick={() => {
+              if (!rowMenuContact?.active) return;
+              setContactTicket(rowMenuContact);
+              setNewTicketModalOpen(true);
+              handleCloseRowMenu();
+            }}
+          >
+            {rowMenuContact?.channel === "whatsapp" && <WhatsApp fontSize="small" />}
+            {rowMenuContact?.channel === "instagram" && <Instagram fontSize="small" />}
+            {rowMenuContact?.channel === "facebook" && <Facebook fontSize="small" />}
+            {rowMenuContact?.channel !== "whatsapp" &&
+              rowMenuContact?.channel !== "instagram" &&
+              rowMenuContact?.channel !== "facebook" && <ContactPhone fontSize="small" />}
+            Abrir ticket
+          </MenuItem>
+          <MenuItem
+            className={classes.rowMenuItem}
+            onClick={() => {
+              hadleEditContact(rowMenuContact.id);
+              handleCloseRowMenu();
+            }}
+          >
+            <EditIcon fontSize="small" />
+            Editar
+          </MenuItem>
+          <MenuItem
+            className={classes.rowMenuItem}
+            onClick={() => {
+              setConfirmOpen(true);
+              if (rowMenuContact.active) {
+                setBlockingContact(rowMenuContact);
+              } else {
+                setUnBlockingContact(rowMenuContact);
+              }
+              handleCloseRowMenu();
+            }}
+          >
+            {rowMenuContact?.active ? <BlockIcon fontSize="small" /> : <CheckCircleIcon fontSize="small" />}
+            {rowMenuContact?.active
+              ? "Bloquear contacto"
+              : "Activar contacto"}
+          </MenuItem>
+          <Can
+            role={user.profile}
+            perform="contacts-page:deleteContact"
+            yes={() => (
+              <MenuItem
+                className={classes.rowMenuItem}
+                onClick={() => {
+                  setConfirmOpen(true);
+                  setDeletingContact(rowMenuContact);
+                  handleCloseRowMenu();
+                }}
+              >
+                <DeleteOutlineIcon fontSize="small" />
+                Eliminar contacto
+              </MenuItem>
+            )}
+          />
+        </Menu>
+
         <input
           style={{ display: "none" }}
           id="upload"
@@ -1020,6 +1164,7 @@ const Contacts = () => {
             <TableRow className={classes.tableRow}>
               <TableCell className={classes.checkboxCell + " " + classes.tableHeadCell}>
                 <Checkbox
+                  className={classes.roundedCheckbox}
                   indeterminate={checkboxStatus.indeterminate}
                   checked={checkboxStatus.checked}
                   onChange={handleSelectAllContacts}
@@ -1027,20 +1172,20 @@ const Contacts = () => {
                   inputProps={{ 'aria-label': i18n.t("contacts.bulk.selectAll") }}
                 />
               </TableCell>
-              <TableCell className={classes.idCell + " " + classes.tableHeadCell + " " + classes.columnDivider}>{i18n.t("contacts.table.id")}</TableCell>
-              <TableCell className={classes.avatarCell + " " + classes.tableHeadCell + " " + classes.columnDivider} align="center">{i18n.t("contacts.table.photo")}</TableCell>
-              <TableCell className={classes.tableHeadCell + " " + classes.columnDivider}>{i18n.t("contacts.table.name")}</TableCell>
-              <TableCell className={classes.tableHeadCell + " " + classes.columnDivider} align="center">
+              <TableCell className={classes.idCell + " " + classes.tableHeadCell}>{i18n.t("contacts.table.id")}</TableCell>
+              <TableCell className={classes.avatarCell + " " + classes.tableHeadCell} align="center">{i18n.t("contacts.table.photo")}</TableCell>
+              <TableCell className={classes.tableHeadCell}>{i18n.t("contacts.table.name")}</TableCell>
+              <TableCell className={classes.tableHeadCell} align="center">
                 {i18n.t("contacts.table.whatsapp")}
               </TableCell>
-              <TableCell className={classes.tableHeadCell + " " + classes.columnDivider} align="center">
+              <TableCell className={classes.tableHeadCell} align="center">
                 {i18n.t("contacts.table.email")}
               </TableCell>
-              <TableCell className={classes.tableHeadCell + " " + classes.columnDivider} align="center">
+              <TableCell className={classes.tableHeadCell} align="center">
                 {i18n.t("contacts.table.ownerPhone")}
               </TableCell>
-              <TableCell className={classes.tableHeadCell + " " + classes.columnDivider} align="center">{i18n.t("contacts.table.status")}</TableCell>
-              <TableCell className={classes.tableHeadCell + " " + classes.columnDivider} align="center">{i18n.t("contacts.table.wallet")}</TableCell>
+              <TableCell className={classes.tableHeadCell} align="center">{i18n.t("contacts.table.status")}</TableCell>
+              <TableCell className={classes.tableHeadCell} align="center">{i18n.t("contacts.table.wallet")}</TableCell>
               <TableCell className={classes.tableHeadCell} align="center">
                 {i18n.t("contacts.table.actions")}
               </TableCell>
@@ -1059,22 +1204,25 @@ const Contacts = () => {
                   >
                     <TableCell className={classes.checkboxCell + " " + classes.tableCell}>
                       <Checkbox
+                        className={classes.roundedCheckbox}
                         checked={isSelected}
                         onChange={() => handleSelectContact(contact.id)}
                         disabled={selectAllMode}
                         inputProps={{ 'aria-label': `${i18n.t("contacts.modal.selectContact")} ${contact.name}` }}
                       />
                     </TableCell>
-                    <TableCell className={classes.idCell + " " + classes.tableCell + " " + classes.columnDivider}>{contact.id}</TableCell>
-                    <TableCell className={classes.avatarCell + " " + classes.tableCell + " " + classes.columnDivider} align="center">
+                    <TableCell className={classes.idCell + " " + classes.tableCell}>{contact.id}</TableCell>
+                    <TableCell className={classes.avatarCell + " " + classes.tableCell} align="center">
                       <Avatar 
                         src={`${contact?.urlPicture}`}
-                        className={classes.clickableAvatar}
+                        className={clsx(classes.clickableAvatar, !contact?.urlPicture && classes.avatarFallback)}
                         onClick={() => handleOpenImageModal(contact?.urlPicture, contact.name)}
-                      />
+                      >
+                        {!contact?.urlPicture ? getContactInitials(contact.name) : null}
+                      </Avatar>
                     </TableCell>
-                    <TableCell className={classes.tableCell + " " + classes.columnDivider}>{contact.name}</TableCell>
-                    <TableCell className={classes.tableCell + " " + classes.columnDivider} align="center">
+                    <TableCell className={classes.tableCell}>{contact.name}</TableCell>
+                    <TableCell className={classes.tableCell} align="center">
                       {enableLGPD && hideNum && user.profile === "user"
                         ? contact.isGroup
                           ? contact.number
@@ -1089,16 +1237,16 @@ const Contacts = () => {
                         ? contact.number
                         : formatSerializedId(contact?.number)}
                     </TableCell>
-                    <TableCell className={classes.tableCell + " " + classes.columnDivider} align="center">{contact.email}</TableCell>
-                    <TableCell className={classes.tableCell + " " + classes.columnDivider} align="center">
+                    <TableCell className={classes.tableCell} align="center">{contact.email}</TableCell>
+                    <TableCell className={classes.tableCell} align="center">
                       {renderContactConnection(contact)}
                     </TableCell>
-                    <TableCell className={classes.tableCell + " " + classes.columnDivider} align="center">
+                    <TableCell className={classes.tableCell} align="center">
                       <span className={clsx(classes.statusPill, contact.active ? classes.statusActive : classes.statusInactive)}>
                         {contact.active ? i18n.t("contacts.status.active") : i18n.t("contacts.status.inactive")}
                       </span>
                     </TableCell>
-                    <TableCell className={classes.tableCell + " " + classes.columnDivider} align="center">
+                    <TableCell className={classes.tableCell} align="center">
                       {contact.contactWallets && contact.contactWallets.length > 0 
                         ? contact.contactWallets[0].wallet?.name || i18n.t("contacts.modal.userNotFound")
                         : i18n.t("contacts.modal.notAssigned")}
@@ -1106,68 +1254,11 @@ const Contacts = () => {
                     <TableCell className={classes.tableCell} align="center">
                       <IconButton
                         size="small"
-                        disabled={!contact.active}
-                        onClick={() => {
-                          setContactTicket(contact);
-                          setNewTicketModalOpen(true);
-                        }}
-                        className={classes.actionIconButton}
+                        onClick={(e) => handleOpenRowMenu(e, contact)}
+                        className={clsx(classes.actionIconButton, classes.moreActionsButton)}
                       >
-                        {contact.channel === "whatsapp" && (
-                          <WhatsApp style={{ color: "green" }} />
-                        )}
-                        {contact.channel === "instagram" && (
-                          <Instagram style={{ color: "purple" }} />
-                        )}
-                        {contact.channel === "facebook" && (
-                          <Facebook style={{ color: "blue" }} />
-                        )}
+                        <MoreHorizIcon />
                       </IconButton>
-
-                      <IconButton
-                        size="small"
-                        onClick={() => hadleEditContact(contact.id)}
-                        className={classes.actionIconButton}
-                      >
-                        <EditIcon color="secondary" />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        onClick={
-                          contact.active
-                            ? () => {
-                                setConfirmOpen(true);
-                                setBlockingContact(contact);
-                              }
-                            : () => {
-                                setConfirmOpen(true);
-                                setUnBlockingContact(contact);
-                              }
-                        }
-                        className={classes.actionIconButton}
-                      >
-                        {contact.active ? (
-                          <BlockIcon color="secondary" />
-                        ) : (
-                          <CheckCircleIcon color="secondary" />
-                        )}
-                      </IconButton>
-                      <Can
-                        role={user.profile}
-                        perform="contacts-page:deleteContact"
-                        yes={() => (
-                          <IconButton
-                            size="small"
-                            onClick={(e) => {
-                              setConfirmOpen(true);
-                              setDeletingContact(contact);
-                            }}
-                            className={classes.actionIconButton}
-                          >
-                            <DeleteOutlineIcon color="secondary" />
-                          </IconButton>
-                        )}
-                      />
                     </TableCell>
                   </TableRow>
                 );

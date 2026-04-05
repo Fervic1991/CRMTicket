@@ -105,9 +105,40 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 700,
     letterSpacing: 0.2,
   },
+  headerActionsWrap: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    gap: 12,
+    flexWrap: "wrap",
+    width: "100%",
+    [theme.breakpoints.down("sm")]: {
+      justifyContent: "stretch",
+    },
+  },
+  searchWrap: {
+    flex: "1 1 280px",
+    maxWidth: 320,
+    minWidth: 220,
+    [theme.breakpoints.down("sm")]: {
+      flexBasis: "100%",
+      maxWidth: "100%",
+    },
+  },
+  buttonGroup: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    gap: 12,
+    flexWrap: "wrap",
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
+  },
   searchField: {
     "& .MuiOutlinedInput-root": {
-      borderRadius: 14,
+      height: 40,
+      borderRadius: 999,
       backgroundColor: "rgba(255,255,255,0.85)",
       border: "1px solid rgba(120,130,160,0.25)",
       transition: "box-shadow 0.2s ease, border-color 0.2s ease",
@@ -120,47 +151,51 @@ const useStyles = makeStyles((theme) => ({
       },
     },
     "& .MuiOutlinedInput-input": {
-      padding: "10px 12px",
+      padding: "9px 12px",
     },
   },
   actionButtonPrimary: {
-    height: 42,
-    borderRadius: 12,
+    height: 40,
+    borderRadius: 8,
     fontWeight: 600,
     textTransform: "none",
-    background: "linear-gradient(135deg, rgba(63,81,181,0.9), rgba(25,118,210,0.95))",
+    padding: theme.spacing(0, 2),
+    whiteSpace: "nowrap",
+    background: "linear-gradient(135deg, rgba(37,99,235,0.96), rgba(56,189,248,0.92))",
     boxShadow: "0 12px 28px rgba(63,81,181,0.3)",
     color: "#fff",
     "&:hover": {
-      background: "linear-gradient(135deg, rgba(56,73,166,0.96), rgba(22,104,188,1))",
+      background: "linear-gradient(135deg, rgba(29,78,216,0.98), rgba(14,165,233,0.96))",
     },
   },
   actionButton: {
-    height: 42,
-    borderRadius: 12,
+    height: 40,
+    borderRadius: 8,
     fontWeight: 600,
     textTransform: "none",
+    padding: theme.spacing(0, 2),
+    whiteSpace: "nowrap",
     background:
       theme.mode === "light"
         ? "rgba(255,255,255,0.96)"
-        : "rgba(15,23,42,0.78)",
+        : "rgba(15,23,42,0.38)",
     color:
       theme.mode === "light"
-        ? theme.palette.primary.main
+        ? "#1e293b"
         : "#e2e8f0",
     border:
       theme.mode === "light"
-        ? "1px solid rgba(120,130,160,0.24)"
-        : "1px solid rgba(148,163,184,0.18)",
+        ? "1px solid rgba(148,163,184,0.34)"
+        : "1px solid rgba(148,163,184,0.22)",
     boxShadow:
       theme.mode === "light"
-        ? "0 10px 24px rgba(31,45,61,0.08)"
-        : "0 10px 24px rgba(2,6,23,0.28)",
+        ? "0 8px 18px rgba(31,45,61,0.05)"
+        : "0 10px 24px rgba(2,6,23,0.18)",
     "&:hover": {
       background:
         theme.mode === "light"
-          ? "rgba(244,247,255,1)"
-          : "rgba(30,41,59,0.9)",
+          ? "rgba(248,250,252,1)"
+          : "rgba(30,41,59,0.55)",
       borderColor:
         theme.mode === "light"
           ? "rgba(63,81,181,0.32)"
@@ -564,8 +599,8 @@ const ContactListItems = () => {
                   <Title className={classes.headerTitle}>{contactList.name}</Title>
                 </Grid>
                 <Grid xs={12} sm={7} item>
-                  <Grid spacing={2} container>
-                    <Grid xs={12} sm={6} item>
+                  <div className={classes.headerActionsWrap}>
+                    <div className={classes.searchWrap}>
                       <TextField
                         fullWidth
                         variant="outlined"
@@ -578,15 +613,14 @@ const ContactListItems = () => {
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <SearchIcon style={{ color: "gray" }} />
+                              <SearchIcon style={{ color: "rgba(148,163,184,0.9)" }} />
                             </InputAdornment>
                           ),
                         }}
                       />
-                    </Grid>
-                    <Grid xs={6} sm={3} item>
+                    </div>
+                    <div className={classes.buttonGroup}>
                       <Button
-                        fullWidth
                         variant="contained"
                         color="primary"
                         onClick={goToContactLists}
@@ -594,10 +628,7 @@ const ContactListItems = () => {
                       >
                         {i18n.t("contactListItems.buttons.lists")}
                       </Button>
-                    </Grid>
-                    <Grid xs={6} sm={3} item>
                       <Button
-                        fullWidth
                         variant="contained"
                         color="primary"
                         onClick={() => {
@@ -608,10 +639,7 @@ const ContactListItems = () => {
                       >
                         {i18n.t("contactListItems.buttons.import")}
                       </Button>
-                    </Grid>
-                    <Grid xs={6} sm={3} item>
                       <Button
-                        fullWidth
                         variant="contained"
                         color="primary"
                         onClick={handleOpenContactSelectionModal}
@@ -619,10 +647,7 @@ const ContactListItems = () => {
                       >
                         {i18n.t("contactListItems.buttons.importFromContacts")}
                       </Button>
-                    </Grid>
-                    <Grid xs={6} sm={3} item>
                       <Button
-                        fullWidth
                         variant="contained"
                         color="primary"
                         onClick={handleOpenContactListItemModal}
@@ -630,8 +655,8 @@ const ContactListItems = () => {
                       >
                         {i18n.t("contactListItems.buttons.add")}
                       </Button>
-                    </Grid>
-                  </Grid>
+                    </div>
+                  </div>
                 </Grid>
               </Grid>
             </MainHeader>

@@ -53,20 +53,58 @@ import {
 const useStyles = makeStyles((theme) => ({
   ticket: {
     position: "relative",
+    margin: theme.spacing(0, 0, 0.5),
+    padding: theme.spacing(1.25, 1.5),
+    borderRadius: 16,
+    alignItems: "flex-start",
+    background: theme.palette.mode === "dark" ? "rgba(15, 23, 42, 0.82)" : "#FFFFFF",
+    border: "1px solid transparent",
+    borderBottom: "1px solid #F1F5F9",
+    boxShadow: "none",
+    transition: "background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease",
+    "&:hover": {
+      background: theme.palette.mode === "dark" ? "rgba(30, 41, 59, 0.88)" : "#F8FAFC",
+    },
+    "&::before": {
+      content: '""',
+      position: "absolute",
+      left: 0,
+      top: 10,
+      bottom: 10,
+      width: 0,
+      borderRadius: 999,
+      background: "#2563EB",
+      transition: "width 0.2s ease",
+    },
+    "&$selectedTicket": {
+      background: theme.palette.mode === "dark" ? "rgba(30, 64, 175, 0.14)" : "#EFF6FF",
+      boxShadow: "inset 0 0 0 1px rgba(37, 99, 235, 0.08)",
+    },
+    "&$selectedTicket::before": {
+      width: 4,
+    },
+    "&:hover $hoverActions": {
+      opacity: 1,
+      pointerEvents: "auto",
+      transform: "translateY(0)",
+    },
   },
+  selectedTicket: {},
 
   pendingTicket: {
     cursor: "unset",
+    borderColor: "rgba(245, 158, 11, 0.28)",
   },
   queueTag: {
-    background: "#FCFCFC",
-    color: "#000",
-    marginRight: 1,
-    padding: 1,
-    fontWeight: "bold",
-    borderRadius: 3,
-    fontSize: "0.5em",
+    background: "#F8FAFC",
+    color: "#334155",
+    marginRight: 6,
+    padding: "4px 10px",
+    fontWeight: 700,
+    borderRadius: 20,
+    fontSize: "0.66rem",
     whiteSpace: "nowrap",
+    border: "1px solid rgba(226, 232, 240, 0.95)",
   },
   noTicketsDiv: {
     display: "flex",
@@ -81,10 +119,10 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "right",
     position: "relative",
     top: 0,
-    color: "green",
-    fontWeight: "bold",
+    color: "#047857",
+    fontWeight: 700,
     marginRight: "10px",
-    borderRadius: 0,
+    borderRadius: 999,
   },
   noTicketsText: {
     textAlign: "center",
@@ -93,13 +131,20 @@ const useStyles = makeStyles((theme) => ({
     lineHeight: "1.4",
   },
   connectionTag: {
-    background: "green",
-    color: "#FFF",
-    marginRight: 1,
-    padding: 1,
-    fontWeight: "bold",
-    borderRadius: 3,
-    fontSize: "0.6em",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: 24,
+    color: "#334155",
+    marginRight: 6,
+    marginTop: 6,
+    padding: "0 10px",
+    fontWeight: 700,
+    borderRadius: 20,
+    fontSize: "0.66rem",
+    letterSpacing: "0.01em",
+    boxShadow: "none",
+    border: "1px solid rgba(226, 232, 240, 0.95)",
   },
   noTicketsTitle: {
     textAlign: "center",
@@ -111,27 +156,30 @@ const useStyles = makeStyles((theme) => ({
   contactNameWrapper: {
     display: "flex",
     justifyContent: "space-between",
-    marginLeft: "5px",
+    alignItems: "center",
+    gap: theme.spacing(1),
+    marginLeft: theme.spacing(1),
     fontWeight: "bold",
-    color: theme.mode === "light" ? "black" : "white",
+    color: theme.mode === "light" ? "#0F172A" : "#F8FAFC",
   },
 
   lastMessageTime: {
     justifySelf: "flex-end",
     textAlign: "right",
     position: "relative",
-    top: -30,
+    top: -4,
     marginRight: "1px",
-    color: theme.mode === "light" ? "black" : grey[400],
+    color: theme.mode === "light" ? "#64748B" : grey[400],
+    fontWeight: 600,
   },
 
   lastMessageTimeUnread: {
     justifySelf: "flex-end",
     textAlign: "right",
     position: "relative",
-    top: -30,
-    color: "green",
-    fontWeight: "bold",
+    top: -4,
+    color: "#0F766E",
+    fontWeight: 700,
     marginRight: "1px",
   },
 
@@ -144,20 +192,25 @@ const useStyles = makeStyles((theme) => ({
 
   contactLastMessage: {
     paddingRight: "0%",
-    marginLeft: "5px",
-    color: theme.mode === "light" ? "black" : grey[400],
+    marginLeft: theme.spacing(1),
+    color: theme.mode === "light" ? "#334155" : grey[400],
   },
 
   contactLastMessageUnread: {
     paddingRight: 20,
-    fontWeight: "bold",
-    color: theme.mode === "light" ? "black" : grey[400],
+    fontWeight: 700,
+    color: theme.mode === "light" ? "#0F172A" : grey[400],
     width: "50%",
   },
 
   badgeStyle: {
-    color: "white",
-    backgroundColor: green[500],
+    color: "#064E3B",
+    backgroundColor: "#D1FAE5",
+    minWidth: 24,
+    height: 24,
+    borderRadius: 999,
+    fontWeight: 700,
+    boxShadow: "0 6px 14px rgba(16, 185, 129, 0.18)",
   },
 
   acceptButton: {
@@ -184,10 +237,124 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "row",
     alignContent: "flex-start",
   },
+  secondaryContentSecond1: {
+    display: "flex",
+    alignItems: "flex-start",
+    flexWrap: "nowrap",
+    flexDirection: "row",
+    alignContent: "flex-start",
+  },
   ticketInfo1: {
     position: "relative",
     top: 13,
     right: 0,
+  },
+  headerIdentity: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: theme.spacing(0.75),
+    minWidth: 0,
+  },
+  statusDot: {
+    width: 12,
+    height: 12,
+    minWidth: 12,
+    borderRadius: "50%",
+    boxShadow: "0 0 0 4px rgba(255, 255, 255, 0.7)",
+  },
+  titleText: {
+    fontWeight: 700,
+    color: theme.palette.mode === "dark" ? "#F8FAFC" : "#0F172A",
+    letterSpacing: "-0.01em",
+  },
+  metaWrap: {
+    display: "flex",
+    flexWrap: "wrap",
+    alignItems: "center",
+    gap: 6,
+    marginTop: 6,
+  },
+  sideActions: {
+    top: 14,
+    right: 14,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-end",
+    gap: 6,
+  },
+  sideTools: {
+    top: "auto",
+    right: 14,
+    bottom: 12,
+  },
+  quickActionRail: {
+    top: "auto",
+    right: 52,
+    bottom: 10,
+    display: "flex",
+    alignItems: "center",
+    gap: 6,
+  },
+  hoverActions: {
+    opacity: 1,
+    pointerEvents: "auto",
+    transform: "translateY(0)",
+    transition: "opacity 0.18s ease, transform 0.18s ease",
+  },
+  quickActionButton: {
+    minWidth: 30,
+    width: 30,
+    height: 30,
+    padding: 0,
+    borderRadius: 10,
+    border: "1px solid rgba(203, 213, 225, 0.9)",
+    background: "rgba(255,255,255,0.92)",
+    color: "#475569",
+    boxShadow: "0 8px 16px rgba(15, 23, 42, 0.08)",
+    transition: "all 0.18s ease",
+    "&:hover": {
+      transform: "translateY(-1px)",
+      boxShadow: "0 12px 20px rgba(15, 23, 42, 0.12)",
+      background: "#FFFFFF",
+    },
+    "& .MuiSvgIcon-root": {
+      fontSize: 16,
+    },
+  },
+  acceptQuickAction: {
+    color: "#047857",
+    "&:hover": {
+      borderColor: "rgba(16, 185, 129, 0.45)",
+      background: "rgba(236, 253, 245, 0.95)",
+    },
+  },
+  transferQuickAction: {
+    color: "#1D4ED8",
+    "&:hover": {
+      borderColor: "rgba(59, 130, 246, 0.45)",
+      background: "rgba(239, 246, 255, 0.95)",
+    },
+  },
+  closeQuickAction: {
+    color: "#DC2626",
+    "&:hover": {
+      borderColor: "rgba(239, 68, 68, 0.45)",
+      background: "rgba(254, 242, 242, 0.96)",
+    },
+  },
+  spyQuickAction: {
+    color: "#7C3AED",
+    "&:hover": {
+      borderColor: "rgba(139, 92, 246, 0.45)",
+      background: "rgba(245, 243, 255, 0.96)",
+    },
+  },
+  reopenQuickAction: {
+    color: "#0F766E",
+    "&:hover": {
+      borderColor: "rgba(20, 184, 166, 0.45)",
+      background: "rgba(240, 253, 250, 0.96)",
+    },
   },
   Radiusdot: {
     "& .MuiBadge-badge": {
@@ -227,7 +394,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       opacity: 0.8,
     },
-  }
+  },
 }));
 
 const TicketListItemCustom = ({ setTabOpen, ticket }) => {
@@ -505,8 +672,167 @@ const TicketListItemCustom = ({ setTabOpen, ticket }) => {
     history.push(`/tickets/${ticket.uuid}`);
   };
 
+  const renderQuickActions = () => {
+    if (ticket.status === "chatbot") {
+      return (
+        <Tooltip title="Apri conversazione chatbot">
+          <ButtonWithSpinner
+            variant="contained"
+            className={`${classes.quickActionButton} ${classes.spyQuickAction}`}
+            size="small"
+            loading={loading}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleSpyTicket();
+            }}
+          >
+            <VisibilityIcon />
+          </ButtonWithSpinner>
+        </Tooltip>
+      );
+    }
+
+    return (
+      <>
+        {ticket.status === "pending" &&
+          (ticket.queueId === null || ticket.queueId === undefined) && (
+            <Tooltip title={i18n.t("ticketsList.buttons.accept")}>
+              <ButtonWithSpinner
+                variant="contained"
+                className={`${classes.quickActionButton} ${classes.acceptQuickAction}`}
+                size="small"
+                loading={loading}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpenAcceptTicketWithouSelectQueue();
+                }}
+              >
+                <Done />
+              </ButtonWithSpinner>
+            </Tooltip>
+          )}
+
+        {ticket.status === "pending" && ticket.queueId !== null && (
+          <Tooltip title={i18n.t("ticketsList.buttons.accept")}>
+            <ButtonWithSpinner
+              variant="contained"
+              className={`${classes.quickActionButton} ${classes.acceptQuickAction}`}
+              size="small"
+              loading={loading}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAcepptTicket(ticket.id);
+              }}
+            >
+              <Done />
+            </ButtonWithSpinner>
+          </Tooltip>
+        )}
+
+        {(ticket.status === "pending" ||
+          ticket.status === "open" ||
+          ticket.status === "group") && (
+          <Tooltip title={i18n.t("ticketsList.buttons.transfer")}>
+            <ButtonWithSpinner
+              variant="contained"
+              className={`${classes.quickActionButton} ${classes.transferQuickAction}`}
+              size="small"
+              loading={loading}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleOpenTransferModal();
+              }}
+            >
+              <SwapHoriz />
+            </ButtonWithSpinner>
+          </Tooltip>
+        )}
+
+        {(ticket.status === "open" || ticket.status === "group") && (
+          <Tooltip title={i18n.t("ticketsList.buttons.closed")}>
+            <ButtonWithSpinner
+              variant="contained"
+              className={`${classes.quickActionButton} ${classes.closeQuickAction}`}
+              size="small"
+              loading={loading}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleCloseTicket(ticket.id);
+              }}
+            >
+              <HighlightOff />
+            </ButtonWithSpinner>
+          </Tooltip>
+        )}
+
+        {(ticket.status === "pending" || ticket.status === "lgpd") &&
+          (user.userClosePendingTicket === "enabled" ||
+            user.profile === "admin") && (
+            <Tooltip title={i18n.t("ticketsList.buttons.ignore")}>
+              <ButtonWithSpinner
+                variant="contained"
+                className={`${classes.quickActionButton} ${classes.closeQuickAction}`}
+                size="small"
+                loading={loading}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleCloseIgnoreTicket(ticket.id);
+                }}
+              >
+                <HighlightOff />
+              </ButtonWithSpinner>
+            </Tooltip>
+          )}
+
+        {ticket.status === "closed" &&
+          (ticket.queueId === null || ticket.queueId === undefined) && (
+            <Tooltip title={i18n.t("ticketsList.buttons.reopen")}>
+              <ButtonWithSpinner
+                variant="contained"
+                className={`${classes.quickActionButton} ${classes.reopenQuickAction}`}
+                size="small"
+                loading={loading}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpenAcceptTicketWithouSelectQueue();
+                }}
+              >
+                <Replay />
+              </ButtonWithSpinner>
+            </Tooltip>
+          )}
+
+        {ticket.status === "closed" && ticket.queueId !== null && (
+          <Tooltip title={i18n.t("ticketsList.buttons.reopen")}>
+            <ButtonWithSpinner
+              variant="contained"
+              className={`${classes.quickActionButton} ${classes.reopenQuickAction}`}
+              size="small"
+              loading={loading}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAcepptTicket(ticket.id);
+              }}
+            >
+              <Replay />
+            </ButtonWithSpinner>
+          </Tooltip>
+        )}
+      </>
+    );
+  };
+
   // Lógica de permissão para mensagens pending - MOVIDA PARA DEPOIS DE TODAS AS FUNÇÕES
   const shouldBlurMessages = ticket.status === "pending" && user?.allowSeeMessagesInPendingTickets === "disabled";
+
+  const statusConfig = {
+    open: { label: i18n.t("tickets.tabs.open") || "Aperto", color: "#6EE7B7" },
+    pending: { label: i18n.t("tickets.tabs.pending") || "In attesa", color: "#FBBF24" },
+    group: { label: i18n.t("tickets.tabs.group") || "Gruppo", color: "#93C5FD" },
+    closed: { label: i18n.t("tickets.tabs.closed") || "Chiuso", color: "#CBD5E1" },
+    chatbot: { label: "Bot", color: "#C4B5FD" },
+    lgpd: { label: "LGPD", color: "#FCA5A5" },
+  }[ticket.status] || { label: ticket.status, color: "#CBD5E1" };
 
   // Função para renderizar a mensagem com base na permissão - MOVIDA PARA DEPOIS DE TODAS AS FUNÇÕES
   const renderLastMessage = () => {
@@ -563,7 +889,7 @@ const TicketListItemCustom = ({ setTabOpen, ticket }) => {
           ticket={ticket}
         />
       )}
-      <ListItem
+        <ListItem
         button
         dense
         onClick={(e) => {
@@ -583,9 +909,10 @@ const TicketListItemCustom = ({ setTabOpen, ticket }) => {
         selected={ticketId && ticketId === ticket.uuid}
         className={clsx(classes.ticket, {
           [classes.pendingTicket]: ticket.status === "pending",
+          [classes.selectedTicket]: ticketId && ticketId === ticket.uuid,
         })}
       >
-        <ListItemAvatar style={{ marginLeft: "-15px" }}>
+        <ListItemAvatar style={{ marginLeft: 0, minWidth: 58 }}>
           <Avatar
             style={{
               width: "50px",
@@ -605,18 +932,22 @@ const TicketListItemCustom = ({ setTabOpen, ticket }) => {
                 noWrap
                 component="span"
                 variant="body2"
+                className={classes.headerIdentity}
               >
+                <span
+                  className={classes.statusDot}
+                  title={statusConfig.label}
+                  style={{ backgroundColor: statusConfig.color }}
+                />
                 {ticket.isGroup && ticket.channel === "whatsapp" && (
                   <GroupIcon
                     fontSize="small"
                     style={{
                       color: grey[700],
                       marginBottom: "-1px",
-                      marginLeft: "5px",
                     }}
                   />
-                )}{" "}
-                &nbsp;
+                )}
                 {ticket.channel && (
                   <ConnectionIcon
                     width="20"
@@ -624,9 +955,10 @@ const TicketListItemCustom = ({ setTabOpen, ticket }) => {
                     className={classes.connectionIcon}
                     connectionType={ticket.channel}
                   />
-                )}{" "}
-                &nbsp;
-                {truncate(ticket.contact?.name, 60)}
+                )}
+                <span className={classes.titleText}>
+                  {truncate(ticket.contact?.name, 60)}
+                </span>
               </Typography>
             </span>
           }
@@ -643,17 +975,23 @@ const TicketListItemCustom = ({ setTabOpen, ticket }) => {
                 variant="body2"
               >
                 {renderLastMessage()}
-                <span className={classes.secondaryContentSecond}>
+                <span className={classes.metaWrap}>
                   {ticket?.whatsapp ? (
                     <Badge
                       className={classes.connectionTag}
                       style={{
                         backgroundColor:
                           ticket.channel === "whatsapp"
-                            ? ticket.whatsapp?.color || "#25D366"
+                            ? "#DCFCE7"
                             : ticket.channel === "facebook"
-                            ? "#4267B2"
-                            : "#E1306C",
+                            ? "#DBEAFE"
+                            : "#FCE7F3",
+                        color:
+                          ticket.channel === "whatsapp"
+                            ? "#166534"
+                            : ticket.channel === "facebook"
+                            ? "#1D4ED8"
+                            : "#9D174D",
                       }}
                     >
                       {ticket.whatsapp?.name.toUpperCase()}
@@ -664,7 +1002,8 @@ const TicketListItemCustom = ({ setTabOpen, ticket }) => {
                   {
                     <Badge
                       style={{
-                        backgroundColor: ticket.queue?.color || "#7c7c7c",
+                        backgroundColor: ticket.queueId ? `${ticket.queue?.color || "#CBD5E1"}22` : "#FEF3C7",
+                        color: ticket.queueId ? (ticket.queue?.color || "#475569") : "#92400E",
                       }}
                       className={classes.connectionTag}
                     >
@@ -677,7 +1016,7 @@ const TicketListItemCustom = ({ setTabOpen, ticket }) => {
                   }
                   {ticket?.user && (
                     <Badge
-                      style={{ backgroundColor: "#000000" }}
+                      style={{ backgroundColor: "#E2E8F0", color: "#334155" }}
                       className={classes.connectionTag}
                     >
                       {ticket.user?.name.toUpperCase()}
@@ -706,17 +1045,10 @@ const TicketListItemCustom = ({ setTabOpen, ticket }) => {
                 </span>
               </Typography>
 
-              <Badge
-                className={classes.newMessagesCount}
-                badgeContent={shouldBlurMessages ? "?" : ticket.unreadMessages}
-                classes={{
-                  badge: classes.badgeStyle,
-                }}
-              />
             </span>
           }
         />
-        <ListItemSecondaryAction>
+        <ListItemSecondaryAction className={classes.sideActions}>
           {ticket.lastMessage && (
             <>
               <Typography
@@ -734,257 +1066,22 @@ const TicketListItemCustom = ({ setTabOpen, ticket }) => {
                   <>{format(parseISO(ticket.updatedAt), "dd/MM/yyyy")}</>
                 )}
               </Typography>
-
-              <br />
             </>
           )}
         </ListItemSecondaryAction>
-        <ListItemSecondaryAction>
-          {/* Para tickets com status chatbot, mostrar apenas o ícone de spy */}
-          {ticket.status === "chatbot" && (
-            <span className={classes.secondaryContentSecond}>
-              <ButtonWithSpinner
-                style={{
-                  backgroundColor: "transparent",
-                  boxShadow: "none",
-                  border: "none",
-                  color: theme.mode === "light" ? "blue" : "#FFF",
-                  padding: "0px",
-                  borderRadius: "50%",
-                  right: "1px",
-                  fontSize: "0.6rem",
-                  bottom: "-30px",
-                  minWidth: "2em",
-                  width: "auto",
-                }}
-                variant="contained"
-                className={classes.acceptButton}
-                size="small"
-                loading={loading}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleSpyTicket();
-                }}
-              >
-                <Tooltip title="Espiar conversa do chatbot">
-                  <VisibilityIcon />
-                </Tooltip>
-              </ButtonWithSpinner>
-            </span>
-          )}
-
-          {/* Para todos os outros status, manter os botões originais */}
-          {ticket.status !== "chatbot" && (
-            <>
-              <span className={classes.secondaryContentSecond}>
-                {ticket.status === "pending" &&
-                  (ticket.queueId === null || ticket.queueId === undefined) && (
-                    <ButtonWithSpinner
-                      style={{
-                        backgroundColor: "transparent",
-                        boxShadow: "none",
-                        border: "none",
-                        color: theme.mode === "light" ? "green" : "#FFF",
-                        padding: "0px",
-                        borderRadius: "50%",
-                        right: "51px",
-                        fontSize: "0.6rem",
-                        bottom: "-30px",
-                        minWidth: "2em",
-                        width: "auto",
-                      }}
-                      variant="contained"
-                      className={classes.acceptButton}
-                      size="small"
-                      loading={loading}
-                      onClick={(e) => handleOpenAcceptTicketWithouSelectQueue()}
-                    >
-                      <Tooltip title={`${i18n.t("ticketsList.buttons.accept")}`}>
-                        <Done />
-                      </Tooltip>
-                    </ButtonWithSpinner>
-                  )}
-              </span>
-              <span className={classes.secondaryContentSecond}>
-                {ticket.status === "pending" && ticket.queueId !== null && (
-                  <ButtonWithSpinner
-                    style={{
-                      backgroundColor: "transparent",
-                      boxShadow: "none",
-                      border: "none",
-                      color: theme.mode === "light" ? "green" : "#FFF",
-                      padding: "0px",
-                      borderRadius: "50%",
-                      right: "51px",
-                      fontSize: "0.6rem",
-                      bottom: "-30px",
-                      minWidth: "2em",
-                      width: "auto",
-                    }}
-                    variant="contained"
-                    className={classes.acceptButton}
-                    size="small"
-                    loading={loading}
-                    onClick={(e) => handleAcepptTicket(ticket.id)}
-                  >
-                    <Tooltip title={`${i18n.t("ticketsList.buttons.accept")}`}>
-                      <Done />
-                    </Tooltip>
-                  </ButtonWithSpinner>
-                )}
-              </span>
-              <span className={classes.secondaryContentSecond1}>
-                {(ticket.status === "pending" ||
-                  ticket.status === "open" ||
-                  ticket.status === "group") && (
-                  <ButtonWithSpinner
-                    style={{
-                      backgroundColor: "transparent",
-                      boxShadow: "none",
-                      border: "none",
-                      color: theme.mode === "light" ? "purple" : "#FFF",
-                      padding: "0px",
-                      borderRadius: "50%",
-                      right: "26px",
-                      position: "absolute",
-                      fontSize: "0.6rem",
-                      bottom: "-30px",
-                      minWidth: "2em",
-                      width: "auto",
-                    }}
-                    variant="contained"
-                    className={classes.acceptButton}
-                    size="small"
-                    loading={loading}
-                    onClick={handleOpenTransferModal}
-                  >
-                    <Tooltip title={`${i18n.t("ticketsList.buttons.transfer")}`}>
-                      <SwapHoriz />
-                    </Tooltip>
-                  </ButtonWithSpinner>
-                )}
-              </span>
-              <span className={classes.secondaryContentSecond}>
-                {(ticket.status === "open" || ticket.status === "group") && (
-                  <ButtonWithSpinner
-                    style={{
-                      backgroundColor: "transparent",
-                      boxShadow: "none",
-                      border: "none",
-                      color: theme.mode === "light" ? "red" : "#FFF",
-                      padding: "0px",
-                      bottom: "0px",
-                      borderRadius: "50%",
-                      right: "1px",
-                      fontSize: "0.6rem",
-                      bottom: "-30px",
-                      minWidth: "2em",
-                      width: "auto",
-                    }}
-                    variant="contained"
-                    className={classes.acceptButton}
-                    size="small"
-                    loading={loading}
-                    onClick={(e) => handleCloseTicket(ticket.id)}
-                  >
-                    <Tooltip title={`${i18n.t("ticketsList.buttons.closed")}`}>
-                      <HighlightOff />
-                    </Tooltip>
-                  </ButtonWithSpinner>
-                )}
-              </span>
-              <span className={classes.secondaryContentSecond}>
-                {(ticket.status === "pending" || ticket.status === "lgpd") &&
-                  (user.userClosePendingTicket === "enabled" ||
-                    user.profile === "admin") && (
-                    <ButtonWithSpinner
-                      style={{
-                        backgroundColor: "transparent",
-                        boxShadow: "none",
-                        border: "none",
-                        color: theme.mode === "light" ? "red" : "#FFF",
-                        padding: "0px",
-                        bottom: "0px",
-                        borderRadius: "50%",
-                        right: "1px",
-                        fontSize: "0.6rem",
-                        bottom: "-30px",
-                        minWidth: "2em",
-                        width: "auto",
-                      }}
-                      variant="contained"
-                      className={classes.acceptButton}
-                      size="small"
-                      loading={loading}
-                      onClick={(e) => handleCloseIgnoreTicket(ticket.id)}
-                    >
-                      <Tooltip title={`${i18n.t("ticketsList.buttons.ignore")}`}>
-                        <HighlightOff />
-                      </Tooltip>
-                    </ButtonWithSpinner>
-                  )}
-              </span>
-              <span className={classes.secondaryContentSecond}>
-                {ticket.status === "closed" &&
-                  (ticket.queueId === null || ticket.queueId === undefined) && (
-                    <ButtonWithSpinner
-                      style={{
-                        backgroundColor: "transparent",
-                        boxShadow: "none",
-                        border: "none",
-                        color: theme.mode === "light" ? "orange" : "#FFF",
-                        padding: "0px",
-                        bottom: "0px",
-                        borderRadius: "50%",
-                        right: "1px",
-                        fontSize: "0.6rem",
-                        bottom: "-30px",
-                        minWidth: "2em",
-                        width: "auto",
-                      }}
-                      variant="contained"
-                      className={classes.acceptButton}
-                      size="small"
-                      loading={loading}
-                      onClick={(e) => handleOpenAcceptTicketWithouSelectQueue()}
-                    >
-                      <Tooltip title={`${i18n.t("ticketsList.buttons.reopen")}`}>
-                        <Replay />
-                      </Tooltip>
-                    </ButtonWithSpinner>
-                  )}
-              </span>
-              <span className={classes.secondaryContentSecond}>
-                {ticket.status === "closed" && ticket.queueId !== null && (
-                  <ButtonWithSpinner
-                    style={{
-                      backgroundColor: "transparent",
-                      boxShadow: "none",
-                      border: "none",
-                      color: theme.mode === "light" ? "orange" : "#FFF",
-                      padding: "0px",
-                      bottom: "0px",
-                      borderRadius: "50%",
-                      right: "1px",
-                      fontSize: "0.6rem",
-                      bottom: "-30px",
-                      minWidth: "2em",
-                      width: "auto",
-                    }}
-                    variant="contained"
-                    className={classes.acceptButton}
-                    size="small"
-                    loading={loading}
-                    onClick={(e) => handleAcepptTicket(ticket.id)}
-                  >
-                    <Tooltip title={`${i18n.t("ticketsList.buttons.reopen")}`}>
-                      <Replay />
-                    </Tooltip>
-                  </ButtonWithSpinner>
-                )}
-              </span>
-            </>
-          )}
+        <ListItemSecondaryAction className={classes.sideTools}>
+          <Badge
+            badgeContent={shouldBlurMessages ? "?" : ticket.unreadMessages}
+            invisible={!shouldBlurMessages && !Number(ticket.unreadMessages)}
+            classes={{
+              badge: classes.badgeStyle,
+            }}
+          />
+        </ListItemSecondaryAction>
+        <ListItemSecondaryAction
+          className={clsx(classes.quickActionRail, classes.hoverActions)}
+        >
+          {renderQuickActions()}
         </ListItemSecondaryAction>
       </ListItem>
 

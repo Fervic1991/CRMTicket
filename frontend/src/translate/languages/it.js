@@ -284,6 +284,25 @@ const messages = {
         connections: "Connessioni:",
         channel: "Canale",
         whatsappOfficial: "WhatsApp Ufficiale",
+        connectNewAccount: "Collega nuovo account",
+        selectChannel: "Seleziona il canale",
+        pageName: "Nome della pagina",
+        instagramHandle: "Handle Instagram",
+        badges: {
+          linked: "Vincolato",
+        },
+        channelDescriptions: {
+          whatsapp: "QR code e gestione sessioni classiche.",
+          facebook: "Collega le pagine Facebook e ricevi messaggi Messenger.",
+          instagram: "Collega il profilo business e centralizza i direct.",
+        },
+        steps: {
+          stepOne: "Passaggio 1",
+          stepTwo: "Passaggio 2",
+          loginFacebook: "Accedi a Facebook",
+          selectPage: "Seleziona la Pagina",
+          selectInstagram: "Seleziona il profilo Instagram",
+        },
         facebook: {
           success: "Connessione Facebook stabilita con successo!",
         },
@@ -347,6 +366,9 @@ const messages = {
           processed: "Processati",
           in: "di",
           connecting: "Connessione in corso",
+          connect: "Collega",
+          disconnectSocial: "Scollega",
+          loginWithFacebook: "Login with Facebook",
         },
         typography: {
           processed: "Processati",
@@ -887,29 +909,44 @@ const messages = {
       },
       scheduleModal: {
         title: {
-          add: "Nuovo Orario",
-          edit: "Modifica Orario",
+          add: "Programma Messaggio",
+          edit: "Modifica Programmazione",
           message: "Messaggio",
           sendError: "Errore Invio",
         },
+        subtitle: "Compila il messaggio, scegli la destinazione e definisci quando inviarlo.",
         validation: {
           messageTooShort: "Messaggio troppo corto",
           required: "Richiesto",
         },
+        sections: {
+          messageInfo: "Informazioni Messaggio",
+          messageInfoDescription: "Scrivi il contenuto del messaggio e inserisci rapidamente le variabili disponibili.",
+          destinationStatus: "Destinazione e Stato",
+          destinationStatusDescription: "Definisci connessione, apertura ticket, operatore e stato finale del ticket.",
+          planning: "Pianificazione / Ricorrenza",
+          planningDescription: "Imposta data, ricorrenza e comportamento nei giorni festivi.",
+        },
+        variables: {
+          title: "Variabili disponibili",
+          helper: "Clicca per inserire una variabile",
+        },
         form: {
           body: "Messaggio",
           contact: "Contatto",
-          sendAt: "Data Programmata",
-          sentAt: "Data Invio",
-          assinar: "Invia Firma",
+          sendAt: "Data programmata",
+          sentAt: "Data invio",
+          assinar: "Invia firma",
+          assinarDescription: "Aggiunge automaticamente la firma al messaggio pianificato.",
+          holidayMode: "Giorni",
         },
         buttons: {
-          okAdd: "Aggiungi",
-          okEdit: "Salva",
+          okAdd: "Salva Programmazione",
+          okEdit: "Aggiorna Programmazione",
           cancel: "Annulla",
           addSchedule: "Aggiungi Orario",
         },
-        success: "Orario salvato con successo.",
+        success: "Programmazione salvata con successo.",
         toasts: {
           deleted: "Multimedia eliminato con successo.",
         },
@@ -926,6 +963,7 @@ const messages = {
           editKanban: "Modifica Corsia",
           backToKanban: "TORNA AL KANBAN",
         },
+        subtitle: "Crea etichette pulite e riconoscibili per organizzare contatti e flussi.",
         form: {
           name: "Nome",
           color: "Colore",
@@ -1364,6 +1402,7 @@ const messages = {
           add: "Nuovo",
           lists: "Liste",
           import: "Importa",
+          importFromContacts: "Importa da contatti",
         },
         status: {
           valid: "WhatsApp valido",
@@ -1960,6 +1999,7 @@ const messages = {
         settings: {
           codeVideo: "Codice Video",
           description: "Descrizione",
+          filterUsers: "Cerca utenti da aggiungere",
           clear: "Pulisci",
           delete: "Elimina",
           save: "Salva",
@@ -2031,7 +2071,7 @@ const messages = {
         },
         emptyState: {
           title: "Nessuna etichetta trovata",
-          description: "Crea la tua prima etichetta.",
+          description: "Nessuna etichetta trovata. Inizia a organizzare i tuoi contatti creando la prima!",
         },
         toasts: {
           deleted: "Etichetta eliminata con successo.",
@@ -2110,6 +2150,7 @@ const messages = {
           table: {
             name: "Nome",
             description: "Descrizione",
+          filterUsers: "Cerca utenti da aggiungere",
             actions: "Azioni",
             noDescription: "Senza descrizione"
           },
@@ -2393,11 +2434,11 @@ const messages = {
       recurrenceSection: {
         title: "Ricorrenza",
         description:
-          "Puoi scegliere di inviare il messaggio in modo ricorrente e selezionare l'intervallo. Se è un messaggio unico, non cambiare nulla in questa sezione.",
+          "Usa questi campi solo se vuoi ripetere l'invio del messaggio nel tempo.",
         labelInterval: "Intervallo",
-        intervalFilterValue: "Valore filtro intervallo",
+        intervalFilterValue: "Valore",
         sendAsManyTimes: "Invia tante volte",
-        shipNormallyOnNonbusinessDays: "Invia normalmente nei giorni non lavorativi",
+        shipNormallyOnNonbusinessDays: "Invia anche nei giorni festivi",
         sendOneBusinessDayBefore: "Invia un giorno lavorativo prima",
         sendOneBusinessDayLater: "Invia un giorno lavorativo dopo",
         options: {
@@ -2566,10 +2607,10 @@ const messages = {
         noMessages: "Nessun messaggio",
         loading: "Caricamento...",
         error: "Errore caricamento dati",
-        addGroupPhoto: "Aggiungi Foto Gruppo",
+        addGroupPhoto: "Carica foto del gruppo",
         changeGroupPhoto: "Cambia Foto Gruppo",
-        groupName: "Nome Gruppo",
-        groupDescription: "Descrizione Gruppo",
+        groupName: "Nome del gruppo",
+        groupDescription: "Descrizione",
         save: "Salva",
         cancel: "Annulla",
         createGroup: "Crea Gruppo",
@@ -2585,10 +2626,12 @@ const messages = {
         modal: {
           title: "Crea Gruppo",
           editTitle: "Modifica Gruppo",
+          subtitle: "Crea un gruppo interno e aggiungi rapidamente i partecipanti",
           save: "Salva",
           cancel: "Annulla",
-          name: "Nome Gruppo",
-          description: "Descrizione Gruppo",
+          name: "Nome del gruppo",
+          description: "Descrizione",
+          filterUsers: "Cerca utenti da aggiungere",
           create: "Crea",
           edit: "Modifica",
         },
@@ -2849,7 +2892,7 @@ const messages = {
     },
     placeholders: {
       chooseFlow: "Scegli un flusso",
-      filterByTags: "Filtra per Etichette",
+      filterByTags: "Filtra per tag",
       departments: "Dipartimenti",
       searchTemplates: "Cerca Template",
       emailAddress: "Indirizzo email",

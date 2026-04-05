@@ -48,67 +48,124 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
+    gap: 15,
+  },
+  filterContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 15,
   },
   searchField: {
-    marginTop: theme.spacing(1.5),
     "& .MuiOutlinedInput-root": {
-      borderRadius: 14,
+      borderRadius: 10,
       backgroundColor: "rgba(255,255,255,0.9)",
-      border: "1px solid rgba(120,130,160,0.2)",
+      border: "1px solid #E2E8F0",
       transition: "box-shadow 0.2s ease, border-color 0.2s ease",
       "&:hover": {
-        borderColor: "rgba(120,130,160,0.45)",
+        borderColor: "#CBD5E1",
       },
       "&.Mui-focused": {
         boxShadow: "0 0 0 3px rgba(63,81,181,0.12)",
         borderColor: theme.palette.primary.main,
       },
+      "& .MuiOutlinedInput-notchedOutline": {
+        borderColor: "#E2E8F0",
+        borderWidth: 1,
+      },
+      "&:hover .MuiOutlinedInput-notchedOutline": {
+        borderColor: "#CBD5E1",
+      },
+      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+        borderColor: theme.palette.primary.main,
+        borderWidth: 1,
+      },
+    },
+    "& .MuiInputLabel-outlined": {
+      color: "#64748B",
     },
   },
   tableContainer: {
     flex: 1,
     overflow: "auto",
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
     borderRadius: 14,
     border: "1px solid rgba(120,130,160,0.2)",
     boxShadow: "0 10px 24px rgba(31, 45, 61, 0.08)",
   },
   selectAllContainer: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
+    marginTop: 0,
+    marginBottom: 0,
   },
   actionButton: {
-    height: 42,
-    borderRadius: 12,
+    height: 40,
+    borderRadius: 8,
     fontWeight: 600,
     textTransform: "none",
-    background: "rgba(255,255,255,0.9)",
-    border: "1px solid rgba(120,130,160,0.2)",
+    background: "transparent",
+    color: "#475569",
+    border: "1px solid #E2E8F0",
+    boxShadow: "none",
+    "&:hover": {
+      background: "rgba(248,250,252,0.9)",
+      borderColor: "#CBD5E1",
+    },
   },
   primaryButton: {
-    borderRadius: 12,
+    minWidth: 132,
+    height: 40,
+    borderRadius: 8,
     textTransform: "none",
     fontWeight: 600,
+    color: "#FFFFFF",
+    background: "linear-gradient(135deg, rgba(37,99,235,0.96), rgba(56,189,248,0.92))",
     boxShadow: "0 14px 28px rgba(63,81,181,0.28)",
+    "&:hover": {
+      background: "linear-gradient(135deg, rgba(29,78,216,0.98), rgba(14,165,233,0.94))",
+    },
+    "&.Mui-disabled": {
+      color: "rgba(255,255,255,0.86)",
+      background: "linear-gradient(135deg, rgba(148,163,184,0.96), rgba(203,213,225,0.92))",
+      boxShadow: "none",
+    },
   },
   tableHeader: {
     fontWeight: 700,
-    backgroundColor: "rgba(243,246,252,0.9)",
+    backgroundColor: "#FFFFFF",
     color: theme.palette.text.secondary,
+    paddingTop: 14,
+    paddingBottom: 14,
   },
   rowSelected: {
     backgroundColor: "rgba(63,81,181,0.08)",
+  },
+  tableCell: {
+    paddingTop: 14,
+    paddingBottom: 14,
+  },
+  checkbox: {
+    "& .MuiIconButton-root": {
+      borderRadius: 8,
+    },
+    "& .MuiSvgIcon-root": {
+      borderRadius: 6,
+    },
   },
   emptyState: {
     padding: theme.spacing(3),
     textAlign: "center",
     color: theme.palette.text.secondary,
   },
+  dialogActions: {
+    padding: theme.spacing(1.5, 3, 2.5),
+    gap: 12,
+  },
 }));
 
 const ContactSelectionModal = ({ open, onClose, contactListId, onAddContacts }) => {
   const classes = useStyles();
+  const numberLabel =
+    i18n.t("contacts.table.number") !== "contacts.table.number"
+      ? i18n.t("contacts.table.number")
+      : "Numero";
   const [contacts, setContacts] = useState([]);
   const [selectedContacts, setSelectedContacts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -229,51 +286,50 @@ const ContactSelectionModal = ({ open, onClose, contactListId, onAddContacts }) 
       <DialogContent className={classes.dialogContent}>
         <Box className={classes.filterContainer}>
           <TagsFilter onFiltered={handleTagsFilter} />
-        </Box>
-
-        <FormControl
-          fullWidth
-          variant="outlined"
-          size="small"
-          className={classes.searchField}
-        >
-          <InputLabel id="contact-selection-whatsapp-filter-label">
-            Connessione
-          </InputLabel>
-          <Select
-            labelId="contact-selection-whatsapp-filter-label"
-            value={selectedWhatsappId}
-            onChange={handleWhatsappFilter}
-            label="Connessione"
+          <FormControl
+            fullWidth
+            variant="outlined"
+            size="small"
+            className={classes.searchField}
           >
-            <MenuItem value="">
-              Tutte le connessioni
-            </MenuItem>
-            {whatsApps.map((whatsApp) => (
-              <MenuItem key={whatsApp.id} value={String(whatsApp.id)}>
-                {whatsApp.name || "Connessione"}{whatsApp.number ? ` (${whatsApp.number})` : ""}
+            <InputLabel id="contact-selection-whatsapp-filter-label">
+              Connessione
+            </InputLabel>
+            <Select
+              labelId="contact-selection-whatsapp-filter-label"
+              value={selectedWhatsappId}
+              onChange={handleWhatsappFilter}
+              label="Connessione"
+            >
+              <MenuItem value="">
+                Tutte le connessioni
               </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+              {whatsApps.map((whatsApp) => (
+                <MenuItem key={whatsApp.id} value={String(whatsApp.id)}>
+                  {whatsApp.name || "Connessione"}{whatsApp.number ? ` (${whatsApp.number})` : ""}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
-        <TextField
-          fullWidth
-          variant="outlined"
-          size="small"
-          placeholder={i18n.t("contacts.searchPlaceholder")}
-          type="search"
-          value={searchParam}
-          onChange={handleSearch}
-          className={classes.searchField}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon style={{ color: "gray" }} />
-              </InputAdornment>
-            ),
-          }}
-        />
+          <TextField
+            fullWidth
+            variant="outlined"
+            size="small"
+            placeholder={i18n.t("contacts.searchPlaceholder")}
+            type="search"
+            value={searchParam}
+            onChange={handleSearch}
+            className={classes.searchField}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon style={{ color: "#94A3B8" }} />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Box>
 
         <Box className={classes.selectAllContainer}>
           <Button
@@ -300,6 +356,7 @@ const ContactSelectionModal = ({ open, onClose, contactListId, onAddContacts }) 
                 <TableRow>
                   <TableCell align="center" style={{ width: "50px" }} className={classes.tableHeader}>
                     <Checkbox
+                      className={classes.checkbox}
                       indeterminate={
                         selectedContacts.length > 0 &&
                         selectedContacts.length < contacts.length
@@ -312,7 +369,7 @@ const ContactSelectionModal = ({ open, onClose, contactListId, onAddContacts }) 
                     />
                   </TableCell>
                   <TableCell className={classes.tableHeader}>{i18n.t("contacts.table.name")}</TableCell>
-                  <TableCell className={classes.tableHeader}>{i18n.t("contacts.table.number")}</TableCell>
+                  <TableCell className={classes.tableHeader}>{numberLabel}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -328,15 +385,16 @@ const ContactSelectionModal = ({ open, onClose, contactListId, onAddContacts }) 
                         backgroundColor: isSelected ? "rgba(63,81,181,0.08)" : "inherit",
                       }}
                     >
-                      <TableCell align="center">
+                      <TableCell align="center" className={classes.tableCell}>
                         <Checkbox
+                          className={classes.checkbox}
                           checked={isSelected}
                           onChange={() => handleSelectContact(contact.id)}
                           onClick={(e) => e.stopPropagation()}
                         />
                       </TableCell>
-                      <TableCell>{contact.name}</TableCell>
-                      <TableCell>{contact.number}</TableCell>
+                      <TableCell className={classes.tableCell}>{contact.name}</TableCell>
+                      <TableCell className={classes.tableCell}>{contact.number}</TableCell>
                     </TableRow>
                   );
                 })}
@@ -358,9 +416,9 @@ const ContactSelectionModal = ({ open, onClose, contactListId, onAddContacts }) 
           </Button>
         )}
       </DialogContent>
-      <DialogActions>
+      <DialogActions className={classes.dialogActions}>
         <Button onClick={onClose} color="default" className={classes.actionButton}>
-          {i18n.t("buttons.cancel")}
+          {i18n.t("common.cancel")}
         </Button>
         <Button
           onClick={handleAddContacts}

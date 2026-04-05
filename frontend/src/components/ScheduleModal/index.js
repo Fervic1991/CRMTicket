@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 
 import * as Yup from "yup";
-import { Formik, Form, Field, FieldArray } from "formik";
+import { Formik, Form, Field } from "formik";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
 
@@ -22,12 +22,9 @@ import { i18n } from "../../translate/i18n";
 import api from "../../services/api";
 import toastError from "../../errors/toastError";
 import {
-  Chip,
   FormControl,
-  FormControlLabel,
   Grid,
   IconButton,
-  InputLabel,
   MenuItem,
   Select,
   Switch,
@@ -37,8 +34,7 @@ import Autocomplete, {
   createFilterOptions,
 } from "@material-ui/lab/Autocomplete";
 import moment from "moment";
-import { AuthContext } from "../../context/Auth/AuthContext";
-import { isArray, capitalize } from "lodash";
+import { isArray } from "lodash";
 import DeleteOutline from "@material-ui/icons/DeleteOutline";
 import AttachFile from "@material-ui/icons/AttachFile";
 import { head } from "lodash";
@@ -54,57 +50,173 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
   },
   dialogPaper: {
-    borderRadius: 20,
+    borderRadius: 24,
     overflow: "hidden",
     background:
       theme.palette.mode === "dark"
         ? "linear-gradient(180deg, rgba(15,23,42,0.98) 0%, rgba(10,14,24,0.98) 100%)"
-        : "linear-gradient(180deg, #ffffff 0%, #f6f8ff 100%)",
+        : "linear-gradient(180deg, #ffffff 0%, #f8fbff 100%)",
     border:
       theme.palette.mode === "dark"
         ? "1px solid rgba(148,163,184,0.18)"
-        : "1px solid rgba(148,163,184,0.35)",
+        : "1px solid rgba(226,232,240,0.95)",
     boxShadow:
       theme.palette.mode === "dark"
         ? "0 30px 70px rgba(0,0,0,0.45)"
         : "0 30px 70px rgba(15,23,42,0.12)",
   },
   dialogTitle: {
-    padding: theme.spacing(2.5, 3),
+    padding: theme.spacing(3, 4, 2.5),
     background:
       theme.palette.mode === "dark"
         ? "linear-gradient(135deg, rgba(59,130,246,0.35), rgba(14,165,233,0.2))"
-        : "linear-gradient(135deg, rgba(59,130,246,0.18), rgba(16,185,129,0.16))",
+        : "linear-gradient(135deg, rgba(59,130,246,0.12), rgba(14,165,233,0.08))",
     color: theme.palette.mode === "dark" ? "#f8fafc" : "#0f172a",
   },
+  dialogTitleText: {
+    fontSize: 26,
+    fontWeight: 700,
+    lineHeight: 1.2,
+  },
+  dialogTitleSubtext: {
+    marginTop: theme.spacing(0.75),
+    fontSize: 13,
+    lineHeight: 1.6,
+    color: theme.palette.mode === "dark" ? "rgba(226,232,240,0.74)" : "#64748B",
+  },
   dialogContent: {
-    padding: theme.spacing(3),
+    padding: theme.spacing(3.5, 4),
   },
-  formControl: {
-    "& .MuiInputBase-root": {
-      borderRadius: 12,
-      background:
-        theme.palette.mode === "dark"
-          ? "rgba(15,23,42,0.7)"
-          : "rgba(255,255,255,0.95)",
-    },
-  },
-  multFieldLine: {
-    marginBottom: theme.spacing(2),
+  sectionCard: {
+    padding: theme.spacing(2.5),
+    borderRadius: 18,
+    border: theme.palette.mode === "dark"
+      ? "1px solid rgba(148,163,184,0.12)"
+      : "1px solid #E2E8F0",
+    background: theme.palette.mode === "dark"
+      ? "rgba(15,23,42,0.42)"
+      : "rgba(255,255,255,0.92)",
+    boxShadow: theme.palette.mode === "dark"
+      ? "none"
+      : "0 10px 28px rgba(15,23,42,0.04)",
   },
   sectionTitle: {
-    marginTop: theme.spacing(2.5),
     marginBottom: theme.spacing(0.5),
-    fontSize: 16,
-    fontWeight: 600,
-    color: theme.palette.mode === "dark" ? "#e2e8f0" : "#0f172a",
+    fontSize: 13,
+    fontWeight: 700,
+    letterSpacing: "0.06em",
+    textTransform: "uppercase",
+    color: theme.palette.mode === "dark" ? "#E2E8F0" : "#1E293B",
   },
   sectionSubtitle: {
     marginBottom: theme.spacing(2),
-    color: theme.palette.mode === "dark" ? "rgba(226,232,240,0.7)" : "#475569",
+    fontSize: 13,
+    lineHeight: 1.6,
+    color: theme.palette.mode === "dark" ? "rgba(226,232,240,0.7)" : "#64748B",
+  },
+  fieldLabel: {
+    marginBottom: theme.spacing(0.75),
+    fontSize: 12,
+    fontWeight: 600,
+    color: theme.palette.mode === "dark" ? "#CBD5E1" : "#334155",
+  },
+  formControl: {
+    width: "100%",
+    '& .MuiOutlinedInput-root': {
+      borderRadius: 8,
+      background: theme.palette.mode === "dark" ? "rgba(15,23,42,0.7)" : "#FFFFFF",
+      transition: "all 0.2s ease",
+      '& fieldset': {
+        borderColor: theme.palette.mode === "dark" ? "rgba(148,163,184,0.22)" : "#E2E8F0",
+      },
+      '&:hover fieldset': {
+        borderColor: theme.palette.mode === "dark" ? "rgba(125,211,252,0.4)" : "#CBD5E1",
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: "#2563EB",
+        borderWidth: 1,
+      },
+    },
+    '& .MuiInputBase-input': {
+      fontSize: 14,
+    },
+  },
+  messageField: {
+    '& .MuiOutlinedInput-root': {
+      alignItems: "flex-start",
+      paddingTop: 10,
+      paddingBottom: 10,
+    },
+    '& .MuiInputBase-inputMultiline': {
+      fontFamily: '"SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace',
+      lineHeight: 1.6,
+      fontSize: 13,
+    },
+  },
+  compactRow: {
+    alignItems: "flex-end",
+  },
+  switchRow: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: theme.spacing(2),
+    marginTop: theme.spacing(0.5),
+    padding: theme.spacing(1.25, 1.5),
+    borderRadius: 12,
+    background: theme.palette.mode === "dark" ? "rgba(15,23,42,0.58)" : "#F8FAFC",
+    border: theme.palette.mode === "dark" ? "1px solid rgba(148,163,184,0.12)" : "1px solid #E2E8F0",
+  },
+  switchTextWrap: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 2,
+  },
+  switchTitle: {
+    fontSize: 13,
+    fontWeight: 600,
+    color: theme.palette.mode === "dark" ? "#F8FAFC" : "#1E293B",
+  },
+  switchDescription: {
+    fontSize: 12,
+    lineHeight: 1.5,
+    color: theme.palette.mode === "dark" ? "rgba(226,232,240,0.7)" : "#64748B",
+  },
+  iosSwitch: {
+    '& .MuiSwitch-switchBase.Mui-checked': {
+      color: '#fff',
+      transform: 'translateX(18px)',
+    },
+    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+      backgroundColor: '#2563EB',
+      opacity: '1 !important',
+    },
+    '& .MuiSwitch-track': {
+      borderRadius: 999,
+      backgroundColor: theme.palette.mode === 'dark' ? 'rgba(148,163,184,0.35)' : '#CBD5E1',
+      opacity: '1 !important',
+    },
+    '& .MuiSwitch-thumb': {
+      boxShadow: '0 2px 8px rgba(15,23,42,0.18)',
+    },
+  },
+  attachmentRow: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: theme.spacing(1),
+    padding: theme.spacing(1, 1.25),
+    borderRadius: 12,
+    border: theme.palette.mode === 'dark' ? '1px solid rgba(148,163,184,0.12)' : '1px solid #E2E8F0',
+    background: theme.palette.mode === 'dark' ? 'rgba(15,23,42,0.55)' : '#F8FAFC',
+  },
+  attachmentButton: {
+    justifyContent: 'flex-start',
+    textTransform: 'none',
+    color: theme.palette.mode === 'dark' ? '#F8FAFC' : '#1E293B',
   },
   dialogActions: {
-    padding: theme.spacing(2.5, 3),
+    padding: theme.spacing(2.5, 4),
     background:
       theme.palette.mode === "dark"
         ? "rgba(15,23,42,0.6)"
@@ -112,17 +224,26 @@ const useStyles = makeStyles((theme) => ({
     borderTop:
       theme.palette.mode === "dark"
         ? "1px solid rgba(148,163,184,0.15)"
-        : "1px solid rgba(148,163,184,0.2)",
+        : "1px solid rgba(226,232,240,0.9)",
   },
   primaryButton: {
     borderRadius: 12,
-    padding: theme.spacing(1, 2.6),
-    fontWeight: 600,
+    padding: theme.spacing(1.1, 2.8),
+    fontWeight: 700,
     textTransform: "none",
+    color: '#fff',
+    background: 'linear-gradient(135deg, #2563EB 0%, #38BDF8 100%)',
+    boxShadow: '0 12px 24px rgba(37,99,235,0.22)',
+    '&:hover': {
+      background: 'linear-gradient(135deg, #1D4ED8 0%, #0EA5E9 100%)',
+    },
   },
   outlineButton: {
     borderRadius: 12,
     textTransform: "none",
+    borderColor: '#CBD5E1',
+    color: '#334155',
+    background: '#fff',
   },
   btnWrapper: {
     position: "relative",
@@ -150,14 +271,12 @@ const ScheduleModal = ({
   contactId,
   cleanContact,
   reload,
-  message, // ✅ Nova prop para pre-popular mensagem
-  fromMessageInput = false, // ✅ Nova prop para identificar origem
+  message,
   user
 }) => {
   const classes = useStyles();
   const history = useHistory();
   const isMounted = useRef(true);
-  const { companyId } = user;
   const isAdmin = user.profile === 'admin';
 
   const initialState = {
@@ -273,8 +392,7 @@ const ScheduleModal = ({
 
   // ✅ MELHORIA: UseEffect otimizado com melhor lógica de inicialização
   useEffect(() => {
-    const { companyId } = user;
-    if (open) {
+      if (open) {
       try {
         (async () => {
           // Carregar lista de contatos
@@ -354,7 +472,7 @@ const ScheduleModal = ({
         toastError(err);
       }
     }
-  }, [scheduleId, contactId, open, user, message, fromMessageInput]);
+  }, [scheduleId, contactId, open, user, message]);
 
   const filterOptions = createFilterOptions({
     trim: true,
@@ -519,11 +637,16 @@ const ScheduleModal = ({
         classes={{ paper: classes.dialogPaper }}
       >
         <DialogTitle id="form-dialog-title" className={classes.dialogTitle}>
-          {schedule.status === "ERRO"
-            ? i18n.t("scheduleModal.title.sendError")
-            : scheduleId
-            ? i18n.t("scheduleModal.title.edit")
-            : i18n.t("scheduleModal.title.add")}
+          <Typography className={classes.dialogTitleText} component="div">
+            {schedule.status === "ERRO"
+              ? i18n.t("scheduleModal.title.sendError")
+              : scheduleId
+              ? i18n.t("scheduleModal.title.edit")
+              : i18n.t("scheduleModal.title.add")}
+          </Typography>
+          <Typography className={classes.dialogTitleSubtext} component="div">
+            {i18n.t("scheduleModal.subtitle")}
+          </Typography>
         </DialogTitle>
         <div style={{ display: "none" }}>
           <input
@@ -547,378 +670,347 @@ const ScheduleModal = ({
           {({ touched, errors, isSubmitting, values, setFieldValue }) => (
             <Form>
               <DialogContent dividers className={classes.dialogContent}>
-                <div className={classes.multFieldLine}>
-                  <FormControl variant="outlined" fullWidth>
-                    <Autocomplete
-                      fullWidth
-                      value={currentContact}
-                      options={contacts}
-                      onChange={(e, contact) => {
-                        const contactId = contact ? contact.id : "";
-                        setSchedule({ ...schedule, contactId });
-                        setCurrentContact(contact ? contact : initialContact);
-                        setChannelFilter(
-                          contact ? contact.channel : "whatsapp"
-                        );
-                      }}
-                      getOptionLabel={(option) => option.name}
-                      renderOption={renderOption}
-                      getOptionSelected={(option, value) => {
-                        return value.id === option.id;
-                      }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          variant="outlined"
-                          className={classes.formControl}
-                          placeholder={i18n.t("scheduleModal.form.contact")}
-                        />
-                      )}
-                    />
-                  </FormControl>
-                </div>
-                <div className={classes.multFieldLine}>
-                  <Field
-                    as={TextField}
-                    rows={9}
-                    multiline={true}
-                    label={i18n.t("scheduleModal.form.body")}
-                    name="body"
-                    inputRef={messageInputRef}
-                    error={touched.body && Boolean(errors.body)}
-                    helperText={touched.body && errors.body}
-                    variant="outlined"
-                    margin="dense"
-                    className={classes.formControl}
-                    fullWidth
-                  />
-                </div>
-                <Grid item xs={12} md={12} xl={6}>
-                  <MessageVariablesPicker
-                    disabled={isSubmitting}
-                    onClick={(value) => handleClickMsgVar(value, setFieldValue)}
-                  />
-                </Grid>
-                <Grid container spacing={1}>
-                  <Grid item xs={12} md={6} xl={6}>
-                    <FormControl
-                      variant="outlined"
-                      margin="dense"
-                      fullWidth
-                      className={classes.formControl}
-                    >
-                      <InputLabel id="whatsapp-selection-label">
-                        {i18n.t("campaigns.dialog.form.whatsapp")}
-                      </InputLabel>
-                      <Field
-                        as={Select}
-                        label={i18n.t("campaigns.dialog.form.whatsapp")}
-                        placeholder={i18n.t("campaigns.dialog.form.whatsapp")}
-                        labelId="whatsapp-selection-label"
-                        id="whatsappIds"
-                        name="whatsappIds"
-                        required
-                        error={touched.whatsappId && Boolean(errors.whatsappId)}
-                        value={selectedWhatsapps}
-                        onChange={(event) =>
-                          setSelectedWhatsapps(event.target.value)
-                        }
-                      >
-                        {whatsapps &&
-                          whatsapps.map((whatsapp) => (
-                            <MenuItem key={whatsapp.id} value={whatsapp.id}>
-                              {whatsapp.name}
-                            </MenuItem>
-                          ))}
-                      </Field>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12} md={12} xl={6}>
-                    <FormControl
-                      variant="outlined"
-                      margin="dense"
-                      fullWidth
-                      className={classes.formControl}
-                    >
-                      <InputLabel id="openTicket-selection-label">
-                        {i18n.t("campaigns.dialog.form.openTicket")}
-                      </InputLabel>
-                      <Field
-                        as={Select}
-                        label={i18n.t("campaigns.dialog.form.openTicket")}
-                        placeholder={i18n.t("campaigns.dialog.form.openTicket")}
-                        labelId="openTicket-selection-label"
-                        id="openTicket"
-                        name="openTicket"
-                        error={touched.openTicket && Boolean(errors.openTicket)}
-                      >
-                        <MenuItem value={"enabled"}>
-                          {i18n.t("campaigns.dialog.form.enabledOpenTicket")}
-                        </MenuItem>
-                        <MenuItem value={"disabled"}>
-                          {i18n.t("campaigns.dialog.form.disabledOpenTicket")}
-                        </MenuItem>
-                      </Field>
-                    </FormControl>
-                  </Grid>
-                </Grid>
-                <Grid spacing={1} container>
-                  <Grid item xs={12} md={6} xl={6}>
-<Autocomplete
-  style={{ marginTop: "8px" }}
-  variant="outlined"
-  margin="dense"
-  className={classes.formControl}
-  getOptionLabel={(option) => `${option.name}`}
-  value={isAdmin ? selectedUser : user}
-  size="small"
-  onChange={(e, newValue) => {
-    if (isAdmin) {
-      setSelectedUser(newValue);
-      if (newValue != null && Array.isArray(newValue.queues)) {
-        if (newValue.queues.length === 1) {
-          setSelectedQueue(newValue.queues[0].id);
-        }
-        setQueues(newValue.queues);
-      } else {
-        setQueues(allQueues);
-        setSelectedQueue("");
-      }
-    }
-  }}
-  options={isAdmin ? options : [user]} 
-  filterOptions={filterOptions}
-  freeSolo={isAdmin} 
-  fullWidth
-  disabled={values.openTicket === "disabled" || !isAdmin} 
-  autoHighlight
-  noOptionsText={i18n.t("transferTicketModal.noOptions")}
-  loading={loading}
-  renderOption={(option) => (
-    <span>
-      {" "}
-      <UserStatusIcon user={option} /> {option.name}
-    </span>
-  )}
-  renderInput={(params) => (
-    <TextField
-      {...params}
-      label={i18n.t("transferTicketModal.fieldLabel")}
-      variant="outlined"
-      onChange={isAdmin ? (e) => setSearchParam(e.target.value) : undefined} // Só busca se for admin
-      InputProps={{
-        ...params.InputProps,
-        endAdornment: (
-          <React.Fragment>
-            {loading ? (
-              <CircularProgress color="inherit" size={20} />
-            ) : null}
-            {params.InputProps.endAdornment}
-          </React.Fragment>
-        ),
-        readOnly: !isAdmin, // Modo somente leitura se não for admin
-      }}
-    />
-  )}
-/>
-                  </Grid>
-
-                  <Grid item xs={12} md={6} xl={6}>
-                    <FormControl
-                      variant="outlined"
-                      margin="dense"
-                      fullWidth
-                      className={classes.formControl}
-                    >
-                      <InputLabel>
-                        {i18n.t("transferTicketModal.fieldQueueLabel")}
-                      </InputLabel>
-                      <Select
-                        value={selectedQueue}
-                        onChange={(e) => setSelectedQueue(e.target.value)}
-                        label={i18n.t(
-                          "transferTicketModal.fieldQueuePlaceholder"
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <div className={classes.sectionCard}>
+                      <Typography className={classes.sectionTitle}>
+                        {i18n.t("scheduleModal.sections.messageInfo")}
+                      </Typography>
+                      <Typography className={classes.sectionSubtitle}>
+                        {i18n.t("scheduleModal.sections.messageInfoDescription")}
+                      </Typography>
+                      <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                          <Typography className={classes.fieldLabel}>
+                            {i18n.t("scheduleModal.form.contact")}
+                          </Typography>
+                          <Autocomplete
+                            fullWidth
+                            value={currentContact}
+                            options={contacts}
+                            onChange={(e, contact) => {
+                              const nextContactId = contact ? contact.id : "";
+                              setFieldValue("contactId", nextContactId);
+                              setSchedule({ ...schedule, contactId: nextContactId });
+                              setCurrentContact(contact ? contact : initialContact);
+                              setChannelFilter(contact ? contact.channel : "whatsapp");
+                            }}
+                            getOptionLabel={(option) => option.name}
+                            renderOption={renderOption}
+                            getOptionSelected={(option, value) => value.id === option.id}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                variant="outlined"
+                                className={classes.formControl}
+                                placeholder={i18n.t("scheduleModal.form.contact")}
+                              />
+                            )}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Typography className={classes.fieldLabel}>
+                            {i18n.t("scheduleModal.form.body")}
+                          </Typography>
+                          <Field
+                            as={TextField}
+                            rows={10}
+                            multiline={true}
+                            name="body"
+                            placeholder={i18n.t("scheduleModal.form.body")}
+                            inputRef={messageInputRef}
+                            error={touched.body && Boolean(errors.body)}
+                            helperText={touched.body && errors.body}
+                            variant="outlined"
+                            className={`${classes.formControl} ${classes.messageField}`}
+                            fullWidth
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <MessageVariablesPicker
+                            disabled={isSubmitting}
+                            onClick={(value) => handleClickMsgVar(value, setFieldValue)}
+                          />
+                        </Grid>
+                        {(schedule.mediaPath || attachment) && (
+                          <Grid item xs={12}>
+                            <div className={classes.attachmentRow}>
+                              <Button startIcon={<AttachFile />} className={classes.attachmentButton}>
+                                {attachment ? attachment.name : schedule.mediaName}
+                              </Button>
+                              <IconButton
+                                onClick={() => setConfirmationOpen(true)}
+                                color="secondary"
+                              >
+                                <DeleteOutline color="secondary" />
+                              </IconButton>
+                            </div>
+                          </Grid>
                         )}
-                        disabled={values.openTicket === "disabled"}
-                      >
-                        {queues.map((queue) => (
-                          <MenuItem key={queue.id} value={queue.id}>
-                            {queue.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                </Grid>
-                <Grid spacing={1} container style={{ marginTop: "-10px" }}>
-                  <Grid item xs={12} md={6} xl={6}>
-                    <FormControl
-                      variant="outlined"
-                      margin="dense"
-                      fullWidth
-                      className={classes.formControl}
-                    >
-                      <InputLabel id="statusTicket-selection-label">
-                        {i18n.t("campaigns.dialog.form.statusTicket")}
-                      </InputLabel>
-                      <Field
-                        as={Select}
-                        disabled={values.openTicket === "disabled"}
-                        label={i18n.t("campaigns.dialog.form.statusTicket")}
-                        placeholder={i18n.t(
-                          "campaigns.dialog.form.statusTicket"
-                        )}
-                        labelId="statusTicket-selection-label"
-                        id="statusTicket"
-                        name="statusTicket"
-                        error={
-                          touched.statusTicket && Boolean(errors.statusTicket)
-                        }
-                      >
-                        <MenuItem value={"closed"}>
-                          {i18n.t("campaigns.dialog.form.closedTicketStatus")}
-                        </MenuItem>
-                        <MenuItem value={"open"}>
-                          {i18n.t("campaigns.dialog.form.openTicketStatus")}
-                        </MenuItem>
-                      </Field>
-                    </FormControl>
+                      </Grid>
+                    </div>
                   </Grid>
 
-                  <Grid item xs={12} md={6} xl={6}>
-                    <Field
-                      as={TextField}
-                      label={i18n.t("scheduleModal.form.sendAt")}
-                      type="datetime-local"
-                      name="sendAt"
-                      error={touched.sendAt && Boolean(errors.sendAt)}
-                      helperText={touched.sendAt && errors.sendAt}
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      className={classes.formControl}
-                      style={{ marginTop: "8px" }}
-                    />
+                  <Grid item xs={12}>
+                    <div className={classes.sectionCard}>
+                      <Typography className={classes.sectionTitle}>
+                        {i18n.t("scheduleModal.sections.destinationStatus")}
+                      </Typography>
+                      <Typography className={classes.sectionSubtitle}>
+                        {i18n.t("scheduleModal.sections.destinationStatusDescription")}
+                      </Typography>
+                      <Grid container spacing={2}>
+                        <Grid item xs={12} md={6}>
+                          <Typography className={classes.fieldLabel}>
+                            {i18n.t("campaigns.dialog.form.whatsapp")}
+                          </Typography>
+                          <FormControl variant="outlined" fullWidth className={classes.formControl}>
+                            <Field
+                              as={Select}
+                              displayEmpty
+                              id="whatsappIds"
+                              name="whatsappIds"
+                              required
+                              error={touched.whatsappId && Boolean(errors.whatsappId)}
+                              value={selectedWhatsapps}
+                              onChange={(event) => setSelectedWhatsapps(event.target.value)}
+                            >
+                              {whatsapps && whatsapps.map((whatsapp) => (
+                                <MenuItem key={whatsapp.id} value={whatsapp.id}>
+                                  {whatsapp.name}
+                                </MenuItem>
+                              ))}
+                            </Field>
+                          </FormControl>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                          <Typography className={classes.fieldLabel}>
+                            {i18n.t("campaigns.dialog.form.openTicket")}
+                          </Typography>
+                          <FormControl variant="outlined" fullWidth className={classes.formControl}>
+                            <Field as={Select} id="openTicket" name="openTicket" displayEmpty>
+                              <MenuItem value={"enabled"}>
+                                {i18n.t("campaigns.dialog.form.enabledOpenTicket")}
+                              </MenuItem>
+                              <MenuItem value={"disabled"}>
+                                {i18n.t("campaigns.dialog.form.disabledOpenTicket")}
+                              </MenuItem>
+                            </Field>
+                          </FormControl>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                          <Typography className={classes.fieldLabel}>
+                            {i18n.t("transferTicketModal.fieldLabel")}
+                          </Typography>
+                          <Autocomplete
+                            className={classes.formControl}
+                            getOptionLabel={(option) => `${option.name}`}
+                            value={isAdmin ? selectedUser : user}
+                            size="small"
+                            onChange={(e, newValue) => {
+                              if (isAdmin) {
+                                setSelectedUser(newValue);
+                                if (newValue != null && Array.isArray(newValue.queues)) {
+                                  if (newValue.queues.length === 1) {
+                                    setSelectedQueue(newValue.queues[0].id);
+                                  }
+                                  setQueues(newValue.queues);
+                                } else {
+                                  setQueues(allQueues);
+                                  setSelectedQueue("");
+                                }
+                              }
+                            }}
+                            options={isAdmin ? options : [user]}
+                            filterOptions={filterOptions}
+                            freeSolo={isAdmin}
+                            fullWidth
+                            disabled={values.openTicket === "disabled" || !isAdmin}
+                            autoHighlight
+                            noOptionsText={i18n.t("transferTicketModal.noOptions")}
+                            loading={loading}
+                            renderOption={(option) => (
+                              <span>
+                                <UserStatusIcon user={option} /> {option.name}
+                              </span>
+                            )}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                variant="outlined"
+                                placeholder={i18n.t("transferTicketModal.fieldLabel")}
+                                onChange={isAdmin ? (e) => setSearchParam(e.target.value) : undefined}
+                                InputProps={{
+                                  ...params.InputProps,
+                                  endAdornment: (
+                                    <React.Fragment>
+                                      {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                      {params.InputProps.endAdornment}
+                                    </React.Fragment>
+                                  ),
+                                  readOnly: !isAdmin,
+                                }}
+                              />
+                            )}
+                          />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                          <Typography className={classes.fieldLabel}>
+                            {i18n.t("transferTicketModal.fieldQueueLabel")}
+                          </Typography>
+                          <FormControl variant="outlined" fullWidth className={classes.formControl}>
+                            <Select
+                              value={selectedQueue}
+                              onChange={(e) => setSelectedQueue(e.target.value)}
+                              displayEmpty
+                              disabled={values.openTicket === "disabled"}
+                            >
+                              {queues.map((queue) => (
+                                <MenuItem key={queue.id} value={queue.id}>
+                                  {queue.name}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                          <Typography className={classes.fieldLabel}>
+                            {i18n.t("campaigns.dialog.form.statusTicket")}
+                          </Typography>
+                          <FormControl variant="outlined" fullWidth className={classes.formControl}>
+                            <Field as={Select} disabled={values.openTicket === "disabled"} id="statusTicket" name="statusTicket" displayEmpty>
+                              <MenuItem value={"closed"}>
+                                {i18n.t("campaigns.dialog.form.closedTicketStatus")}
+                              </MenuItem>
+                              <MenuItem value={"open"}>
+                                {i18n.t("campaigns.dialog.form.openTicketStatus")}
+                              </MenuItem>
+                            </Field>
+                          </FormControl>
+                        </Grid>
+                      </Grid>
+                    </div>
                   </Grid>
-                  <Grid item xs={12} md={6} xl={6}>
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Switch}
-                          color="primary"
-                          name="assinar"
-                          checked={values.assinar}
-                          disabled={values.openTicket === "disabled"}
-                        />
-                      }
-                      label={i18n.t("scheduleModal.form.assinar")}
-                    />
+
+                  <Grid item xs={12}>
+                    <div className={classes.sectionCard}>
+                      <Typography className={classes.sectionTitle}>
+                        {i18n.t("scheduleModal.sections.planning")}
+                      </Typography>
+                      <Typography className={classes.sectionSubtitle}>
+                        {i18n.t("scheduleModal.sections.planningDescription")}
+                      </Typography>
+                      <Grid container spacing={2}>
+                        <Grid item xs={12} md={6}>
+                          <Typography className={classes.fieldLabel}>
+                            {i18n.t("scheduleModal.form.sendAt")}
+                          </Typography>
+                          <Field
+                            as={TextField}
+                            type="datetime-local"
+                            name="sendAt"
+                            error={touched.sendAt && Boolean(errors.sendAt)}
+                            helperText={touched.sendAt && errors.sendAt}
+                            variant="outlined"
+                            fullWidth
+                            size="small"
+                            className={classes.formControl}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Typography className={classes.sectionTitle} style={{ marginTop: 4 }}>
+                            {i18n.t("recurrenceSection.title")}
+                          </Typography>
+                          <Typography className={classes.sectionSubtitle}>
+                            {i18n.t("recurrenceSection.description")}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Grid container spacing={2} className={classes.compactRow}>
+                            <Grid item xs={12} md={4}>
+                              <Typography className={classes.fieldLabel}>
+                                {i18n.t("recurrenceSection.labelInterval")}
+                              </Typography>
+                              <FormControl size="small" fullWidth variant="outlined" className={classes.formControl}>
+                                <Select value={intervalo} onChange={(e) => setIntervalo(e.target.value || 1)}>
+                                  <MenuItem value={1}>{i18n.t("recurrenceSection.options.days")}</MenuItem>
+                                  <MenuItem value={2}>{i18n.t("recurrenceSection.options.weeks")}</MenuItem>
+                                  <MenuItem value={3}>{i18n.t("recurrenceSection.options.months")}</MenuItem>
+                                  <MenuItem value={4}>{i18n.t("recurrenceSection.options.minutes")}</MenuItem>
+                                </Select>
+                              </FormControl>
+                            </Grid>
+                            <Grid item xs={12} md={4}>
+                              <Typography className={classes.fieldLabel}>
+                                {i18n.t("recurrenceSection.intervalFilterValue")}
+                              </Typography>
+                              <Field
+                                as={TextField}
+                                name="valorIntervalo"
+                                size="small"
+                                variant="outlined"
+                                className={classes.formControl}
+                                fullWidth
+                              />
+                            </Grid>
+                            <Grid item xs={12} md={4}>
+                              <Typography className={classes.fieldLabel}>
+                                {i18n.t("recurrenceSection.sendAsManyTimes")}
+                              </Typography>
+                              <Field
+                                as={TextField}
+                                name="enviarQuantasVezes"
+                                size="small"
+                                variant="outlined"
+                                className={classes.formControl}
+                                fullWidth
+                              />
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                        <Grid item xs={12} md={7}>
+                          <Typography className={classes.fieldLabel}>
+                            {i18n.t("scheduleModal.form.holidayMode")}
+                          </Typography>
+                          <FormControl size="small" fullWidth variant="outlined" className={classes.formControl}>
+                            <Select value={tipoDias} onChange={(e) => setTipoDias(e.target.value || 4)}>
+                              <MenuItem value={4}>
+                                {i18n.t("recurrenceSection.shipNormallyOnNonbusinessDays")}
+                              </MenuItem>
+                              <MenuItem value={5}>
+                                {i18n.t("recurrenceSection.sendOneBusinessDayBefore")}
+                              </MenuItem>
+                              <MenuItem value={6}>
+                                {i18n.t("recurrenceSection.sendOneBusinessDayLater")}
+                              </MenuItem>
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                        <Grid item xs={12} md={5}>
+                          <div className={classes.switchRow}>
+                            <div className={classes.switchTextWrap}>
+                              <Typography className={classes.switchTitle}>
+                                {i18n.t("scheduleModal.form.assinar")}
+                              </Typography>
+                              <Typography className={classes.switchDescription}>
+                                {i18n.t("scheduleModal.form.assinarDescription")}
+                              </Typography>
+                            </div>
+                            <Field
+                              as={Switch}
+                              color="primary"
+                              name="assinar"
+                              checked={values.assinar}
+                              disabled={values.openTicket === "disabled"}
+                              className={classes.iosSwitch}
+                            />
+                          </div>
+                        </Grid>
+                      </Grid>
+                    </div>
                   </Grid>
                 </Grid>
-
-                <h3 className={classes.sectionTitle}>{i18n.t("recurrenceSection.title")}</h3>
-                <p className={classes.sectionSubtitle}>{i18n.t("recurrenceSection.description")}</p>
-                <br />
-                <Grid container spacing={1}>
-                  <Grid item xs={12} md={4} xl={4}>
-                    <FormControl size="small" fullWidth variant="outlined" className={classes.formControl}>
-                      <InputLabel id="demo-simple-select-label">
-                        {i18n.t("recurrenceSection.labelInterval")}
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={intervalo}
-                        onChange={(e) => setIntervalo(e.target.value || 1)}
-                        label={i18n.t("recurrenceSection.labelInterval")}
-                      >
-                        <MenuItem value={1}>
-                          {i18n.t("recurrenceSection.options.days")}
-                        </MenuItem>
-                        <MenuItem value={2}>
-                          {i18n.t("recurrenceSection.options.weeks")}
-                        </MenuItem>
-                        <MenuItem value={3}>
-                          {i18n.t("recurrenceSection.options.months")}
-                        </MenuItem>
-                        <MenuItem value={4}>
-                          {i18n.t("recurrenceSection.options.minutes")}
-                        </MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} md={4} xl={4}>
-                    <Field
-                      as={TextField}
-                      label={i18n.t("recurrenceSection.intervalFilterValue")}
-                      name="valorIntervalo"
-                      size="small"
-                      error={
-                        touched.valorIntervalo && Boolean(errors.valorIntervalo)
-                      }
-                      InputLabelProps={{ shrink: true }}
-                      variant="outlined"
-                      className={classes.formControl}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={4} xl={4}>
-                    <Field
-                      as={TextField}
-                      label={i18n.t("recurrenceSection.sendAsManyTimes")}
-                      name="enviarQuantasVezes"
-                      size="small"
-                      error={
-                        touched.enviarQuantasVezes &&
-                        Boolean(errors.enviarQuantasVezes)
-                      }
-                      variant="outlined"
-                      className={classes.formControl}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={12} xl={12}>
-                    <FormControl size="small" fullWidth variant="outlined" className={classes.formControl}>
-                      <InputLabel id="demo-simple-select-label">
-                        {i18n.t("recurrenceSection.sendAsManyTimes")}
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={tipoDias}
-                        onChange={(e) => setTipoDias(e.target.value || 4)}
-                        label="Enviar quantas vezes"
-                      >
-                        <MenuItem value={4}>
-                          {i18n.t(
-                            "recurrenceSection.shipNormallyOnNonbusinessDays"
-                          )}
-                        </MenuItem>
-                        <MenuItem value={5}>
-                          {i18n.t("recurrenceSection.sendOneBusinessDayBefore")}
-                        </MenuItem>
-                        <MenuItem value={6}>
-                          {" "}
-                          {i18n.t("recurrenceSection.sendOneBusinessDayLater")}
-                        </MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                </Grid>
-                {(schedule.mediaPath || attachment) && (
-                  <Grid xs={12} item>
-                    <Button startIcon={<AttachFile />}>
-                      {attachment ? attachment.name : schedule.mediaName}
-                    </Button>
-                    <IconButton
-                      onClick={() => setConfirmationOpen(true)}
-                      color="secondary"
-                    >
-                      <DeleteOutline color="secondary" />
-                    </IconButton>
-                  </Grid>
-                )}
               </DialogContent>
               <DialogActions className={classes.dialogActions}>
                 {!attachment && !schedule.mediaPath && (

@@ -3,7 +3,7 @@ import React, { useState, useEffect, useReducer, useContext } from "react";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
 
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -53,6 +53,7 @@ import ShowTicketLogModal from "../../components/ShowTicketLogModal";
 import { blue, green } from "@material-ui/core/colors";
 import {
   Facebook,
+  FilterList,
   Forward,
   History,
   Instagram,
@@ -64,6 +65,40 @@ import Autocomplete, {
   createFilterOptions,
 } from "@material-ui/lab/Autocomplete";
 import { Field } from "formik";
+
+const IOSSwitch = withStyles((theme) => ({
+  root: {
+    width: 42,
+    height: 26,
+    padding: 0,
+    margin: theme.spacing(0, 1, 0, 0),
+  },
+  switchBase: {
+    padding: 2,
+    "&$checked": {
+      transform: "translateX(16px)",
+      color: "#fff",
+      "& + $track": {
+        backgroundColor: theme.palette.primary.main,
+        opacity: 1,
+        border: "none",
+      },
+    },
+  },
+  thumb: {
+    width: 22,
+    height: 22,
+    boxShadow: "0 2px 6px rgba(15,23,42,0.18)",
+  },
+  track: {
+    borderRadius: 13,
+    border: "1px solid rgba(148,163,184,0.35)",
+    backgroundColor: "rgba(203,213,225,0.9)",
+    opacity: 1,
+    transition: theme.transitions.create(["background-color", "border"]),
+  },
+  checked: {},
+}))(Switch);
 
 const useStyles = makeStyles((theme) => ({
   mainContainer: {
@@ -85,37 +120,98 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     gap: theme.spacing(2),
     padding: theme.spacing(2),
-    borderRadius: theme.appTokens?.radius?.lg || 18,
-    background: theme.appTokens?.glass?.background,
-    border: theme.appTokens?.glass?.border,
-    boxShadow: theme.appTokens?.glass?.shadow,
-    backdropFilter: theme.appTokens?.glass?.blur,
+    borderRadius: 16,
+    background: theme.palette.mode === "dark"
+      ? "linear-gradient(180deg, rgba(22,32,51,0.72), rgba(15,23,42,0.62))"
+      : "rgba(255,255,255,0.96)",
+    boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
   },
   headerMeta: {
     fontSize: 12,
     color: theme.appTokens?.colors?.textMuted || (theme.palette.mode === "dark" ? "rgba(226,232,240,0.7)" : "#64748b"),
   },
+  pageTitle: {
+    fontWeight: 700,
+    color: "#1E293B",
+  },
   filterCard: {
     flex: 1,
     overflow: "auto",
     padding: theme.spacing(2),
-    borderRadius: theme.appTokens?.radius?.lg || 18,
-    background: theme.appTokens?.glass?.background,
-    border: theme.appTokens?.glass?.border,
-    boxShadow: theme.appTokens?.glass?.shadow,
-    backdropFilter: theme.appTokens?.glass?.blur,
+    borderRadius: 16,
+    background: theme.palette.mode === "dark"
+      ? "linear-gradient(180deg, rgba(22,32,51,0.72), rgba(15,23,42,0.62))"
+      : "rgba(255,255,255,0.96)",
+    boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
     ...theme.scrollbarStylesSoftBig,
   },
   mainPaperTable: {
     flex: 1,
     overflow: "auto",
     height: "68vh",
-    borderRadius: theme.appTokens?.radius?.lg || 18,
-    background: theme.appTokens?.glass?.background,
-    border: theme.appTokens?.glass?.border,
-    boxShadow: theme.appTokens?.glass?.shadow,
-    backdropFilter: theme.appTokens?.glass?.blur,
+    borderRadius: 16,
+    background: theme.palette.mode === "dark"
+      ? "linear-gradient(180deg, rgba(22,32,51,0.72), rgba(15,23,42,0.62))"
+      : "rgba(255,255,255,0.96)",
+    boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
     ...theme.scrollbarStylesSoftBig,
+  },
+  filtersGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: 16,
+    alignItems: "end",
+  },
+  filterGroup: {
+    minWidth: 0,
+  },
+  minimalField: {
+    "& .MuiOutlinedInput-root": {
+      minHeight: 40,
+      borderRadius: 8,
+      backgroundColor: theme.palette.mode === "dark" ? "rgba(248,250,252,0.08)" : "#F8FAFC",
+      transition: "background-color 0.2s ease, box-shadow 0.2s ease",
+      "&.Mui-focused": {
+        backgroundColor: "#FFFFFF",
+        boxShadow: "0 0 0 3px rgba(37,99,235,0.08)",
+      },
+      "& .MuiOutlinedInput-notchedOutline": {
+        borderColor: "rgba(226,232,240,0.9)",
+        borderWidth: 1,
+      },
+      "&:hover .MuiOutlinedInput-notchedOutline": {
+        borderColor: "rgba(203,213,225,1)",
+      },
+      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+        borderColor: "rgba(191,219,254,1)",
+      },
+    },
+    "& .MuiInputLabel-outlined": {
+      color: "#64748B",
+    },
+    "& input[type='date']::-webkit-calendar-picker-indicator": {
+      opacity: 0.45,
+      cursor: "pointer",
+    },
+  },
+  toggleField: {
+    minHeight: 40,
+    display: "flex",
+    alignItems: "center",
+    borderRadius: 8,
+    padding: theme.spacing(0.5, 1.25),
+    backgroundColor: theme.palette.mode === "dark" ? "rgba(248,250,252,0.08)" : "#F8FAFC",
+    border: "1px solid rgba(226,232,240,0.9)",
+  },
+  toggleLabel: {
+    margin: 0,
+    width: "100%",
+    justifyContent: "space-between",
+    "& .MuiFormControlLabel-label": {
+      color: "#475569",
+      fontWeight: 500,
+      fontSize: 14,
+    },
   },
   mainHeaderBlock: {
     [theme.breakpoints.down("md")]: {
@@ -125,26 +221,30 @@ const useStyles = makeStyles((theme) => ({
   },
   tableHeadCell: {
     fontWeight: 700,
-    fontSize: 12,
+    fontSize: 11.5,
     textTransform: "uppercase",
-    letterSpacing: 0.4,
-    color: theme.appTokens?.colors?.text || (theme.palette.mode === "dark" ? "#e2e8f0" : "#0f172a"),
+    letterSpacing: 0.7,
+    color: "#64748B",
     borderBottom: `1px solid ${theme.appTokens?.colors?.border || theme.palette.divider}`,
-    background:
-      theme.palette.mode === "dark"
-        ? "rgba(30, 41, 59, 0.7)"
-        : "rgba(248, 250, 252, 0.9)",
+    background: "#FFFFFF",
+    whiteSpace: "nowrap",
+    paddingTop: 14,
+    paddingBottom: 14,
   },
   tableRow: {
+    transition: "background-color 0.2s ease",
     "&:hover": {
       background:
         theme.palette.mode === "dark"
           ? "rgba(30, 41, 59, 0.5)"
-          : "rgba(226, 232, 240, 0.6)",
+          : "rgba(248, 250, 252, 1)",
     },
   },
   tableCell: {
     borderBottom: `1px solid ${theme.appTokens?.colors?.border || theme.palette.divider}`,
+    paddingTop: 14,
+    paddingBottom: 14,
+    whiteSpace: "nowrap",
   },
   actionButton: {
     borderRadius: theme.appTokens?.radius?.md || 12,
@@ -156,15 +256,20 @@ const useStyles = makeStyles((theme) => ({
     backdropFilter: theme.appTokens?.glass?.blur,
   },
   filterButton: {
-    borderRadius: 12,
+    height: 40,
+    borderRadius: 8,
     textTransform: "none",
     fontWeight: 600,
-  },
-  filterItem: {
-    width: 200,
-    [theme.breakpoints.down("md")]: {
-      width: "45%",
+    color: "#FFFFFF",
+    background: "linear-gradient(135deg, rgba(37,99,235,0.96), rgba(56,189,248,0.92))",
+    boxShadow: "0 12px 24px rgba(37,99,235,0.22)",
+    padding: theme.spacing(0, 2),
+    "&:hover": {
+      background: "linear-gradient(135deg, rgba(29,78,216,0.98), rgba(14,165,233,0.94))",
     },
+  },
+  tableScroller: {
+    minWidth: 1220,
   },
 }));
 
@@ -635,7 +740,6 @@ const Reports = () => {
   };
   const renderContactAutocomplete = () => {
     return (
-      <Grid xs={12} item>
         <Autocomplete
           fullWidth
           options={options}
@@ -656,6 +760,7 @@ const Reports = () => {
               variant="outlined"
               autoFocus
               size="small"
+              className={classes.minimalField}
               onChange={(e) => setSearchParam(e.target.value)}
               // onKeyPress={(e, newValue) => handleSelectOption(e, newValue)}
               InputProps={{
@@ -672,7 +777,6 @@ const Reports = () => {
             />
           )}
         />
-      </Grid>
     );
   };
 
@@ -685,7 +789,7 @@ const Reports = () => {
           ticketId={ticketOpen.id}
         />
       )}
-      <Title>{i18n.t("reports.title")}</Title>
+      <Title className={classes.pageTitle}>{i18n.t("reports.title")}</Title>
 
       <MainHeader
         className={classes.mainHeaderFilter}
@@ -700,30 +804,30 @@ const Reports = () => {
               </Typography>
             </div>
           </div>
-          <Grid container spacing={1}>
-            <Grid item xs={12} md={3} xl={3}>
+          <div className={classes.filtersGrid}>
+            <div className={classes.filterGroup}>
               {renderContactAutocomplete()}
-            </Grid>
-            <Grid item xs={12} md={3} xl={3}>
+            </div>
+            <div className={classes.filterGroup}>
               <WhatsappsFilter onFiltered={handleSelectedWhatsapps} />
-            </Grid>
-            <Grid item xs={12} md={3} xl={3}>
+            </div>
+            <div className={classes.filterGroup}>
               <StatusFilter onFiltered={handleSelectedStatus} />
-            </Grid>
-            <Grid item xs={12} md={3} xl={3}>
+            </div>
+            <div className={classes.filterGroup}>
               <UsersFilter onFiltered={handleSelectedUsers} />
-            </Grid>
+            </div>
             {/* <Grid item xs={12} md={4} xl={4}>
               <TagsFilter onFiltered={handleSelectedTags} />
             </Grid> */}
-            <Grid item xs={12} md={3} xl={3} style={{ marginTop: "-13px" }}>
+            <div className={classes.filterGroup}>
               <QueueSelectCustom
                 selectedQueueIds={queueIds}
                 onChange={(values) => setQueueIds(values)}
               />
-            </Grid>
+            </div>
 
-            <Grid item xs={12} sm={3} md={3}>
+            <div className={classes.filterGroup}>
               <TextField
                 label={i18n.t("reports.startDate")}
                 type="date"
@@ -735,9 +839,10 @@ const Reports = () => {
                 InputLabelProps={{
                   shrink: true,
                 }}
+                className={classes.minimalField}
               />
-            </Grid>
-            <Grid item xs={12} sm={3} md={3}>
+            </div>
+            <div className={classes.filterGroup}>
               <TextField
                 label={i18n.t("reports.endDate")}
                 type="date"
@@ -749,25 +854,22 @@ const Reports = () => {
                 InputLabelProps={{
                   shrink: true,
                 }}
+                className={classes.minimalField}
               />
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              sm={3}
-              md={3}
-              style={{ display: "flex", justifyContent: "center" }}
-            >
+            </div>
+            <div className={`${classes.filterGroup} ${classes.toggleField}`}>
               <FormControlLabel
+                className={classes.toggleLabel}
                 control={
-                  <Switch
-                    color="primary"
+                  <IOSSwitch
                     checked={onlyRated}
                     onChange={() => setOnlyRated(!onlyRated)}
                   />
                 }
                 label={i18n.t("reports.buttons.onlyRated")}
               />
+            </div>
+            <div className={classes.filterGroup} style={{ display: "flex", gap: 8 }}>
               <IconButton
                 onClick={exportarGridParaExcel}
                 aria-label={i18n.t("reports.buttons.exportExcel")}
@@ -781,14 +883,16 @@ const Reports = () => {
                 onClick={() => handleFilter(pageNumber)}
                 size="small"
                 className={classes.filterButton}
+                startIcon={<FilterList fontSize="small" />}
               >
                 {i18n.t("reports.buttons.filter")}
               </Button>
-            </Grid>
-          </Grid>
+            </div>
+          </div>
         </Paper>
       </MainHeader>
       <Paper className={classes.mainPaperTable} variant="outlined">
+        <div className={classes.tableScroller}>
         <Table size="small" id="grid-attendants">
           <TableHead>
             <TableRow>
@@ -903,6 +1007,7 @@ const Reports = () => {
             </>
           </TableBody>
         </Table>
+        </div>
       </Paper>
 
       <div>

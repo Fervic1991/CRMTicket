@@ -9,12 +9,12 @@ import { useHistory } from "react-router-dom";
 const useStyles = makeStyles(theme => ({
 	ticketHeader: {
 		display: "flex",
-		background: "linear-gradient(135deg, rgba(59, 130, 246, 0.18) 0%, rgba(14, 116, 144, 0.16) 45%, rgba(16, 185, 129, 0.16) 100%)",
+		background: "rgba(255, 255, 255, 0.92)",
 		flex: "none",
-		borderBottom: "1px solid rgba(148, 163, 184, 0.35)",
-		height: "70px",
-		backdropFilter: "blur(8px)",
-		boxShadow: "0 8px 20px rgba(15, 23, 42, 0.06)",
+		borderBottom: "1px solid #E2E8F0",
+		height: "72px",
+		backdropFilter: "blur(10px)",
+		boxShadow: "0 8px 20px rgba(15, 23, 42, 0.04)",
 		alignItems: "center",
 		padding: theme.spacing(0, 1),
 		[theme.breakpoints.down("sm")]: {

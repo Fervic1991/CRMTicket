@@ -20,6 +20,7 @@ import {
   Button,
   TextField,
   CircularProgress,
+  InputAdornment,
 } from "@material-ui/core";
 
 import { useHistory, useParams } from "react-router-dom";
@@ -186,12 +187,24 @@ const useStyles = makeStyles((theme) => ({
   },
   searchBar: {
     flex: 1,
-    padding: "8px 12px",
-    borderRadius: 999,
-    border: "1px solid rgba(148, 163, 184, 0.35)",
-    outline: "none",
-    background: "rgba(255, 255, 255, 0.9)",
-    boxShadow: "0 8px 18px rgba(15, 23, 42, 0.06)",
+    '& .MuiOutlinedInput-root': {
+      borderRadius: 999,
+      background: '#FFFFFF',
+      minHeight: 42,
+      '& fieldset': {
+        borderColor: '#E2E8F0',
+      },
+      '&:hover fieldset': {
+        borderColor: '#CBD5E1',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#2563EB',
+      },
+    },
+    '& .MuiInputBase-input::placeholder': {
+      color: '#94A3B8',
+      opacity: 1,
+    },
   },
   addChatButton: {
     backgroundColor: "rgba(59, 130, 246, 0.95)",
@@ -539,12 +552,21 @@ function ChatList({
             alignItems: "center",
           }}
         >
-          <input
+          <TextField
             type="text"
+            variant="outlined"
+            size="small"
             placeholder={i18n.t("chatList.searchChat")}
             defaultValue={searchTerm}
             onChange={(e) => handleSearchChange(e.target.value)}
             className={classes.searchBar}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon style={{ fontSize: 18, color: '#94A3B8' }} />
+                </InputAdornment>
+              ),
+            }}
           />
           {!isShowingOnlyGroups && (
             <IconButton

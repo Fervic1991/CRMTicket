@@ -4,8 +4,7 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { useTheme } from "@material-ui/core/styles";
-import { IconButton } from "@mui/material";
-import { Groups, SaveAlt } from "@mui/icons-material";
+import { Groups } from "@mui/icons-material";
 
 import CallIcon from "@material-ui/icons/Call";
 import RecordVoiceOverIcon from "@material-ui/icons/RecordVoiceOver";
@@ -22,11 +21,9 @@ import * as XLSX from "xlsx";
 import CheckCircleOutlineIcon from "@material-ui/icons/RecordVoiceOver";
 import ErrorOutlineIcon from "@material-ui/icons/RecordVoiceOver";
 
-import { grey, blue } from "@material-ui/core/colors";
 import { toast } from "react-toastify";
 
 import MainContainer from "../../components/MainContainer";
-import TabPanel from "../../components/TabPanel";
 import TableAttendantsStatus from "../../components/Dashboard/TableAttendantsStatus";
 import { isArray } from "lodash";
 
@@ -39,19 +36,7 @@ import Filters from "./Filters";
 import { isEmpty } from "lodash";
 import moment from "moment";
 import { ChartsDate } from "./ChartsDate";
-import {
-  Avatar,
-  Button,
-  Card,
-  CardContent,
-  Container,
-  Stack,
-  SvgIcon,
-  Tab,
-  Tabs,
-  LinearProgress,
-  Box,
-} from "@mui/material";
+import { Button, Container, Box } from "@mui/material";
 import { i18n } from "../../translate/i18n";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import ForbiddenPage from "../../components/ForbiddenPage";
@@ -59,21 +44,19 @@ import { ArrowDownward, ArrowUpward } from "@material-ui/icons";
 import api from "../../services/api";
 
 const useStyles = makeStyles((theme) => ({
-  overline: {
-    fontSize: "0.9rem",
-    fontWeight: 700,
-    color: theme.palette.text.secondary,
-    letterSpacing: "0.5px",
-    lineHeight: 2.5,
-    textTransform: "uppercase",
-    fontFamily: "'Plus Jakarta Sans', sans-serif'",
+  dashboardTitle: {
+    fontFamily: "Inter, sans-serif",
+    fontSize: "1.95rem",
+    fontWeight: 800,
+    letterSpacing: "-0.03em",
+    color: theme.palette.mode === "dark" ? "#F8FAFC" : "#1E293B",
+    marginBottom: theme.spacing(0.75),
   },
-  h4: {
-    fontFamily: "'Plus Jakarta Sans', sans-serif'",
-    fontWeight: 500,
-    fontSize: "2rem",
-    lineHeight: 1,
-    color: theme.palette.text.primary,
+  dashboardSubtitle: {
+    fontFamily: "Inter, sans-serif",
+    fontSize: "0.95rem",
+    color: theme.palette.mode === "dark" ? "rgba(203,213,225,0.74)" : "#64748B",
+    marginBottom: theme.spacing(2.5),
   },
   dashboardBackground: {
     minHeight: "100%",
@@ -207,13 +190,16 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "baseline",
     justifyContent: "space-between",
     gap: theme.spacing(2),
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(1.5),
+    marginTop: theme.spacing(5),
+    marginBottom: theme.spacing(1.75),
+    paddingTop: theme.spacing(1),
   },
   sectionTitle: {
+    fontFamily: "Inter, sans-serif",
     fontSize: "1.35rem",
-    fontWeight: 700,
-    color: theme.appTokens?.colors?.text || (theme.palette.mode === "dark" ? "#e2e8f0" : "#0f172a"),
+    fontWeight: 800,
+    letterSpacing: "-0.02em",
+    color: theme.palette.mode === "dark" ? "#E2E8F0" : "#1E293B",
   },
   sectionHint: {
     fontSize: 12,
@@ -222,38 +208,78 @@ const useStyles = makeStyles((theme) => ({
   barContainer: {
     display: "flex",
     alignItems: "center",
-    marginBottom: theme.spacing(1),
+    gap: theme.spacing(1.25),
+    marginBottom: theme.spacing(1.25),
   },
-  progressBar: {
+  progressTrack: {
     flex: 1,
-    marginRight: theme.spacing(1),
-    borderRadius: 5,
-    height: 10,
+    height: 8,
+    borderRadius: 999,
+    backgroundColor: theme.palette.mode === "dark" ? "rgba(51,65,85,0.7)" : "#E2E8F0",
+    overflow: "hidden",
+  },
+  progressFill: {
+    height: "100%",
+    borderRadius: 999,
+    transition: "width 900ms ease, transform 900ms ease",
+    transformOrigin: "left center",
+    boxShadow: "0 6px 16px rgba(59,130,246,0.18)",
   },
   progressLabel: {
-    minWidth: 50,
+    minWidth: 82,
+    textAlign: "left",
+    fontWeight: 600,
+    color: theme.palette.mode === "light" ? "#475569" : "#CBD5E1",
+  },
+  progressValue: {
+    minWidth: 48,
     textAlign: "right",
-    fontWeight: 500,
-    color: theme.palette.mode === "light" ? theme.palette.text.secondary : theme.palette.text.primary,
+    fontWeight: 700,
+    color: theme.palette.mode === "light" ? "#1E293B" : "#F8FAFC",
+  },
+  kpiCard: {
+    position: "relative",
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(2),
+    padding: theme.spacing(2.25),
+    borderRadius: 20,
+    background: theme.palette.mode === "dark"
+      ? "linear-gradient(180deg, rgba(15,23,42,0.92), rgba(15,23,42,0.74))"
+      : "linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,250,252,0.94))",
+    border: theme.palette.mode === "dark"
+      ? "1px solid rgba(148,163,184,0.16)"
+      : "1px solid rgba(226,232,240,0.9)",
+    boxShadow: theme.palette.mode === "dark"
+      ? "0 18px 40px rgba(2,6,23,0.32)"
+      : "0 18px 40px rgba(15,23,42,0.08)",
+    overflow: "hidden",
+    height: "100%",
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      height: 4,
+      background: 'var(--card-accent, linear-gradient(90deg, #2563EB, #60A5FA))',
+    },
   },
   infoCard: {
-    padding: theme.spacing(2),
-    textAlign: "center",
-    borderRadius: 18,
-    background:
-      theme.palette.mode === "dark"
-        ? "rgba(15, 23, 42, 0.7)"
-        : "rgba(255, 255, 255, 0.82)",
-    border:
-      theme.palette.mode === "dark"
-        ? "1px solid rgba(148, 163, 184, 0.2)"
-        : "1px solid rgba(148, 163, 184, 0.35)",
-    boxShadow:
-      theme.palette.mode === "dark"
-        ? "0 16px 36px rgba(0,0,0,0.4)"
-        : "0 16px 36px rgba(15,23,42,0.08)",
-    backdropFilter: "blur(10px)",
+    padding: theme.spacing(2.25),
+    borderRadius: 20,
+    background: theme.palette.mode === "dark"
+      ? "linear-gradient(180deg, rgba(15,23,42,0.88), rgba(15,23,42,0.72))"
+      : "linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,250,252,0.94))",
+    border: theme.palette.mode === "dark"
+      ? "1px solid rgba(148,163,184,0.16)"
+      : "1px solid rgba(226,232,240,0.92)",
+    boxShadow: theme.palette.mode === "dark"
+      ? "0 18px 40px rgba(2,6,23,0.3)"
+      : "0 18px 40px rgba(15,23,42,0.08)",
+    backdropFilter: "blur(12px)",
     marginBottom: theme.spacing(2),
+    height: "100%",
   },
   infoIcon: {
     fontSize: "2rem",
@@ -261,9 +287,9 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(1),
   },
   iconBadge: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
+    width: 56,
+    height: 56,
+    borderRadius: 18,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -281,7 +307,7 @@ const useStyles = makeStyles((theme) => ({
         : "0 12px 24px rgba(15,23,42,0.08)",
   },
   iconModern: {
-    fontSize: 22,
+    fontSize: 28,
     color: theme.palette.mode === "dark" ? "#e2e8f0" : "#0f172a",
     filter: theme.palette.mode === "dark"
       ? "drop-shadow(0 6px 10px rgba(0,0,0,0.45))"
@@ -317,58 +343,82 @@ const useStyles = makeStyles((theme) => ({
         ? "0 12px 24px rgba(0,0,0,0.35)"
         : "0 12px 24px rgba(15,23,42,0.08)",
   },
+  metricValue: {
+    fontFamily: "Inter, sans-serif",
+    fontSize: "1.85rem",
+    fontWeight: 800,
+    lineHeight: 1.1,
+    letterSpacing: "-0.04em",
+    color: theme.palette.mode === "dark" ? "#F8FAFC" : "#1E293B",
+  },
+  metricLabel: {
+    marginTop: theme.spacing(0.5),
+    fontSize: "0.95rem",
+    fontWeight: 600,
+    color: theme.palette.mode === "dark" ? "rgba(203,213,225,0.78)" : "#64748B",
+  },
+  ratingSummaryCard: {
+    textAlign: "center",
+    padding: theme.spacing(1.5),
+    borderRadius: 18,
+    background: theme.palette.mode === "dark" ? "rgba(245,158,11,0.14)" : "linear-gradient(180deg, rgba(255,247,237,0.98), rgba(255,237,213,0.95))",
+    border: theme.palette.mode === "dark" ? "1px solid rgba(245,158,11,0.2)" : "1px solid rgba(251,191,36,0.3)",
+  },
 }));
 
-// Componente memoizado para os indicadores
-const IndicatorCard = memo(({ label, value, icon }) => {
+const indicatorThemes = {
+  primary: { accent: "linear-gradient(90deg, #2563EB, #60A5FA)", soft: "rgba(59,130,246,0.12)" },
+  warning: { accent: "linear-gradient(90deg, #F59E0B, #FCD34D)", soft: "rgba(245,158,11,0.14)" },
+  success: { accent: "linear-gradient(90deg, #10B981, #6EE7B7)", soft: "rgba(16,185,129,0.14)" },
+  danger: { accent: "linear-gradient(90deg, #F97316, #FB7185)", soft: "rgba(249,115,22,0.14)" },
+};
+
+const IndicatorCard = memo(({ label, value, icon, tone = "primary" }) => {
   const classes = useStyles();
+  const cardTheme = indicatorThemes[tone] || indicatorThemes.primary;
   return (
     <Grid2 xs={12} sm={6} md={4} lg={3}>
-      <Paper className={classes.paper}>
-        <Box display="flex" alignItems="center">
-          <div className={classes.iconBadge}>{icon}</div>
-          <Box ml={2}>
-            <Typography variant="h6">{value}</Typography>
-            <Typography variant="body2">{label}</Typography>
-          </Box>
+      <Paper className={classes.kpiCard} style={{ "--card-accent": cardTheme.accent }}>
+        <div className={classes.iconBadge} style={{ background: cardTheme.soft }}>
+          {icon}
+        </div>
+        <Box>
+          <Typography className={classes.metricValue}>{value}</Typography>
+          <Typography className={classes.metricLabel}>{label}</Typography>
         </Box>
       </Paper>
     </Grid2>
   );
 });
 
-// Componente memoizado para NPS
 const NPSCard = memo(({ label, value, color }) => {
   const classes = useStyles();
   return (
-    <Grid2 xs={12} md={6} lg={3}>
+    <Grid2 xs={12} md={6}>
       <Paper className={classes.paper}>
         <Box className={classes.barContainer}>
           <Typography className={classes.progressLabel}>{label}</Typography>
-          <LinearProgress
-            variant="determinate"
-            value={value}
-            className={classes.progressBar}
-            style={{ backgroundColor: color }}
-          />
-          <Typography className={classes.progressLabel}>{value}%</Typography>
+          <Box className={classes.progressTrack}>
+            <Box className={classes.progressFill} style={{ width: `${value}%`, background: color }} />
+          </Box>
+          <Typography className={classes.progressValue}>{value}%</Typography>
         </Box>
       </Paper>
     </Grid2>
   );
 });
 
-// Componente memoizado para informações de atendimento
-const AttendanceCard = memo(({ label, value, icon }) => {
+const AttendanceCard = memo(({ label, value, icon, tone = "primary" }) => {
   const classes = useStyles();
+  const cardTheme = indicatorThemes[tone] || indicatorThemes.primary;
   return (
     <Grid2 xs={12} sm={6} md={3}>
-      <Paper className={classes.infoCard} style={{ height: '100%' }}>
-        <Box display="flex" alignItems="center">
-          <div className={classes.iconBadge}>{icon}</div>
-          <Box ml={2}>
-            <Typography variant="h6">{value}</Typography>
-            <Typography variant="body2">{label}</Typography>
+      <Paper className={classes.infoCard}>
+        <Box display="flex" alignItems="center" gap={2}>
+          <div className={classes.iconBadge} style={{ background: cardTheme.soft }}>{icon}</div>
+          <Box>
+            <Typography className={classes.metricValue}>{value}</Typography>
+            <Typography className={classes.metricLabel}>{label}</Typography>
           </Box>
         </Box>
       </Paper>
@@ -591,34 +641,33 @@ const Dashboard = () => {
 
   // Dados memoizados para os indicadores
   const indicators = useMemo(() => [
-    { label: i18n.t("dashboard.cards.inAttendance"), value: counters.supportHappening || 0, icon: renderIcon(CallIcon, classes.iconAccent) },
-    { label: i18n.t("dashboard.cards.waiting"), value: counters.supportPending || 0, icon: renderIcon(HourglassEmptyIcon, classes.iconWarning) },
-    { label: i18n.t("dashboard.cards.finalized"), value: counters.supportFinished || 0, icon: renderIcon(CheckCircleIcon, classes.iconSuccess) },
-    { label: i18n.t("dashboard.cards.groups"), value: counters.supportGroups || 0, icon: renderIcon(Groups, classes.iconAccent) },
-    { label: i18n.t("dashboard.cards.activeAttendants"), value: `${getUsersOnlineCount}/${attendants.length}`, icon: renderIcon(RecordVoiceOverIcon, classes.iconAccent) },
-    { label: i18n.t("dashboard.cards.newContacts"), value: counters.leads || 0, icon: renderIcon(GroupAddIcon, classes.iconAccent) },
-    { label: i18n.t("dashboard.cards.totalReceivedMessages"), value: `${messagesCount.received}/${messagesCount.receivedAll}`, icon: renderIcon(MessageIcon, classes.iconAccent) },
-    { label: i18n.t("dashboard.cards.totalSentMessages"), value: `${messagesCount.sent}/${messagesCount.sentAll}`, icon: renderIcon(SendIcon, classes.iconSuccess) },
-    { label: i18n.t("dashboard.cards.averageServiceTime"), value: formatTime(counters.avgSupportTime), icon: renderIcon(AccessAlarmIcon, classes.iconWarning) },
-    { label: i18n.t("dashboard.cards.averageWaitingTime"), value: formatTime(counters.avgWaitTime), icon: renderIcon(TimerIcon, classes.iconDanger) },
-    { label: i18n.t("dashboard.cards.activeTickets"), value: counters.activeTickets || 0, icon: renderIcon(ArrowUpward, classes.iconAccent) },
-    { label: i18n.t("dashboard.cards.passiveTickets"), value: counters.passiveTickets || 0, icon: renderIcon(ArrowDownward, classes.iconSuccess) },
+    { label: i18n.t("dashboard.cards.inAttendance"), value: counters.supportHappening || 0, icon: renderIcon(CallIcon, classes.iconAccent), tone: "primary" },
+    { label: i18n.t("dashboard.cards.waiting"), value: counters.supportPending || 0, icon: renderIcon(HourglassEmptyIcon, classes.iconWarning), tone: "warning" },
+    { label: i18n.t("dashboard.cards.finalized"), value: counters.supportFinished || 0, icon: renderIcon(CheckCircleIcon, classes.iconSuccess), tone: "success" },
+    { label: i18n.t("dashboard.cards.groups"), value: counters.supportGroups || 0, icon: renderIcon(Groups, classes.iconAccent), tone: "primary" },
+    { label: i18n.t("dashboard.cards.activeAttendants"), value: `${getUsersOnlineCount}/${attendants.length}`, icon: renderIcon(RecordVoiceOverIcon, classes.iconAccent), tone: "primary" },
+    { label: i18n.t("dashboard.cards.newContacts"), value: counters.leads || 0, icon: renderIcon(GroupAddIcon, classes.iconAccent), tone: "success" },
+    { label: i18n.t("dashboard.cards.totalReceivedMessages"), value: `${messagesCount.received}/${messagesCount.receivedAll}`, icon: renderIcon(MessageIcon, classes.iconAccent), tone: "primary" },
+    { label: i18n.t("dashboard.cards.totalSentMessages"), value: `${messagesCount.sent}/${messagesCount.sentAll}`, icon: renderIcon(SendIcon, classes.iconSuccess), tone: "success" },
+    { label: i18n.t("dashboard.cards.averageServiceTime"), value: formatTime(counters.avgSupportTime), icon: renderIcon(AccessAlarmIcon, classes.iconWarning), tone: "warning" },
+    { label: i18n.t("dashboard.cards.averageWaitingTime"), value: formatTime(counters.avgWaitTime), icon: renderIcon(TimerIcon, classes.iconDanger), tone: "danger" },
+    { label: i18n.t("dashboard.cards.activeTickets"), value: counters.activeTickets || 0, icon: renderIcon(ArrowUpward, classes.iconAccent), tone: "primary" },
+    { label: i18n.t("dashboard.cards.passiveTickets"), value: counters.passiveTickets || 0, icon: renderIcon(ArrowDownward, classes.iconSuccess), tone: "success" },
   ], [counters, getUsersOnlineCount, attendants.length, messagesCount, formatTime, renderIcon, classes.iconAccent, classes.iconSuccess, classes.iconWarning, classes.iconDanger]);
 
   // Dados memoizados para NPS
   const npsData = useMemo(() => [
-    { label: i18n.t("dashboard.nps.score"), value: counters.npsScore || 0, color: "#000" },
-    { label: i18n.t("dashboard.nps.promoters"), value: counters.npsPromotersPerc || 0, color: "#2EA85A" },
-    { label: i18n.t("dashboard.nps.neutrals"), value: counters.npsPassivePerc || 0, color: "#F7EC2C" },
-    { label: i18n.t("dashboard.nps.detractors"), value: counters.npsDetractorsPerc || 0, color: "#F73A2C" },
+    { label: i18n.t("dashboard.nps.promoters"), value: counters.npsPromotersPerc || 0, color: "linear-gradient(90deg, #059669, #34D399)" },
+    { label: i18n.t("dashboard.nps.neutrals"), value: counters.npsPassivePerc || 0, color: "linear-gradient(90deg, #F59E0B, #FCD34D)" },
+    { label: i18n.t("dashboard.nps.detractors"), value: counters.npsDetractorsPerc || 0, color: "linear-gradient(90deg, #F97316, #FB7185)" },
   ], [counters]);
 
   // Dados memoizados para atendimentos
   const attendanceData = useMemo(() => [
-    { label: i18n.t("dashboard.attendances.total"), value: counters.tickets || 0, icon: renderIcon(CallIcon, classes.iconAccent) },
-    { label: i18n.t("dashboard.attendances.waitingRating"), value: counters.waitRating || 0, icon: renderIcon(HourglassEmptyIcon, classes.iconWarning) },
-    { label: i18n.t("dashboard.attendances.withoutRating"), value: counters.withoutRating || 0, icon: renderIcon(ErrorOutlineIcon, classes.iconDanger) },
-    { label: i18n.t("dashboard.attendances.withRating"), value: counters.withRating || 0, icon: renderIcon(CheckCircleOutlineIcon, classes.iconSuccess) },
+    { label: i18n.t("dashboard.attendances.total"), value: counters.tickets || 0, icon: renderIcon(CallIcon, classes.iconAccent), tone: "primary" },
+    { label: i18n.t("dashboard.attendances.waitingRating"), value: counters.waitRating || 0, icon: renderIcon(HourglassEmptyIcon, classes.iconWarning), tone: "warning" },
+    { label: i18n.t("dashboard.attendances.withoutRating"), value: counters.withoutRating || 0, icon: renderIcon(ErrorOutlineIcon, classes.iconDanger), tone: "danger" },
+    { label: i18n.t("dashboard.attendances.withRating"), value: counters.withRating || 0, icon: renderIcon(CheckCircleOutlineIcon, classes.iconSuccess), tone: "success" },
   ], [counters, renderIcon, classes.iconAccent, classes.iconWarning, classes.iconDanger, classes.iconSuccess]);
 
   // Verificação de perfil memoizada
@@ -635,6 +684,10 @@ const Dashboard = () => {
       <Paper className={classes.mainPaper} variant="outlined">
         <Container maxWidth={false} className={classes.dashboardBackground} style={{ maxWidth: '100%', overflowX: 'hidden' }}>
           <Grid2 container spacing={2} className={classes.container} style={{ margin: 0, width: '100%' }}>
+            <Grid2 xs={12}>
+              <Typography className={classes.dashboardTitle}>{i18n.t("dashboard.sections.indicators")}</Typography>
+              <Typography className={classes.dashboardSubtitle}>Monitora andamento, soddisfazione e performance del team in un colpo d'occhio.</Typography>
+            </Grid2>
             {/* FILTROS */}
             <Grid2 xs={12} container justifyContent="flex-end">
               <Button
@@ -708,19 +761,16 @@ const Dashboard = () => {
               </Typography>
               <Grid2 container alignItems="center" spacing={2}>
                 <Grid2 xs={12} sm={2}>
-                  <Paper className={classes.infoCard} style={{ textAlign: 'center', padding: '8px', background: theme.palette.mode === "dark" ? "rgba(30,41,59,0.8)" : "rgba(255, 237, 213, 0.9)" }}>
-                    <Typography variant="h6" style={{ color: theme.palette.mode === "dark" ? "#f59e0b" : "#b45309" }}>
+                  <Paper className={classes.ratingSummaryCard}>
+                    <Typography variant="h6" style={{ color: theme.palette.mode === "dark" ? "#fbbf24" : "#b45309", fontWeight: 800 }}>
                       {Number(counters.percRating / 100).toLocaleString(undefined, { style: 'percent' }) || "0%"}
                     </Typography>
                   </Paper>
                 </Grid2>
                 <Grid2 xs={12} sm={10}>
-                  <LinearProgress
-                    variant="determinate"
-                    value={counters.percRating || 0}
-                    className={classes.progressBar}
-                    style={{ backgroundColor: "#e0e0e0", height: 10, borderRadius: 5 }}
-                  />
+                  <Box className={classes.progressTrack}>
+                    <Box className={classes.progressFill} style={{ width: `${counters.percRating || 0}%`, background: "linear-gradient(90deg, #F59E0B, #FCD34D)" }} />
+                  </Box>
                 </Grid2>
               </Grid2>
             </Grid2>

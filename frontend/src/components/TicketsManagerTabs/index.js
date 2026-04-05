@@ -16,21 +16,11 @@ import {
 } from "@material-ui/core";
 import {
   Group,
-  MoveToInbox as MoveToInboxIcon,
   CheckBox as CheckBoxIcon,
   MessageSharp as MessageSharpIcon,
   AccessTime as ClockIcon,
-  Search as SearchIcon,
-  Add as AddIcon,
-  TextRotateUp,
-  TextRotationDown,
-  Android as AndroidIcon,
 } from "@material-ui/icons";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 import ToggleButton from "@material-ui/lab/ToggleButton";
-
-import { FilterAltOff, FilterAlt, PlaylistAddCheckOutlined } from "@mui/icons-material";
 
 import NewTicketModal from "../NewTicketModal";
 import TicketsList from "../TicketsListCustom";
@@ -49,6 +39,16 @@ import { QueueSelectedContext } from "../../context/QueuesSelected/QueuesSelecte
 
 import api from "../../services/api";
 import { TicketsContext } from "../../context/Tickets/TicketsContext";
+import {
+  LuArrowDownUp,
+  LuCheckCheck,
+  LuEye,
+  LuEyeOff,
+  LuInbox,
+  LuPlus,
+  LuSearch,
+  LuSlidersHorizontal,
+} from "react-icons/lu";
 
 const useStyles = makeStyles((theme) => ({
   ticketsWrapper: {
@@ -65,15 +65,19 @@ const useStyles = makeStyles((theme) => ({
   tabsHeader: {
     minWidth: "auto",
     width: "auto",
-    borderRadius: 14,
+    borderRadius: 999,
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(0.5),
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     padding: theme.spacing(0.5),
-    background: "rgba(248, 250, 252, 0.7)",
-    border: "1px solid rgba(148, 163, 184, 0.3)",
-    boxShadow: "0 8px 18px rgba(15, 23, 42, 0.06)",
+    background: theme.mode === "light"
+      ? "rgba(226, 232, 240, 0.75)"
+      : "rgba(30, 41, 59, 0.68)",
+    border: "1px solid rgba(148, 163, 184, 0.2)",
+    boxShadow: theme.mode === "light"
+      ? "inset 0 1px 0 rgba(255,255,255,0.65)"
+      : "inset 0 1px 0 rgba(255,255,255,0.05)",
   },
 
   settingsIcon: {
@@ -85,17 +89,19 @@ const useStyles = makeStyles((theme) => ({
   tab: {
     minWidth: "auto",
     width: "auto",
-    padding: theme.spacing(0.6, 1.2),
-    borderRadius: 12,
+    minHeight: 36,
+    padding: theme.spacing(0.55, 1.1),
+    borderRadius: 999,
     transition: "0.25s ease",
-    borderColor: "rgba(148, 163, 184, 0.45)",
+    borderColor: "transparent",
     borderWidth: "1px",
     borderStyle: "solid",
     marginRight: theme.spacing(0.5),
     marginLeft: theme.spacing(0.5),
-    background: "rgba(255, 255, 255, 0.85)",
+    background: "transparent",
     textTransform: "none",
     fontWeight: 600,
+    color: theme.mode === "light" ? "#64748B" : "rgba(203,213,225,0.82)",
 
     [theme.breakpoints.down("lg")]: {
       fontSize: "0.9rem",
@@ -112,7 +118,16 @@ const useStyles = makeStyles((theme) => ({
     },
 
     "&:hover": {
-      backgroundColor: "rgba(226, 232, 240, 0.6)",
+      backgroundColor: theme.mode === "light" ? "rgba(255,255,255,0.45)" : "rgba(51,65,85,0.46)",
+    },
+    "&.Mui-selected": {
+      background: theme.mode === "light"
+        ? "linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.9))"
+        : "linear-gradient(180deg, rgba(255,255,255,0.12), rgba(148,163,184,0.08))",
+      color: theme.mode === "light" ? "#0F172A" : "#E2E8F0",
+      boxShadow: theme.mode === "light"
+        ? "0 2px 8px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255,255,255,0.8)"
+        : "0 8px 18px rgba(15,23,42,0.22), inset 0 1px 0 rgba(255,255,255,0.08)",
     },
   },
 
@@ -123,10 +138,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   tabIndicator: {
-    height: 6,
-    bottom: 0,
-    borderRadius: "0 0 12px 12px",
-    backgroundColor: theme.mode === "light" ? theme.palette.primary.main : "#FFF",
+    display: "none",
   },
   tabsBadge: {
     top: "105%",
@@ -147,7 +159,7 @@ const useStyles = makeStyles((theme) => ({
       theme.mode === "light"
         ? "rgba(255, 255, 255, 0.75)"
         : "rgba(15, 23, 42, 0.7)",
-    borderRadius: 16,
+    borderRadius: 18,
     borderColor:
       theme.mode === "light"
         ? "rgba(148, 163, 184, 0.35)"
@@ -158,7 +170,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(1),
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    padding: theme.spacing(1),
+    padding: theme.spacing(0.75, 1),
     boxShadow:
       theme.mode === "light"
         ? "0 10px 24px rgba(15, 23, 42, 0.06)"
@@ -167,14 +179,15 @@ const useStyles = makeStyles((theme) => ({
 
   serachInputWrapper: {
     flex: 1,
-    height: 40,
+    height: 36,
     background:
       theme.mode === "light"
         ? "rgba(248, 250, 252, 0.85)"
         : "rgba(15, 23, 42, 0.9)",
     display: "flex",
     borderRadius: 999,
-    padding: "4px 8px",
+    alignItems: "center",
+    padding: "2px 8px 2px 10px",
     borderColor:
       theme.mode === "light"
         ? "rgba(148, 163, 184, 0.35)"
@@ -194,21 +207,25 @@ const useStyles = makeStyles((theme) => ({
   searchIcon: {
     color:
       theme.mode === "light"
-        ? "rgba(71, 85, 105, 0.9)"
-        : "rgba(226, 232, 240, 0.9)",
-    marginLeft: 6,
-    marginRight: 6,
+        ? "rgba(100, 116, 139, 0.8)"
+        : "rgba(203, 213, 225, 0.82)",
+    marginLeft: 2,
+    marginRight: 8,
     alignSelf: "center",
+    width: 16,
+    height: 16,
+    strokeWidth: 1.5,
   },
 
   searchInput: {
     flex: 1,
     border: "none",
-    borderRadius: 30,
+    borderRadius: 50,
     "& input": {
       color: theme.mode === "light" ? "#0f172a" : "#f8fafc",
+      fontSize: 13,
       "::placeholder": {
-        color: theme.mode === "light" ? "rgba(100,116,139,0.9)" : "rgba(203,213,225,0.75)",
+        color: theme.mode === "light" ? "rgba(148,163,184,0.95)" : "rgba(148,163,184,0.8)",
         opacity: 1,
       },
     },
@@ -313,59 +330,28 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 30,
   },
   filterIcon: {
-    marginRight: 6,
+    marginRight: 0,
     alignSelf: "center",
     cursor: "pointer",
-    borderRadius: 12,
-    padding: 4,
-    background:
-      theme.mode === "light"
-        ? "rgba(255, 255, 255, 0.75)"
-        : "rgba(15, 23, 42, 0.7)",
-    border:
-      theme.mode === "light"
-        ? "1px solid rgba(148, 163, 184, 0.4)"
-        : "1px solid rgba(148, 163, 184, 0.2)",
-    boxShadow:
-      theme.mode === "light"
-        ? "0 10px 24px rgba(15, 23, 42, 0.12)"
-        : "0 10px 24px rgba(0, 0, 0, 0.4)",
-    backdropFilter: "blur(10px)",
+    borderRadius: 999,
+    padding: 6,
+    background: "transparent",
+    border: "1px solid transparent",
+    boxShadow: "none",
     "&:hover": {
-      borderColor:
-        theme.mode === "light"
-          ? theme.palette.primary.main
-          : "rgba(248, 250, 252, 0.6)",
-      transform: "translateY(-1px)",
+      background: theme.mode === "light" ? "rgba(226,232,240,0.65)" : "rgba(51,65,85,0.54)",
     },
   },
   button: {
-    height: 30,
-    width: 30,
-    border:
-      theme.mode === "light"
-        ? "1px solid rgba(148, 163, 184, 0.55)"
-        : "1px solid rgba(148, 163, 184, 0.25)",
-    borderRadius: 12,
+    height: 34,
+    width: 34,
+    border: "1px solid transparent",
+    borderRadius: 999,
     marginRight: 8,
-    background:
-      theme.mode === "light"
-        ? "rgba(255, 255, 255, 0.9)"
-        : "rgba(15, 23, 42, 0.75)",
-    boxShadow:
-      theme.mode === "light"
-        ? "0 10px 24px rgba(15, 23, 42, 0.12)"
-        : "0 10px 24px rgba(0, 0, 0, 0.4)",
-    backdropFilter: "blur(10px)",
+    background: "transparent",
+    boxShadow: "none",
     "&:hover": {
-      borderColor:
-        theme.mode === "light"
-          ? theme.palette.primary.main
-          : "rgba(248, 250, 252, 0.6)",
-      background:
-        theme.mode === "light"
-          ? "rgba(226, 232, 240, 0.6)"
-          : "rgba(30, 41, 59, 0.7)",
+      background: theme.mode === "light" ? "rgba(226, 232, 240, 0.7)" : "rgba(51, 65, 85, 0.56)",
     },
   },
   icon: {
@@ -373,6 +359,9 @@ const useStyles = makeStyles((theme) => ({
       theme.mode === "light"
         ? "rgba(71, 85, 105, 0.85)"
         : "rgba(226, 232, 240, 0.9)",
+    width: 18,
+    height: 18,
+    strokeWidth: 1.5,
     "&:hover": {
       color:
         theme.mode === "light"
@@ -387,45 +376,28 @@ const useStyles = makeStyles((theme) => ({
   },
   // Classe padronizada para todos os botões de ação
   standardButton: {
-    height: 30,
-    width: 30,
-    border:
-      theme.mode === "light"
-        ? "1px solid rgba(148, 163, 184, 0.55)"
-        : "1px solid rgba(148, 163, 184, 0.25)",
-    borderRadius: 12,
+    height: 34,
+    width: 34,
+    border: "1px solid transparent",
+    borderRadius: 999,
     marginRight: 8,
     padding: 0,
     minWidth: 'auto',
-    background:
-      theme.mode === "light"
-        ? "rgba(255, 255, 255, 0.9)"
-        : "rgba(15, 23, 42, 0.75)",
-    boxShadow:
-      theme.mode === "light"
-        ? "0 10px 24px rgba(15, 23, 42, 0.12)"
-        : "0 10px 24px rgba(0, 0, 0, 0.4)",
-    backdropFilter: "blur(10px)",
+    background: "transparent",
+    boxShadow: "none",
     "&:hover": {
-      borderColor:
-        theme.mode === "light"
-          ? theme.palette.primary.main
-          : "rgba(248, 250, 252, 0.6)",
-      background:
-        theme.mode === "light"
-          ? "rgba(226, 232, 240, 0.6)"
-          : "rgba(30, 41, 59, 0.7)",
-      transform: "translateY(-1px)",
+      background: theme.mode === "light" ? "rgba(226, 232, 240, 0.7)" : "rgba(51, 65, 85, 0.56)",
     },
     [theme.breakpoints.down('sm')]: {
-      height: 28,
-      width: 28,
+      height: 32,
+      width: 32,
       marginRight: 6,
     },
   },
   activeButton: {
-    borderColor: theme.mode === "light" ? theme.palette.primary.main : "#FFF",
-    borderWidth: "3px",
+    background: theme.mode === "light" ? "rgba(219,234,254,0.88)" : "rgba(56,189,248,0.16)",
+    borderColor: theme.mode === "light" ? "rgba(96,165,250,0.18)" : "rgba(56,189,248,0.24)",
+    borderWidth: "1px",
   },
   standardIcon: {
     color:
@@ -433,6 +405,9 @@ const useStyles = makeStyles((theme) => ({
         ? "rgba(71, 85, 105, 0.85)"
         : "rgba(226, 232, 240, 0.9)",
     fontSize: 18,
+    width: 18,
+    height: 18,
+    strokeWidth: 1.5,
     "&:hover": {
       color:
         theme.mode === "light"
@@ -445,6 +420,11 @@ const useStyles = makeStyles((theme) => ({
   },
   activeIcon: {
     color: theme.mode === "light" ? theme.palette.primary.main : "#FFF",
+  },
+  segmentedTabs: {
+    "& .MuiTabs-flexContainer": {
+      gap: theme.spacing(0.5),
+    },
   },
 }));
 
@@ -689,7 +669,7 @@ const TicketsManagerTabs = () => {
         }}
       />
       <div className={classes.serachInputWrapper}>
-        <SearchIcon className={classes.searchIcon} />
+        <LuSearch className={classes.searchIcon} />
         <InputBase
           className={classes.searchInput}
           inputRef={searchInputRef}
@@ -729,9 +709,9 @@ const TicketsManagerTabs = () => {
           }}
         >
           {isFilterActive ? (
-            <FilterAlt className={classes.icon} />
+            <LuSlidersHorizontal className={classes.icon} />
           ) : (
-            <FilterAltOff className={classes.icon} />
+            <LuSlidersHorizontal className={classes.icon} />
           )}
         </IconButton>
       </div>
@@ -777,9 +757,9 @@ const TicketsManagerTabs = () => {
     onChange={() => setShowAllTickets((prevState) => !prevState)}
   >
     {showAllTickets ? (
-      <VisibilityIcon className={`${classes.standardIcon} ${classes.activeIcon}`} />
+      <LuEye className={`${classes.standardIcon} ${classes.activeIcon}`} />
     ) : (
-      <VisibilityOffIcon className={classes.standardIcon} />
+      <LuEyeOff className={classes.standardIcon} />
     )}
   </ToggleButton>
 </Badge>
@@ -831,7 +811,7 @@ const TicketsManagerTabs = () => {
       setNewTicketModalOpen(true);
     }}
   >
-    <AddIcon className={classes.standardIcon} />
+    <LuPlus className={classes.standardIcon} />
   </IconButton>
 </Badge>
 {user.profile === "admin" && (
@@ -853,7 +833,7 @@ const TicketsManagerTabs = () => {
       className={classes.standardButton}
       onClick={handleSnackbarOpen}
     >
-      <PlaylistAddCheckOutlined className={classes.standardIcon} />
+      <LuCheckCheck className={classes.standardIcon} />
     </IconButton>
   </Badge>
 )}
@@ -886,7 +866,7 @@ const TicketsManagerTabs = () => {
     }`}
     onClick={() => handleChangeTab(null, "open")}
   >
-    <MoveToInboxIcon
+    <LuInbox
       className={`${classes.standardIcon} ${
         (tab === "open" || isHoveredOpen) ? classes.activeIcon : ''
       }`}
@@ -955,9 +935,9 @@ const TicketsManagerTabs = () => {
       onChange={() => setSortTickets((prevState) => !prevState)}
     >
       {!sortTickets ? (
-        <TextRotateUp className={`${classes.standardIcon} ${sortTickets ? classes.activeIcon : ''}`} />
+        <LuArrowDownUp className={`${classes.standardIcon} ${sortTickets ? classes.activeIcon : ''}`} />
       ) : (
-        <TextRotationDown className={`${classes.standardIcon} ${classes.activeIcon}`} />
+        <LuArrowDownUp className={`${classes.standardIcon} ${classes.activeIcon}`} />
       )}
     </ToggleButton>
   </Badge>
@@ -980,6 +960,8 @@ const TicketsManagerTabs = () => {
           indicatorColor="primary"
           textColor="primary"
           variant="fullWidth"
+          className={`${classes.tabsHeader} ${classes.segmentedTabs}`}
+          classes={{ indicator: classes.tabIndicator }}
         >
           {/* ATENDENDO */}
           <Tab
@@ -1014,7 +996,7 @@ const TicketsManagerTabs = () => {
             }
             value={"open"}
             name="open"
-            classes={{ root: classes.tabPanelItem }}
+            className={`${classes.tab} ${classes.tabPanelItem}`}
           />
 
           {/* AGUARDANDO */}
@@ -1050,7 +1032,7 @@ const TicketsManagerTabs = () => {
             }
             value={"pending"}
             name="pending"
-            classes={{ root: classes.tabPanelItem }}
+            className={`${classes.tab} ${classes.tabPanelItem}`}
           />
 
           {/* GRUPOS */}
@@ -1087,7 +1069,7 @@ const TicketsManagerTabs = () => {
               }
               value={"group"}
               name="group"
-              classes={{ root: classes.tabPanelItem }}
+              className={`${classes.tab} ${classes.tabPanelItem}`}
             />
           )}
         </Tabs>
