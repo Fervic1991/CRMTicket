@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Whatsapp from "../models/Whatsapp";
 import { handleMessage } from "../services/FacebookServices/facebookMessageListener";
+import logger from "../utils/logger";
 // import { handleMessage } from "../services/FacebookServices/facebookMessageListener";
 
 export const index = async (req: Request, res: Response): Promise<Response> => {
@@ -27,6 +28,21 @@ export const webHook = async (
 ): Promise<Response> => {
   try {
     const { body } = req;
+
+    logger.info(
+      `[META WEBHOOK DEBUG] ${JSON.stringify({
+        object: body?.object || null,
+        entryCount: body?.entry?.length || 0,
+        entries: (body?.entry || []).map((entry: any) => ({
+          id: entry?.id || null,
+          hasMessaging: Array.isArray(entry?.messaging),
+          messagingCount: entry?.messaging?.length || 0,
+          hasChanges: Array.isArray(entry?.changes),
+          changesCount: entry?.changes?.length || 0
+        }))
+      })}`
+    );
+
     if (body.object === "page" || body.object === "instagram") {
       let channel: string;
 
@@ -45,6 +61,15 @@ export const webHook = async (
         });
 
         if (getTokenPage) {
+          logger.info(
+            `[META WEBHOOK DEBUG] ${JSON.stringify({
+              matchedChannel: channel,
+              entryId: entry.id,
+              whatsappId: getTokenPage.id,
+              facebookPageUserId: getTokenPage.facebookPageUserId
+            })}`
+          );
+
           entry.messaging?.forEach((data: any) => {
             handleMessage(getTokenPage, data, channel, getTokenPage.companyId);
           });
