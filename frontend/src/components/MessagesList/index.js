@@ -873,7 +873,9 @@ const MessagesList = ({
           key={`timestamp-${message.id}`}
         >
           <div className={classes.dailyTimestampText}>
-            {today === format(parseISO(messagesList[index].createdAt), "dd/MM/yyyy") ? "HOJE" : format(parseISO(messagesList[index].createdAt), "dd/MM/yyyy")}
+            {today === format(parseISO(messagesList[index].createdAt), "dd/MM/yyyy")
+              ? i18n.t("ticketsList.today")
+              : format(parseISO(messagesList[index].createdAt), "dd/MM/yyyy")}
           </div>
         </span>
       );
@@ -889,7 +891,9 @@ const MessagesList = ({
               key={`timestamp-${message.id}`}
             >
               <div className={classes.dailyTimestampText}>
-                {today === format(parseISO(messagesList[index].createdAt), "dd/MM/yyyy") ? "HOJE" : format(parseISO(messagesList[index].createdAt), "dd/MM/yyyy")}
+                {today === format(parseISO(messagesList[index].createdAt), "dd/MM/yyyy")
+                  ? i18n.t("ticketsList.today")
+                  : format(parseISO(messagesList[index].createdAt), "dd/MM/yyyy")}
               </div>
             </span>
           );
@@ -1398,8 +1402,7 @@ const shouldBlurMessages = ticketStatus === "pending" && user.allowSeeMessagesIn
           )}
 
           <span>
-            Você tem 24h para responder após receber uma mensagem, de acordo
-            com as políticas da Meta.
+            {i18n.t("ticketsList.metaReplyWindow")}
           </span>
         </div>
       )}

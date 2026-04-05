@@ -1156,6 +1156,8 @@ const messages = {
         noTicketsMessage:
           "Nenhum atendimento encontrado com esse status ou termo pesquisado",
         noQueue: "Sem Fila",
+        metaReplyWindow:
+          "Você tem 24h para responder após receber uma mensagem, de acordo com as políticas da Meta.",
         buttons: {
           accept: "Aceitar",
           cancel: "Cancelar",
@@ -2343,10 +2345,13 @@ const messages = {
           "Digite uma mensagem ou aperte / para respostas rápidas",
         placeholderOpen:
           "Digite uma mensagem ou aperte / para respostas rápidas",
+        placeholderPending:
+          "Mensagem interna (ticket aguardando aceite)...",
         placeholderClosed:
           "Reabra ou aceite esse ticket para enviar uma mensagem.",
         signMessage: "Assinar",
         privateMessage: "Mensagem Privada",
+        internalMessageLabel: "Mensagem Interna",
       },
       contactDrawer: {
         header: "Dados do contato",

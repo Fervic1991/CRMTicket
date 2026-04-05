@@ -626,7 +626,7 @@ const MessageInput = ({
     if (ticketStatus === "open" || ticketStatus === "group") {
       setPlaceHolderText(i18n.t("messagesInput.placeholderOpen"));
     } else if (ticketStatus === "pending") {
-      setPlaceHolderText("Digite sua mensagem interna (ticket aguardando)...");
+      setPlaceHolderText(i18n.t("messagesInput.placeholderPending"));
     } else {
       setPlaceHolderText(i18n.t("messagesInput.placeholderClosed"));
     }
@@ -1240,7 +1240,7 @@ const MessageInput = ({
     setLoading(true);
 
     const userName = (privateMessage || isTicketPending())
-      ? `${user.name} - Mensagem Interna`
+      ? `${user.name} - ${i18n.t("messagesInput.internalMessageLabel")}`
       : user.name;
 
     const sendMessage = inputMessage.trim();
@@ -2233,7 +2233,7 @@ const MessageInput = ({
                       className={isTicketPending() ? classes.messageInputPending : classes.messageInputPrivate}
                       placeholder={
                         isTicketPending()
-                          ? "Mensagem interna (ticket aguardando aceite)..."
+                          ? i18n.t("messagesInput.placeholderPending")
                           : ticketStatus === "open" || ticketStatus === "group"
                             ? i18n.t("messagesInput.placeholderPrivateMessage")
                             : i18n.t("messagesInput.placeholderClosed")

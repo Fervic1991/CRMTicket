@@ -1124,6 +1124,8 @@ const messages = {
         noTicketsMessage:
           "No se encontraron atenciones con este estado o término de búsqueda",
         noQueue: "Sin Cola",
+        metaReplyWindow:
+          "Tienes 24 horas para responder después de recibir un mensaje, de acuerdo con las políticas de Meta.",
         buttons: {
           accept: "Aceptar",
           cancel: "Cancelar",
@@ -2278,9 +2280,12 @@ const messages = {
         placeholderPrivateMessage:
           "Escribe un mensaje o presiona / para respuestas rápidas",
         placeholderOpen: "Escribe un mensaje o presiona / para respuestas rápidas",
+        placeholderPending:
+          "Mensaje interno (ticket pendiente de aceptación)...",
         placeholderClosed: "Reabre o acepta este ticket para enviar un mensaje.",
         signMessage: "Firma",
         privateMessage: "Mensaje Privado",
+        internalMessageLabel: "Mensaje Interno",
       },
       contactDrawer: {
         header: "Detalles de Contacto",

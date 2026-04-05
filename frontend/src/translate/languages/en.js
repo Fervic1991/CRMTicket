@@ -1134,6 +1134,8 @@ const messages = {
         noTicketsMessage:
           "No attendances found with this status or search term",
         noQueue: "No Queue",
+        metaReplyWindow:
+          "You have 24 hours to reply after receiving a message, according to Meta policies.",
         buttons: {
           accept: "Accept",
           cancel: "Cancel",
@@ -2289,9 +2291,12 @@ const messages = {
         placeholderPrivateMessage:
           "Type a message or press / for quick replies",
         placeholderOpen: "Type a message or press / for quick replies",
+        placeholderPending:
+          "Internal message (ticket awaiting acceptance)...",
         placeholderClosed: "Reopen or accept this ticket to send a message.",
         signMessage: "Sign",
         privateMessage: "Private Message",
+        internalMessageLabel: "Internal Message",
       },
       contactDrawer: {
         header: "Contact Details",
