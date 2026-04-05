@@ -309,6 +309,15 @@ export const storeFacebook = async (
     for await (const page of data) {
       const { name, access_token, id, instagram_business_account } = page;
 
+      logger.info("[META CONNECT DEBUG] Page payload received", {
+        companyId,
+        addInstagram: !!addInstagram,
+        pageId: id,
+        pageName: name,
+        hasInstagramBusinessAccount: !!instagram_business_account,
+        instagramBusinessAccount: instagram_business_account || null
+      });
+
       const acessTokenPage = await getAccessTokenFromPage(access_token);
 
       if (instagram_business_account && addInstagram) {
