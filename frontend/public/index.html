@@ -476,7 +476,7 @@
       // Facebook SDK init (required for Facebook/Instagram connect)
       window.fbAsyncInit = function () {
         const appId = "%REACT_APP_FACEBOOK_APP_ID%";
-        if (!appId || appId.startsWith("%REACT_APP_FACEBOOK_APP_ID%")) {
+        if (!appId || !/^[0-9]+$/.test(appId)) {
           console.warn("[FB SDK] Missing REACT_APP_FACEBOOK_APP_ID");
           return;
         }
