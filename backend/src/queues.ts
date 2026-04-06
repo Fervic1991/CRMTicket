@@ -49,6 +49,10 @@ import { getWbot } from "./libs/wbot";
 import { initializeBirthdayJobs, startBirthdayJob } from "./jobs/BirthdayJob";
 import { getJidOf } from "./services/WbotServices/getJidOf";
 import RecurrenceService from "./services/CampaignService/RecurrenceService";
+import CreateMessageService from "./services/MessageServices/CreateMessageService";
+import { sendMessageWhatsAppOficial } from "./libs/whatsAppOficial/whatsAppOficial.service";
+import mime from "mime-types";
+import { sendAttachmentFromUrl, sendText } from "./services/FacebookServices/graphAPI";
 
 const connection = process.env.REDIS_URI || "";
 const limiterMax = process.env.REDIS_OPT_LIMITER_MAX || 1;
@@ -463,15 +467,14 @@ async function getCampaign(id) {
               "email",
               "isWhatsappValid",
               "isGroup"
-            ],
-            where: { isWhatsappValid: true }
+            ]
           }
         ]
       },
       {
         model: Whatsapp,
         as: "whatsapp",
-        attributes: ["id", "name"]
+        attributes: ["id", "name", "status", "channel", "token", "facebookUserToken"]
       }
       // {
       //   model: CampaignShipping,
@@ -481,6 +484,242 @@ async function getCampaign(id) {
     ]
   });
 }
+
+const normalizeCampaignRecipient = (value?: string | number | null) =>
+  String(value || "").trim();
+
+const isCampaignContactCompatible = (channel: string, contact: any) => {
+  const recipient = normalizeCampaignRecipient(contact?.number);
+
+  if (!recipient) return false;
+
+  if (channel === "whatsapp" || channel === "whatsapp_oficial") {
+    return !!contact?.isWhatsappValid || !!contact?.isGroup;
+  }
+
+  if (channel === "facebook" || channel === "instagram") {
+    return true;
+  }
+
+  return false;
+};
+
+const getEligibleCampaignContacts = (campaign: any) =>
+  (campaign?.contactList?.contacts || []).filter(contact =>
+    isCampaignContactCompatible(campaign?.whatsapp?.channel, contact)
+  );
+
+const logCampaignDispatch = (payload: Record<string, any>) => {
+  logger.info(`[CAMPAIGN DISPATCH DEBUG] ${JSON.stringify(payload)}`);
+};
+
+const resolveOfficialCampaignType = (filePath?: string) => {
+  if (!filePath) return "text";
+
+  const mimeType = mime.lookup(filePath) || "";
+
+  if (String(mimeType).startsWith("image/")) return "image";
+  if (String(mimeType).startsWith("video/")) return "video";
+  if (String(mimeType).startsWith("audio/")) return "audio";
+
+  return "document";
+};
+
+const getOfficialCampaignBodyFallback = (type: string, mediaName?: string) => {
+  if (type === "image") return mediaName || "📷 Immagine campagna";
+  if (type === "video") return mediaName || "🎥 Video campagna";
+  if (type === "audio") return mediaName || "🎵 Audio campagna";
+  if (type === "document") return mediaName || "📎 Documento campagna";
+
+  return "";
+};
+
+const resolveMetaCampaignType = (filePath?: string) => {
+  if (!filePath) return "text";
+
+  const mimeType = mime.lookup(filePath) || "";
+
+  if (String(mimeType).startsWith("image/")) return "image";
+  if (String(mimeType).startsWith("video/")) return "video";
+  if (String(mimeType).startsWith("audio/")) return "audio";
+
+  return "file";
+};
+
+const buildCampaignMediaPaths = (campaign: any) => {
+  if (!campaign?.mediaPath) {
+    return {
+      filePath: null,
+      publicUrl: null
+    };
+  }
+
+  const filePath = path.resolve(
+    __dirname,
+    "..",
+    "public",
+    `company${campaign.companyId}`,
+    campaign.mediaPath
+  );
+
+  const publicBase = `${process.env.BACKEND_URL || ""}${
+    process.env.PROXY_PORT ? `:${process.env.PROXY_PORT}` : ""
+  }`;
+
+  return {
+    filePath,
+    publicUrl: `${publicBase}/public/company${campaign.companyId}/${campaign.mediaPath}`
+  };
+};
+
+const sendCampaignWhatsAppOfficialMessage = async ({
+  campaign,
+  campaignShipping,
+  recipientNumber,
+  body,
+  ticket,
+  contact,
+  includeMedia = true
+}) => {
+  const publicFolder = path.resolve(__dirname, "..", "public");
+  const filePath =
+    includeMedia && campaign.mediaPath
+      ? path.join(publicFolder, `company${campaign.companyId}`, campaign.mediaPath)
+      : null;
+
+  const type = resolveOfficialCampaignType(filePath);
+  const options: any = {
+    to: `+${recipientNumber}`,
+    type
+  };
+
+  if (type === "text") {
+    options.body_text = { body };
+  } else {
+    options.fileName = (campaign.mediaName || path.basename(filePath || "attachment")).replace("/", "-");
+
+    if (type === "image") {
+      options.body_image = { caption: body };
+    }
+
+    if (type === "video") {
+      options.body_video = { caption: body };
+    }
+
+    if (type === "document") {
+      options.body_document = { caption: body };
+    }
+  }
+
+  const sendResult = await sendMessageWhatsAppOficial(filePath, campaign.whatsapp.token, options);
+
+  if (ticket && contact) {
+    const messageBody = body || getOfficialCampaignBodyFallback(type, campaign.mediaName);
+
+    await ticket.update({
+      lastMessage: messageBody,
+      imported: null,
+      unreadMessages: 0
+    });
+
+    await CreateMessageService({
+      companyId: campaign.companyId,
+      messageData: {
+        wid: sendResult?.idMessageWhatsApp?.[0] || `campaign-official-${campaign.id}-${Date.now()}`,
+        ticketId: ticket.id,
+        contactId: contact.id,
+        body: messageBody,
+        fromMe: true,
+        mediaType: type === "text" ? "conversation" : type,
+        mediaUrl: filePath ? campaign.mediaPath : null,
+        read: true,
+        ack: 2,
+        channel: "whatsapp_oficial",
+        remoteJid: `${recipientNumber}@s.whatsapp.net`,
+        participant: null,
+        dataJson: JSON.stringify({ campaignId: campaign.id, body, type }),
+        ticketTrakingId: null,
+        isPrivate: false,
+        ticketImported: ticket.imported,
+        isForwarded: false
+      }
+    });
+  }
+
+  return sendResult;
+};
+
+const sendCampaignMetaMessage = async ({
+  campaign,
+  campaignShipping,
+  recipientId,
+  body,
+  ticket,
+  contact,
+  includeMedia = true
+}) => {
+  const channel = campaign?.whatsapp?.channel;
+  const accessToken = campaign?.whatsapp?.facebookUserToken;
+
+  if (!accessToken) {
+    throw new Error(
+      `Missing facebookUserToken for campaign connection ${campaign?.whatsappId}`
+    );
+  }
+
+  const { filePath, publicUrl } = buildCampaignMediaPaths(campaign);
+  const type = resolveMetaCampaignType(filePath || undefined);
+  const tag = channel === "facebook" ? "ACCOUNT_UPDATE" : null;
+  const messageBody = body || getOfficialCampaignBodyFallback(type, campaign.mediaName);
+
+  let sendResult: any = null;
+
+  if (includeMedia && filePath && publicUrl) {
+    sendResult = await sendAttachmentFromUrl(String(recipientId), publicUrl, type, accessToken);
+
+    if (body) {
+      await sendText(String(recipientId), body, accessToken, tag);
+    }
+  } else {
+    sendResult = await sendText(String(recipientId), body, accessToken, tag);
+  }
+
+  if (ticket && contact) {
+    await ticket.update({
+      lastMessage: messageBody,
+      imported: null,
+      unreadMessages: 0
+    });
+
+    await CreateMessageService({
+      companyId: campaign.companyId,
+      messageData: {
+        wid:
+          sendResult?.message_id ||
+          sendResult?.recipient_id ||
+          `campaign-${channel}-${campaign.id}-${Date.now()}`,
+        ticketId: ticket.id,
+        contactId: contact.id,
+        body: messageBody,
+        fromMe: true,
+        mediaType: type === "text" || !includeMedia || !filePath ? "conversation" : type,
+        mediaUrl: includeMedia && filePath ? campaign.mediaPath : null,
+        read: true,
+        ack: 2,
+        channel,
+        remoteJid: `${channel}:${recipientId}`,
+        participant: null,
+        dataJson: JSON.stringify({ campaignId: campaign.id, body, type, channel }),
+        ticketTrakingId: null,
+        isPrivate: false,
+        ticketImported: ticket.imported,
+        isForwarded: false
+      }
+    });
+  }
+
+  return sendResult;
+};
 
 async function getContact(id) {
   return await ContactListItem.findByPk(id, {
@@ -755,9 +994,9 @@ export function randomValue(min, max) {
 }
 
 async function verifyAndFinalizeCampaign(campaign) {
-  const { companyId, contacts } = campaign.contactList;
-
-  const count1 = contacts.length;
+  const { companyId } = campaign.contactList;
+  const eligibleContacts = getEligibleCampaignContacts(campaign);
+  const count1 = eligibleContacts.length;
   const count2 = await CampaignShipping.count({
     where: {
       campaignId: campaign.id,
@@ -800,7 +1039,24 @@ async function handleProcessCampaign(job) {
     const campaign = await getCampaign(id);
     const settings = await getSettings(campaign);
     if (campaign) {
-      const { contacts } = campaign.contactList;
+      const contacts = getEligibleCampaignContacts(campaign);
+      const skippedContacts =
+        (campaign.contactList?.contacts || []).length - contacts.length;
+
+      if (skippedContacts > 0) {
+        logger.info(
+          `Campagna ${campaign.id}: saltati ${skippedContacts} contatti incompatibili con il canale ${campaign.whatsapp?.channel}`
+        );
+      }
+
+      logCampaignDispatch({
+        step: "process",
+        campaignId: campaign.id,
+        channel: campaign.whatsapp?.channel,
+        totalContacts: (campaign.contactList?.contacts || []).length,
+        eligibleContacts: contacts.length,
+        skippedContacts
+      });
       if (isArray(contacts)) {
         const contactData = contacts.map(contact => ({
           contactId: contact.id,
@@ -878,6 +1134,23 @@ async function handlePrepareContact(job) {
       job.data;
     const campaign = await getCampaign(campaignId);
     const contact = await getContact(contactId);
+    const campaignChannel = campaign?.whatsapp?.channel;
+
+    if (!isCampaignContactCompatible(campaignChannel, contact)) {
+      logger.info(
+        `Campagna ${campaignId}: contatto ${contact?.id} saltato perché incompatibile con il canale ${campaignChannel}`
+      );
+      logCampaignDispatch({
+        step: "prepare-skip",
+        campaignId,
+        channel: campaignChannel,
+        contactId: contact?.id,
+        recipient: contact?.number || null
+      });
+      await verifyAndFinalizeCampaign(campaign);
+      return;
+    }
+
     const campaignShipping: any = {};
     campaignShipping.number = contact.number;
     campaignShipping.contactId = contactId;
@@ -964,14 +1237,6 @@ async function handleDispatchCampaign(job) {
     const { data } = job;
     const { campaignShippingId, campaignId }: DispatchCampaignData = data;
     const campaign = await getCampaign(campaignId);
-    const wbot = await GetWhatsappWbot(campaign.whatsapp);
-
-    if (!wbot) {
-      logger.error(
-        `campaignQueue -> DispatchCampaign -> error: wbot not found`
-      );
-      return;
-    }
 
     if (!campaign.whatsapp) {
       logger.error(
@@ -980,7 +1245,20 @@ async function handleDispatchCampaign(job) {
       return;
     }
 
-    if (!wbot?.user?.id) {
+    const channel = campaign.whatsapp.channel;
+    const isOfficialChannel = channel === "whatsapp_oficial";
+    const isSocialChannel = channel === "facebook" || channel === "instagram";
+    const usesWbot = channel === "whatsapp";
+    const wbot = usesWbot ? await GetWhatsappWbot(campaign.whatsapp) : null;
+
+    if (usesWbot && !wbot) {
+      logger.error(
+        `campaignQueue -> DispatchCampaign -> error: wbot not found`
+      );
+      return;
+    }
+
+    if (usesWbot && !wbot?.user?.id) {
       logger.error(
         `campaignQueue -> DispatchCampaign -> error: wbot user not found`
       );
@@ -990,6 +1268,13 @@ async function handleDispatchCampaign(job) {
     logger.info(
       `Disparo de campanha solicitado: Campanha=${campaignId};Registro=${campaignShippingId}`
     );
+    logCampaignDispatch({
+      step: "dispatch-start",
+      campaignId,
+      campaignShippingId,
+      channel,
+      connectionId: campaign.whatsapp?.id
+    });
 
     const campaignShipping = await CampaignShipping.findByPk(
       campaignShippingId,
@@ -1003,20 +1288,32 @@ async function handleDispatchCampaign(job) {
       : `${campaignShipping.number}@s.whatsapp.net`;
 
     if (campaign.openTicket === "enabled") {
-      const [contact] = await Contact.findOrCreate({
+      let contact = await Contact.findOne({
         where: {
           number: campaignShipping.number,
           companyId: campaign.companyId
-        },
-        defaults: {
+        }
+      });
+
+      if (!contact) {
+        contact = await Contact.create({
           companyId: campaign.companyId,
           name: campaignShipping.contact.name,
           number: campaignShipping.number,
           email: campaignShipping.contact.email,
           whatsappId: campaign.whatsappId,
-          profilePicUrl: ""
-        }
-      });
+          profilePicUrl: "",
+          channel
+        });
+      } else {
+        await contact.update({
+          name: contact.name || campaignShipping.contact.name,
+          email: contact.email || campaignShipping.contact.email,
+          whatsappId: campaign.whatsappId,
+          channel
+        });
+      }
+
       const whatsapp = await Whatsapp.findByPk(campaign.whatsappId);
 
       let ticket = await Ticket.findOne({
@@ -1035,35 +1332,41 @@ async function handleDispatchCampaign(job) {
           whatsappId: whatsapp.id,
           queueId: campaign?.queueId,
           userId: campaign?.userId,
-          status: campaign?.statusTicket
+          status: campaign?.statusTicket,
+          channel
         });
 
       ticket = await ShowTicketService(ticket.id, campaign.companyId);
 
       if (whatsapp.status === "CONNECTED") {
         if (campaign.confirmation && campaignShipping.confirmation === null) {
-          const confirmationMessage = await wbot.sendMessage(getJidOf(chatId), {
-            text: `\u200c ${campaignShipping.confirmationMessage}`
-          });
-
-          await verifyMessage(
-            confirmationMessage,
-            ticket,
-            contact,
-            null,
-            true,
-            false
-          );
-
-          await campaignShipping.update({ confirmationRequestedAt: moment() });
-        } else {
-          if (!campaign.mediaPath) {
-            const sentMessage = await wbot.sendMessage(getJidOf(chatId), {
-              text: `\u200c ${campaignShipping.message}`
+          if (isOfficialChannel) {
+            await sendCampaignWhatsAppOfficialMessage({
+              campaign,
+              campaignShipping,
+              recipientNumber: campaignShipping.number,
+              body: campaignShipping.confirmationMessage,
+              ticket,
+              contact,
+              includeMedia: false
+            });
+          } else if (isSocialChannel) {
+            await sendCampaignMetaMessage({
+              campaign,
+              campaignShipping,
+              recipientId: campaignShipping.number,
+              body: campaignShipping.confirmationMessage,
+              ticket,
+              contact,
+              includeMedia: false
+            });
+          } else {
+            const confirmationMessage = await wbot.sendMessage(getJidOf(chatId), {
+              text: `\u200c ${campaignShipping.confirmationMessage}`
             });
 
             await verifyMessage(
-              sentMessage,
+              confirmationMessage,
               ticket,
               contact,
               null,
@@ -1072,48 +1375,95 @@ async function handleDispatchCampaign(job) {
             );
           }
 
-          if (campaign.mediaPath) {
-            const publicFolder = path.resolve(__dirname, "..", "public");
-            const filePath = path.join(
-              publicFolder,
-              `company${campaign.companyId}`,
-              campaign.mediaPath
-            );
-
-            const options = await getMessageOptions(
-              campaign.mediaName,
-              filePath,
-              String(campaign.companyId),
-              `\u200c ${campaignShipping.message}`
-            );
-            if (Object.keys(options).length) {
-              if (options.mimetype === "audio/mp4") {
-                const audioMessage = await wbot.sendMessage(getJidOf(chatId), {
-                  text: `\u200c ${campaignShipping.message}`
-                });
-
-                await verifyMessage(
-                  audioMessage,
-                  ticket,
-                  contact,
-                  null,
-                  true,
-                  false
-                );
-              }
+          await campaignShipping.update({ confirmationRequestedAt: moment() });
+          logCampaignDispatch({
+            step: "dispatch-confirmation",
+            campaignId,
+            campaignShippingId,
+            channel,
+            contactId: contact.id,
+            recipient: campaignShipping.number
+          });
+        } else {
+          if (isOfficialChannel) {
+            await sendCampaignWhatsAppOfficialMessage({
+              campaign,
+              campaignShipping,
+              recipientNumber: campaignShipping.number,
+              body: campaignShipping.message,
+              ticket,
+              contact,
+              includeMedia: !!campaign.mediaPath
+            });
+          } else if (isSocialChannel) {
+            await sendCampaignMetaMessage({
+              campaign,
+              campaignShipping,
+              recipientId: campaignShipping.number,
+              body: campaignShipping.message,
+              ticket,
+              contact,
+              includeMedia: !!campaign.mediaPath
+            });
+          } else {
+            if (!campaign.mediaPath) {
               const sentMessage = await wbot.sendMessage(getJidOf(chatId), {
-                ...options
+                text: `\u200c ${campaignShipping.message}`
               });
 
-              await verifyMediaMessage(
+              await verifyMessage(
                 sentMessage,
                 ticket,
-                ticket.contact,
+                contact,
                 null,
-                false,
                 true,
-                wbot
+                false
               );
+            }
+
+            if (campaign.mediaPath) {
+              const publicFolder = path.resolve(__dirname, "..", "public");
+              const filePath = path.join(
+                publicFolder,
+                `company${campaign.companyId}`,
+                campaign.mediaPath
+              );
+
+              const options = await getMessageOptions(
+                campaign.mediaName,
+                filePath,
+                String(campaign.companyId),
+                `\u200c ${campaignShipping.message}`
+              );
+              if (Object.keys(options).length) {
+                if (options.mimetype === "audio/mp4") {
+                  const audioMessage = await wbot.sendMessage(getJidOf(chatId), {
+                    text: `\u200c ${campaignShipping.message}`
+                  });
+
+                  await verifyMessage(
+                    audioMessage,
+                    ticket,
+                    contact,
+                    null,
+                    true,
+                    false
+                  );
+                }
+                const sentMessage = await wbot.sendMessage(getJidOf(chatId), {
+                  ...options
+                });
+
+                await verifyMediaMessage(
+                  sentMessage,
+                  ticket,
+                  ticket.contact,
+                  null,
+                  false,
+                  true,
+                  wbot
+                );
+              }
             }
           }
           // if (campaign?.statusTicket === 'closed') {
@@ -1131,46 +1481,109 @@ async function handleDispatchCampaign(job) {
           // }
         }
         await campaignShipping.update({ deliveredAt: moment() });
+        logCampaignDispatch({
+          step: "dispatch-delivered",
+          campaignId,
+          campaignShippingId,
+          channel,
+          contactId: contact.id,
+          recipient: campaignShipping.number,
+          openTicket: true
+        });
       }
     } else {
       if (campaign.confirmation && campaignShipping.confirmation === null) {
-        await wbot.sendMessage(getJidOf(chatId), {
-          text: campaignShipping.confirmationMessage
-        });
-        await campaignShipping.update({ confirmationRequestedAt: moment() });
-      } else {
-        if (!campaign.mediaPath) {
+        if (isOfficialChannel) {
+          await sendCampaignWhatsAppOfficialMessage({
+            campaign,
+            campaignShipping,
+            recipientNumber: campaignShipping.number,
+            body: campaignShipping.confirmationMessage,
+            includeMedia: false
+          });
+        } else if (isSocialChannel) {
+          await sendCampaignMetaMessage({
+            campaign,
+            campaignShipping,
+            recipientId: campaignShipping.number,
+            body: campaignShipping.confirmationMessage,
+            includeMedia: false
+          });
+        } else {
           await wbot.sendMessage(getJidOf(chatId), {
-            text: campaignShipping.message
+            text: campaignShipping.confirmationMessage
           });
         }
+        await campaignShipping.update({ confirmationRequestedAt: moment() });
+        logCampaignDispatch({
+          step: "dispatch-confirmation",
+          campaignId,
+          campaignShippingId,
+          channel,
+          contactId: campaignShipping.contactId,
+          recipient: campaignShipping.number,
+          openTicket: false
+        });
+      } else {
+        if (isOfficialChannel) {
+          await sendCampaignWhatsAppOfficialMessage({
+            campaign,
+            campaignShipping,
+            recipientNumber: campaignShipping.number,
+            body: campaignShipping.message,
+            includeMedia: !!campaign.mediaPath
+          });
+        } else if (isSocialChannel) {
+          await sendCampaignMetaMessage({
+            campaign,
+            campaignShipping,
+            recipientId: campaignShipping.number,
+            body: campaignShipping.message,
+            includeMedia: !!campaign.mediaPath
+          });
+        } else {
+          if (!campaign.mediaPath) {
+            await wbot.sendMessage(getJidOf(chatId), {
+              text: campaignShipping.message
+            });
+          }
 
-        if (campaign.mediaPath) {
-          const publicFolder = path.resolve(__dirname, "..", "public");
-          const filePath = path.join(
-            publicFolder,
-            `company${campaign.companyId}`,
-            campaign.mediaPath
-          );
+          if (campaign.mediaPath) {
+            const publicFolder = path.resolve(__dirname, "..", "public");
+            const filePath = path.join(
+              publicFolder,
+              `company${campaign.companyId}`,
+              campaign.mediaPath
+            );
 
-          const options = await getMessageOptions(
-            campaign.mediaName,
-            filePath,
-            String(campaign.companyId),
-            campaignShipping.message
-          );
-          if (Object.keys(options).length) {
-            if (options.mimetype === "audio/mp4") {
-              await wbot.sendMessage(getJidOf(chatId), {
-                text: campaignShipping.message
-              });
+            const options = await getMessageOptions(
+              campaign.mediaName,
+              filePath,
+              String(campaign.companyId),
+              campaignShipping.message
+            );
+            if (Object.keys(options).length) {
+              if (options.mimetype === "audio/mp4") {
+                await wbot.sendMessage(getJidOf(chatId), {
+                  text: campaignShipping.message
+                });
+              }
+              await wbot.sendMessage(getJidOf(chatId), { ...options });
             }
-            await wbot.sendMessage(getJidOf(chatId), { ...options });
           }
         }
       }
 
       await campaignShipping.update({ deliveredAt: moment() });
+      logCampaignDispatch({
+        step: "dispatch-delivered",
+        campaignId,
+        campaignShippingId,
+        channel,
+        contactId: campaignShipping.contactId,
+        recipient: campaignShipping.number,
+        openTicket: false
+      });
     }
     await verifyAndFinalizeCampaign(campaign);
 

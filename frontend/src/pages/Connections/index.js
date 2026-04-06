@@ -1093,6 +1093,35 @@ const Connections = () => {
               </Card>
             </Grid>
             <Grid item xs={12} md={4}>
+              <Card className={classes.channelCard} onClick={() => handleOpenWhatsAppModal("whatsapp_oficial")}>
+                <div className={classes.channelCardHeader}>
+                  <div className={`${classes.channelIconWrap} ${classes.whatsappGradient}`}><WebhookIcon /></div>
+                  <div>
+                    <Typography className={classes.channelTitle}>WhatsApp Meta</Typography>
+                    <Typography className={classes.channelDescription}>
+                      Collega WhatsApp Cloud API / WABA tramite Meta.
+                    </Typography>
+                  </div>
+                </div>
+                <div className={classes.stepCard}>
+                  <div className={classes.stepTimeline}>
+                    <span className={classes.stepDot}>1</span>
+                    <span className={classes.stepConnector} />
+                    <span className={classes.stepDot}>2</span>
+                  </div>
+                  <div className={classes.stepRow}>
+                    <span className={classes.stepBadge}>{i18n.t("connections.steps.stepOne")}</span>
+                    <Typography variant="body2">Configura i dati WABA</Typography>
+                  </div>
+                  <div className={classes.stepRow}>
+                    <span className={classes.stepBadge}>{i18n.t("connections.steps.stepTwo")}</span>
+                    <Typography variant="body2">Salva e sincronizza il webhook ufficiale</Typography>
+                  </div>
+                  <Button fullWidth className={classes.loginMetaButton}>Configura WhatsApp Meta</Button>
+                </div>
+              </Card>
+            </Grid>
+            <Grid item xs={12} md={4}>
               <FacebookLogin
                 appId={process.env.REACT_APP_FACEBOOK_APP_ID}
                 autoLoad={false}

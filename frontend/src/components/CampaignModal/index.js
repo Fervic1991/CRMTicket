@@ -273,6 +273,17 @@ const CampaignModal = ({
   const [selectedQueue, setSelectedQueue] = useState(null);
   const { findAll: findAllQueues } = useQueues();
 
+  const getCampaignConnectionLabel = (channel) => {
+    const labels = {
+      whatsapp: "WhatsApp QR",
+      whatsapp_oficial: "WhatsApp Meta",
+      facebook: "Facebook",
+      instagram: "Instagram",
+    };
+
+    return labels[channel] || "Connessione";
+  };
+
   // Opções para dias da semana
   const daysOfWeekOptions = [
     { value: 0, label: 'Domingo' },
@@ -436,9 +447,13 @@ const CampaignModal = ({
       api
         .get(`/whatsapp`, { params: { companyId, session: 0 } })
         .then(({ data }) => {
-          const mappedWhatsapps = data.map((whatsapp) => ({
+          const supportedChannels = ["whatsapp", "whatsapp_oficial", "facebook", "instagram"];
+          const mappedWhatsapps = data
+            .filter((whatsapp) => supportedChannels.includes(whatsapp.channel))
+            .map((whatsapp) => ({
             ...whatsapp,
             selected: false,
+            channelLabel: getCampaignConnectionLabel(whatsapp.channel),
           }));
           setWhatsapps(mappedWhatsapps);
         });
@@ -834,7 +849,7 @@ const handleSaveCampaign = async (values) => {
                         {whatsapps &&
                           whatsapps.map((whatsapp) => (
                             <MenuItem key={whatsapp.id} value={whatsapp.id}>
-                              {whatsapp.name}
+                              {`${whatsapp.name} (${whatsapp.channelLabel || getCampaignConnectionLabel(whatsapp.channel)})`}
                             </MenuItem>
                           ))}
                       </Field>
