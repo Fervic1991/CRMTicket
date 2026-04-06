@@ -45,6 +45,11 @@ const messages = {
       },
       login: {
         title: "Iniciar Sesión",
+        welcomeBack: "Bienvenido",
+        subtitle: "Ingrese sus credenciales para acceder",
+        heroTitle: "Gestiona tus conversaciones en un solo lugar",
+        heroDescription:
+          "Centraliza tickets, mensajes y contactos con una experiencia de acceso limpia, segura y moderna.",
         form: {
           email: "Correo Electrónico",
           password: "Contraseña",
@@ -52,7 +57,8 @@ const messages = {
         },
         buttons: {
           submit: "Entrar",
-          register: "¿No tienes una cuenta? ¡Regístrate!",
+          register: "¿No tienes una cuenta? Regístrate",
+          forgotPassword: "¿Olvidaste tu contraseña?",
         },
       },
       companies: {

@@ -52,6 +52,11 @@ const messages = {
       },
       login: {
         title: "Login",
+        welcomeBack: "Bem-vindo de volta",
+        subtitle: "Insira suas credenciais para acessar",
+        heroTitle: "Gerencie suas conversas em um só lugar",
+        heroDescription:
+          "Centralize tickets, mensagens e clientes com uma experiência de acesso moderna, segura e elegante.",
         form: {
           email: "Email",
           password: "Senha",
@@ -59,7 +64,8 @@ const messages = {
         },
         buttons: {
           submit: "Entrar",
-          register: "Não tem um conta? Cadastre-se!",
+          register: "Não tem uma conta? Cadastre-se",
+          forgotPassword: "Esqueceu a senha?",
         },
       },
       companies: {

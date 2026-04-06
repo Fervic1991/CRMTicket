@@ -45,14 +45,20 @@ const messages = {
       },
       login: {
         title: "Accedi",
+        welcomeBack: "Bentornato",
+        subtitle: "Inserisci le tue credenziali per accedere",
+        heroTitle: "Gestisci le tue conversazioni in un unico posto",
+        heroDescription:
+          "Centralizza ticket, messaggi e clienti con un accesso sicuro, veloce e ordinato per tutto il team.",
         form: {
           email: "Email",
           password: "Password",
           button: "Accedi",
         },
         buttons: {
-          submit: "Entra",
-          register: "Non hai un account? Registrati!",
+          submit: "Accedi",
+          register: "Non hai un account? Registrati",
+          forgotPassword: "Password dimenticata?",
         },
       },
       companies: {

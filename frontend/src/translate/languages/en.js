@@ -45,6 +45,11 @@ const messages = {
       },
       login: {
         title: "Login",
+        welcomeBack: "Welcome back",
+        subtitle: "Enter your credentials to access your workspace",
+        heroTitle: "Manage all your conversations in one place",
+        heroDescription:
+          "Centralize tickets, messages and customers with a modern, secure and elegant login experience.",
         form: {
           email: "Email",
           password: "Password",
@@ -52,7 +57,8 @@ const messages = {
         },
         buttons: {
           submit: "Enter",
-          register: "Don't have an account? Register!",
+          register: "Don't have an account? Register",
+          forgotPassword: "Forgot password?",
         },
       },
       companies: {

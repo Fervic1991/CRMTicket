@@ -4,9 +4,8 @@ import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
 import { i18n } from "../../translate/i18n";
 import { AuthContext } from "../../context/Auth/AuthContext";
 import ColorModeContext from "../../layout/themeContext";
@@ -16,6 +15,8 @@ import Brightness4Icon from "@material-ui/icons/Brightness4";
 import Brightness7Icon from "@material-ui/icons/Brightness7";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import { Helmet } from "react-helmet";
 // Importar bandeiras do diretório public
@@ -43,19 +44,15 @@ const useStyles = makeStyles((theme) => ({
     width: "100vw",
     height: "100vh",
     display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    textAlign: "center",
-    padding: "0",
-    margin: "0",
+    alignItems: "stretch",
+    justifyContent: "stretch",
+    padding: 0,
+    margin: 0,
     boxSizing: "border-box",
-    overflow: "hidden", // Corrigido: removido auto que causava rolagem
-    // Background com tom de azul
-    background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%)",
+    overflow: "hidden",
+    background:
+      "linear-gradient(135deg, #dbeafe 0%, #eff6ff 40%, #f8fafc 100%)",
     position: "relative",
-    
-    // Padrão de pontos no fundo
     "&::before": {
       content: '""',
       position: "absolute",
@@ -71,67 +68,143 @@ const useStyles = makeStyles((theme) => ({
       animation: "$float 20s ease-in-out infinite",
     },
   },
-
   "@keyframes float": {
     "0%, 100%": { transform: "translateY(0px) rotate(0deg)" },
     "50%": { transform: "translateY(-10px) rotate(180deg)" },
   },
-
-  // Container ajustado - desktop à direita, mobile centralizado
-  containerLogin: {
-    padding: "16px",
-    maxWidth: "444px",
-    width: "100%",
-    margin: "0 auto",
+  shell: {
     position: "relative",
-    zIndex: 10,
-    
-    // Desktop - centralizado
-    [theme.breakpoints.up("md")]: {
-      position: "relative",
-      right: "auto",
-      top: "auto",
-      left: "auto",
-      transform: "none",
-      margin: "0 auto",
-      maxWidth: "420px",
-    },
-    
-    // Mobile - centralizado (comportamento original)
-    [theme.breakpoints.down("sm")]: {
-      position: "relative",
-      margin: "0 auto",
-      transform: "none",
+    zIndex: 2,
+    width: "100%",
+    height: "100%",
+    display: "grid",
+    gridTemplateColumns: "1.08fr 0.92fr",
+    [theme.breakpoints.down("md")]: {
+      gridTemplateColumns: "1fr",
     },
   },
-
+  visualPanel: {
+    position: "relative",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "64px",
+    overflow: "hidden",
+    background:
+      "linear-gradient(150deg, rgba(15,23,42,0.94) 0%, rgba(29,78,216,0.92) 48%, rgba(56,189,248,0.85) 100%)",
+    color: "#ffffff",
+    "&::before": {
+      content: '""',
+      position: "absolute",
+      inset: 0,
+      background:
+        "radial-gradient(circle at 15% 20%, rgba(255,255,255,0.18) 0, transparent 28%), radial-gradient(circle at 78% 18%, rgba(255,255,255,0.12) 0, transparent 24%), radial-gradient(circle at 70% 75%, rgba(59,130,246,0.32) 0, transparent 32%)",
+    },
+    "&::after": {
+      content: '""',
+      position: "absolute",
+      inset: "10% auto auto 8%",
+      width: "72%",
+      height: "72%",
+      borderRadius: "32px",
+      border: "1px solid rgba(255,255,255,0.14)",
+      background: "rgba(255,255,255,0.05)",
+      backdropFilter: "blur(6px)",
+    },
+    [theme.breakpoints.down("md")]: {
+      display: "none",
+    },
+  },
+  visualBackground: {
+    position: "absolute",
+    inset: 0,
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    opacity: 0.18,
+    mixBlendMode: "screen",
+  },
+  visualContent: {
+    position: "relative",
+    zIndex: 1,
+    maxWidth: 520,
+    display: "flex",
+    flexDirection: "column",
+    gap: "28px",
+  },
+  visualLogoWrap: {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "18px 24px",
+    borderRadius: "24px",
+    background: "rgba(255,255,255,0.1)",
+    border: "1px solid rgba(255,255,255,0.18)",
+    backdropFilter: "blur(10px)",
+    width: "fit-content",
+  },
+  visualTitle: {
+    fontSize: "clamp(2.4rem, 4vw, 4rem)",
+    fontWeight: 800,
+    lineHeight: 1.05,
+    letterSpacing: "-0.04em",
+  },
+  visualSubtitle: {
+    maxWidth: 460,
+    fontSize: "1.08rem",
+    lineHeight: 1.75,
+    color: "rgba(255,255,255,0.84)",
+  },
+  visualBadgeRow: {
+    display: "flex",
+    gap: "12px",
+    flexWrap: "wrap",
+  },
+  visualBadge: {
+    padding: "12px 18px",
+    borderRadius: "999px",
+    background: "rgba(255,255,255,0.1)",
+    border: "1px solid rgba(255,255,255,0.16)",
+    fontWeight: 600,
+    fontSize: "0.94rem",
+    backdropFilter: "blur(8px)",
+  },
+  formPanel: {
+    position: "relative",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "32px",
+    [theme.breakpoints.down("sm")]: {
+      padding: "18px",
+    },
+  },
+  containerLogin: {
+    width: "100%",
+    position: "relative",
+    zIndex: 5,
+    maxWidth: 520,
+  },
   paper: {
-    backgroundColor: "rgba(255, 255, 255, 0.95)",
-    backdropFilter: "blur(20px)",
-    WebkitBackdropFilter: "blur(20px)",
+    backgroundColor: "rgba(255, 255, 255, 0.98)",
     boxShadow: `
-      0 20px 40px rgba(0, 0, 0, 0.1),
-      0 1px 0 rgba(255, 255, 255, 0.2) inset,
-      0 0 0 1px rgba(255, 255, 255, 0.1)
+      0 24px 80px rgba(15, 23, 42, 0.12),
+      0 8px 30px rgba(59, 130, 246, 0.08)
     `,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: "40px 30px",
-    borderRadius: "20px",
-    maxWidth: "420px",
+    padding: "44px 40px 32px",
+    borderRadius: "24px",
     width: "100%",
-    margin: "0 auto",
-    border: "1px solid rgba(255, 255, 255, 0.2)",
+    border: "1px solid rgba(226, 232, 240, 0.9)",
     animation: "$slideInRight 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
-    
     [theme.breakpoints.down("sm")]: {
       animation: "$slideInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
-      borderRadius: "12px",
-      padding: "35px 25px",
+      borderRadius: "24px",
+      padding: "32px 22px 24px",
     },
   },
-
   "@keyframes slideInRight": {
     from: {
       opacity: 0,
@@ -153,106 +226,122 @@ const useStyles = makeStyles((theme) => ({
       transform: "translateY(0)",
     },
   },
-
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: "#3b82f6",
+  formHeader: {
+    width: "100%",
+    textAlign: "center",
+    marginBottom: "28px",
   },
-
+  mobileHero: {
+    display: "none",
+    width: "100%",
+    marginBottom: "22px",
+    padding: "18px 18px 16px",
+    borderRadius: "22px",
+    background:
+      "linear-gradient(145deg, rgba(29,78,216,0.98) 0%, rgba(56,189,248,0.92) 100%)",
+    color: "#fff",
+    [theme.breakpoints.down("md")]: {
+      display: "block",
+    },
+  },
+  mobileHeroTitle: {
+    fontSize: "1.55rem",
+    fontWeight: 800,
+    letterSpacing: "-0.03em",
+    marginBottom: "8px",
+  },
+  mobileHeroText: {
+    lineHeight: 1.6,
+    color: "rgba(255,255,255,0.84)",
+  },
+  logoWrap: {
+    display: "flex",
+    justifyContent: "center",
+    width: "100%",
+    marginBottom: "20px",
+  },
   form: {
     width: "100%",
-    marginTop: theme.spacing(1),
+    marginTop: 0,
   },
-
   submit: {
     margin: theme.spacing(3, 0, 2),
-    background: "linear-gradient(45deg, #3b82f6, #1e40af)",
+    background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 45%, #0ea5e9 100%)",
     color: "white",
-    borderRadius: "12px",
-    padding: "12px 0",
-    fontSize: "16px",
-    fontWeight: 600,
+    borderRadius: "16px",
+    padding: "15px 0",
+    fontSize: "1rem",
+    fontWeight: 700,
+    letterSpacing: "0.01em",
     textTransform: "none",
-    boxShadow: "0 4px 12px rgba(59, 130, 246, 0.3)",
+    boxShadow: "0 14px 24px rgba(37, 99, 235, 0.22)",
     border: "none",
     transition: "all 0.3s ease",
     "&:hover": {
-      background: "linear-gradient(45deg, #2563eb, #1d4ed8)",
+      background: "linear-gradient(135deg, #1d4ed8 0%, #1e40af 50%, #0284c7 100%)",
       transform: "translateY(-2px)",
-      boxShadow: "0 6px 20px rgba(59, 130, 246, 0.4)",
+      boxShadow: "0 18px 28px rgba(37, 99, 235, 0.28)",
     },
     "&:active": {
       transform: "translateY(0)",
     },
   },
-
-  powered: {
-    color: "white",
-  },
-
-  // Logo - agora usando DynamicLogo
-  logoImg: {
-    // Estilos movidos para o componente DynamicLogo inline
-  },
-
   iconButton: {
     position: "absolute",
-    top: 15,
-    right: 15,
-    background: "rgba(255, 255, 255, 0.1)",
-    backdropFilter: "blur(10px)",
-    border: "1px solid rgba(255, 255, 255, 0.2)",
+    top: 18,
+    right: 18,
+    background: "#f8fafc",
+    border: "1px solid #e2e8f0",
     color: "#374151",
     transition: "all 0.3s ease",
     "&:hover": {
-      background: "rgba(255, 255, 255, 0.2)",
+      background: "#eff6ff",
       transform: "scale(1.05)",
     },
   },
-
-  // Campos de input melhorados mas compatíveis
   textField: {
+    marginBottom: "8px",
     "& .MuiOutlinedInput-root": {
-      borderRadius: "12px",
-      backgroundColor: "rgba(255, 255, 255, 0.8)",
-      backdropFilter: "blur(10px)",
+      borderRadius: "16px",
+      backgroundColor: "#ffffff",
       transition: "all 0.3s ease",
-      color: "#1f2937", // Cor escura para o texto digitado
+      color: "#0f172a",
       "&:hover": {
-        backgroundColor: "rgba(255, 255, 255, 0.9)",
+        backgroundColor: "#ffffff",
       },
       "&.Mui-focused": {
-        backgroundColor: "rgba(255, 255, 255, 1)",
-        boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.1)",
+        backgroundColor: "#ffffff",
+        boxShadow: "0 0 0 4px rgba(37, 99, 235, 0.08)",
       },
       "& input": {
-        color: "#1f2937", // Garante que o texto do input seja escuro
+        color: "#0f172a",
         "&::placeholder": {
           color: "#9ca3af",
           opacity: 1,
         },
       },
       "& fieldset": {
-        borderColor: "rgba(59, 130, 246, 0.2)",
+        borderColor: "#dbe3ef",
       },
       "&:hover fieldset": {
-        borderColor: "rgba(59, 130, 246, 0.4)",
+        borderColor: "#93c5fd",
       },
       "&.Mui-focused fieldset": {
-        borderColor: "#3b82f6",
+        borderColor: "#2563eb",
         borderWidth: "2px",
       },
     },
     "& .MuiInputLabel-root": {
       color: "#6b7280",
-      fontWeight: 500,
+      fontWeight: 600,
       "&.Mui-focused": {
-        color: "#3b82f6",
+        color: "#2563eb",
       },
     },
   },
-
-  // Seletor de idioma - versão simplificada
+  inputIcon: {
+    color: "#94a3b8",
+  },
   languageSelector: {
     position: "fixed",
     top: "20px",
@@ -271,8 +360,6 @@ const useStyles = makeStyles((theme) => ({
       ? "0 2px 8px rgba(0, 0, 0, 0.1)"
       : "none",
   },
-
-  // Link de registro
   registerLink: {
     color: "#3b82f6",
     textDecoration: "none",
@@ -283,8 +370,28 @@ const useStyles = makeStyles((theme) => ({
       textDecoration: "underline",
     },
   },
-
-  // Estilos para o dropdown de idiomas
+  secondaryLink: {
+    color: "#64748b",
+    fontWeight: 500,
+    textDecoration: "none",
+    transition: "color 0.25s ease",
+    "&:hover": {
+      color: "#1d4ed8",
+      textDecoration: "underline",
+    },
+  },
+  linksRow: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: "12px",
+    marginTop: "6px",
+    [theme.breakpoints.down("xs")]: {
+      flexDirection: "column",
+      alignItems: "flex-start",
+    },
+  },
   languageDropdown: {
     display: "flex",
     alignItems: "center",
@@ -342,11 +449,20 @@ const useStyles = makeStyles((theme) => ({
     height: 15,
     borderRadius: 2,
   },
+  formTitle: {
+    color: "#0f172a",
+    fontWeight: 800,
+    letterSpacing: "-0.03em",
+    marginBottom: "8px",
+  },
+  formSubtitle: {
+    color: "#64748b",
+    lineHeight: 1.65,
+  },
 }));
 
 const Login = () => {
   const classes = useStyles();
-  const theme = useTheme();
   const { colorMode } = useContext(ColorModeContext);
   const { appLogoFavicon, appName, mode } = colorMode;
   const [user, setUser] = useState({ email: "", password: "" });
@@ -470,13 +586,13 @@ const Login = () => {
     if (backgroundLight) {
       finalBackground = `url(${backgroundLight})`;
     } else {
-      finalBackground = theme.palette.light || "#f5f5f5";
+      finalBackground = "#f5f7fb";
     }
   } else {
     if (backgroundDark) {
       finalBackground = `url(${backgroundDark})`;
     } else {
-      finalBackground = theme.palette.dark || "#303030";
+      finalBackground = "#0f172a";
     }
   }
 
@@ -490,32 +606,7 @@ const Login = () => {
         <link rel="icon" href={appLogoFavicon || "/default-favicon.ico"} />
       </Helmet>
       
-      <div className={clsx(classes.root, "login-page")}
-      style={{   
-          width: "100vw !important",
-          height: "100vh !important",
-          display: "flex !important",
-          alignItems: "center !important",
-          justifyContent: "center !important",
-          padding: "0 !important",
-          margin: "0 !important",
-          boxSizing: "border-box !important",
-          overflow: "auto !important",
-          backgroundColor:
-            typeof finalBackground === "string" &&
-            finalBackground.includes("url(")
-              ? "transparent"
-              : finalBackground,
-          backgroundImage:
-            typeof finalBackground === "string" &&
-            finalBackground.includes("url(")
-              ? finalBackground
-              : "none",
-          backgroundRepeat: "no-repeat !important",
-          backgroundSize: "cover !important",
-          backgroundPosition: "center !important",
-        }}
-      >
+      <div className={clsx(classes.root, "login-page")}>
         {/* Seletor de idioma */}
         <div
           ref={ref}
@@ -555,106 +646,174 @@ const Login = () => {
             </div>
           )}
         </div>
-
-        <Container
-          component="main"
-          maxWidth="xs"
-          className={classes.containerLogin}
-        >
-          <CssBaseline />
-          <div className={classes.paper}>
-            <IconButton
-              className={classes.iconButton}
-              onClick={colorMode.toggleColorMode}
-            >
-              {mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
-            </IconButton>
-            
-            <div>
-              <PublicLogo 
-                className={classes.logoImg}
-                style={{
-                  width: "100%",
-                  maxWidth: "280px",
-                  height: "auto",
-                  maxHeight: "80px",
-                  margin: "0 auto 20px auto",
-                  filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))"
-                }}
-                alt="logo" 
+        <CssBaseline />
+        <main className={classes.shell}>
+          <section className={classes.visualPanel}>
+            {typeof finalBackground === "string" && finalBackground.includes("url(") && (
+              <div
+                className={classes.visualBackground}
+                style={{ backgroundImage: finalBackground }}
               />
+            )}
+            <div className={classes.visualContent}>
+              <div className={classes.visualLogoWrap}>
+                <PublicLogo
+                  style={{
+                    width: "100%",
+                    maxWidth: "240px",
+                    height: "auto",
+                    maxHeight: "72px",
+                    filter: "brightness(0) invert(1)",
+                  }}
+                  alt="logo"
+                />
+              </div>
+              <Typography component="h1" className={classes.visualTitle}>
+                {i18n.t("login.heroTitle")}
+              </Typography>
+              <Typography component="p" className={classes.visualSubtitle}>
+                {i18n.t("login.heroDescription")}
+              </Typography>
+              <div className={classes.visualBadgeRow}>
+                <span className={classes.visualBadge}>WhatsApp</span>
+                <span className={classes.visualBadge}>Facebook</span>
+                <span className={classes.visualBadge}>Instagram</span>
+              </div>
             </div>
-            
-            <form className={classes.form} noValidate onSubmit={handlSubmit}>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label={i18n.t("login.form.email")}
-                name="email"
-                value={user.email}
-                onChange={handleChangeInput}
-                autoComplete="email"
-                autoFocus
-                className={classes.textField}
-              />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label={i18n.t("login.form.password")}
-                type={showPassword ? "text" : "password"}
-                id="password"
-                value={user.password}
-                onChange={handleChangeInput}
-                autoComplete="current-password"
-                className={classes.textField}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={togglePasswordVisibility}
-                        edge="end"
-                        style={{ color: "#6b7280" }}
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-              >
-                {i18n.t("login.buttons.submit")}
-              </Button>
-              {allowSignup && (
-                <Grid container justifyContent="center">
-                  <Grid item>
+          </section>
+
+          <section className={classes.formPanel}>
+            <div className={classes.containerLogin}>
+              <div className={classes.mobileHero}>
+                <Typography className={classes.mobileHeroTitle}>
+                  {i18n.t("login.heroTitle")}
+                </Typography>
+                <Typography className={classes.mobileHeroText}>
+                  {i18n.t("login.heroDescription")}
+                </Typography>
+              </div>
+
+              <div className={classes.paper}>
+                <IconButton
+                  className={classes.iconButton}
+                  onClick={colorMode.toggleColorMode}
+                >
+                  {mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
+                </IconButton>
+
+                <div className={classes.logoWrap}>
+                  <PublicLogo
+                    style={{
+                      width: "100%",
+                      maxWidth: "260px",
+                      height: "auto",
+                      maxHeight: "78px",
+                    }}
+                    alt="logo"
+                  />
+                </div>
+
+                <div className={classes.formHeader}>
+                  <Typography variant="h4" className={classes.formTitle}>
+                    {i18n.t("login.welcomeBack")}
+                  </Typography>
+                  <Typography variant="body1" className={classes.formSubtitle}>
+                    {i18n.t("login.subtitle")}
+                  </Typography>
+                </div>
+
+                <form className={classes.form} noValidate onSubmit={handlSubmit}>
+                  <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="email"
+                    label={i18n.t("login.form.email")}
+                    name="email"
+                    value={user.email}
+                    onChange={handleChangeInput}
+                    autoComplete="email"
+                    autoFocus
+                    className={classes.textField}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <MailOutlineIcon className={classes.inputIcon} />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="password"
+                    label={i18n.t("login.form.password")}
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    value={user.password}
+                    onChange={handleChangeInput}
+                    autoComplete="current-password"
+                    className={classes.textField}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LockOutlinedIcon className={classes.inputIcon} />
+                        </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={togglePasswordVisibility}
+                            edge="end"
+                            style={{ color: "#6b7280" }}
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                  >
+                    {i18n.t("login.buttons.submit")}
+                  </Button>
+
+                  <div className={classes.linksRow}>
                     <Link
                       href="#"
                       variant="body2"
-                      component={RouterLink}
-                      to="/signup"
-                      className={classes.registerLink}
+                      onClick={(event) => event.preventDefault()}
+                      className={classes.secondaryLink}
                     >
-                      {i18n.t("login.buttons.register")}
+                      {i18n.t("login.buttons.forgotPassword")}
                     </Link>
-                  </Grid>
-                </Grid>
-              )}
-            </form>
-          </div>
-        </Container>
+
+                    {allowSignup && (
+                      <Link
+                        href="#"
+                        variant="body2"
+                        component={RouterLink}
+                        to="/signup"
+                        className={classes.registerLink}
+                      >
+                        {i18n.t("login.buttons.register")}
+                      </Link>
+                    )}
+                  </div>
+                </form>
+              </div>
+            </div>
+          </section>
+        </main>
       </div>
     </>
   );
