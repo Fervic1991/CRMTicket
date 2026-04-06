@@ -77,7 +77,7 @@ const FlowBuilderRemoveTagModal = ({ open, onSave, data, onUpdate, close }) => {
 
   const handleSaveContact = () => {
     if (!selectedTag) {
-      return toast.error("Selecione uma tag para remover");
+      return toast.error("Seleziona un'etichetta da rimuovere");
     }
     
     if (open === "edit") {
@@ -108,13 +108,13 @@ const FlowBuilderRemoveTagModal = ({ open, onSave, data, onUpdate, close }) => {
         scroll="paper"
       >
         <DialogTitle id="form-dialog-title">
-          {open === "create" ? `Remover uma tag do fluxo` : `Editar remoção de tag`}
+          {open === "create" ? `Rimuovi un'etichetta dal flusso` : `Modifica rimozione etichetta`}
         </DialogTitle>
         <Stack>
           <DialogContent dividers>
             <Grid style={{ width: "100%", marginTop: 40 }} container>
               <Typography style={{ marginBottom: 10 }}>
-                Escolha uma tag para remover do contato
+                Scegli un'etichetta da rimuovere dal contatto
               </Typography>
               <Typography 
                 variant="caption" 
@@ -148,18 +148,18 @@ const FlowBuilderRemoveTagModal = ({ open, onSave, data, onUpdate, close }) => {
                 }}
                 renderValue={() => {
                   if (selectedTag === "") {
-                    return "Selecione uma tag para remover";
+                    return "Seleziona un'etichetta da rimuovere";
                   }
                   const tag = tags.find((t) => t.id === selectedTag);
                   if (tag === undefined) {
-                    return "Nenhuma tag selecionada";
+                    return "Nessuna etichetta selezionata";
                   }
                   return tag.name;
                 }}
               >
                 {/* Adiciona a opção vazia */}
                 <MenuItem value="">
-                  <em>Selecione uma tag para remover</em>
+                  <em>Seleziona un'etichetta da rimuovere</em>
                 </MenuItem>
 
                 {/* Exibe a lista de tags */}
@@ -187,7 +187,7 @@ const FlowBuilderRemoveTagModal = ({ open, onSave, data, onUpdate, close }) => {
                 color: "#fff"
               }}
             >
-              {open === "create" ? `Adicionar Remoção` : "Editar"}
+              {open === "create" ? "Aggiungi rimozione" : "Modifica"}
             </Button>
           </DialogActions>
         </Stack>

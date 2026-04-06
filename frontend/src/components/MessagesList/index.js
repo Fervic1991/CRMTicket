@@ -1231,7 +1231,7 @@ const MessagesList = ({
 
                         )}
                         {!xmlRegex.test(message.body) && (
-                          <MarkdownWrapper>{(lgpdDeleteMessage && message.isDeleted) ? "🚫 _Mensagem apagada_ " :
+                          <MarkdownWrapper>{(lgpdDeleteMessage && message.isDeleted) ? "🚫 _Messaggio eliminato_ " :
                             message.body
                           }</MarkdownWrapper>)}
 

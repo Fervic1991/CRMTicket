@@ -187,7 +187,7 @@ export function QueueOptionStepper({ queueId, options, updateOptions }) {
             onChange={(event) => handleOptionChangeMessage(event, index)}
             size="small"
             className={classes.input}
-            placeholder="Digite o texto da opção"
+            placeholder="Inserisci il testo dell'opzione"
           />
         </>
       );
@@ -234,7 +234,7 @@ export function QueueOptionStepper({ queueId, options, updateOptions }) {
                 variant="outlined"
                 className={classes.addButton}
               >
-                Adicionar
+                Aggiungi
               </Button>
             </>
           )}
@@ -336,7 +336,7 @@ export function QueueOptions({ queueId }) {
           style={{ marginLeft: 10 }}
           variant="outlined"
         >
-          Adicionar
+          Aggiungi
         </Button>
       </Typography>
       {renderStepper()}

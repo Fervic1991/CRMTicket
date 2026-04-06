@@ -146,13 +146,13 @@ const ContactImport = () => {
     }
 
     if (Object.keys(selectedRows).length === 0) {
-      toastError("Nenhum contato selecionado");
+      toastError("Nessun contatto selezionato");
       setUploading(false);
       return;
     }
 
     if (!selectedWhatsappId) {
-      toastError("Selecione una connessione prima di importare");
+      toastError("Seleziona una connessione prima di importare");
       setUploading(false);
       return;
     }
@@ -367,7 +367,7 @@ const ContactImport = () => {
 
   const handleImportFromPhone = async () => {
     if (!selectedWhatsappId) {
-      toastError("Selecione una connessione prima di importare");
+      toastError("Seleziona una connessione prima di importare");
       return;
     }
 
@@ -441,7 +441,7 @@ const ContactImport = () => {
               setColumns(null);
             }}
           >
-            Cancelar
+            Annulla
           </Button>
           {error && <div className={classes.error}>{error}</div>}
         </div>

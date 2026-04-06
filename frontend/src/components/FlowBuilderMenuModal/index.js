@@ -218,7 +218,7 @@ const FlowBuilderMenuModal = ({ open, onSave, onUpdate, data, close }) => {
               </RadioGroup>
             </Stack>
             <TextField
-              label={"Mensagem de explicação do menu"}
+              label={"Messaggio di spiegazione del menu"}
               rows={4}
               name="text"
               multiline
@@ -229,7 +229,7 @@ const FlowBuilderMenuModal = ({ open, onSave, onUpdate, data, close }) => {
               style={{ width: "100%" }}
             />
             <Stack direction={"row"} justifyContent={"space-between"}>
-              <Typography>Adicionar Opção</Typography>
+              <Typography>Aggiungi opzione</Typography>
               <Button
                 onClick={() =>
                   setArrayOption((old) => [
@@ -248,7 +248,7 @@ const FlowBuilderMenuModal = ({ open, onSave, onUpdate, data, close }) => {
                 <Typography>Digite {item.number}</Typography>
                 <Stack direction={"row"} width={"100%"} style={{ gap: "8px" }}>
                   <TextField
-                    placeholder={"Digite opção"}
+                    placeholder={"Inserisci opzione"}
                     variant="outlined"
                     defaultValue={item.value}
                     style={{ width: "100%" }}

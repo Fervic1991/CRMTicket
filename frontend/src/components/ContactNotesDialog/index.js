@@ -146,12 +146,12 @@ export default function ContactNotesDialog({ modalOpen, onClose, ticket }) {
         <>
             
             <ConfirmationModal
-                title="Excluir Registro"
+                title="Elimina voce"
                 open={showOnDeleteDialog}
                 onClose={setShowOnDeleteDialog}
                 onConfirm={handleDelete}
             >
-                Deseja realmente excluir este registro?
+                Vuoi davvero eliminare questa voce?
             </ConfirmationModal>
             <Dialog
                 open={open}
@@ -200,7 +200,7 @@ export default function ContactNotesDialog({ modalOpen, onClose, ticket }) {
                                     Fechar
                                 </Button>
                                 <ButtonWithSpinner loading={loading} color="primary" type="submit" variant="contained" autoFocus>
-                                    Salvar
+                                    Salva
                                 </ButtonWithSpinner>
                             </DialogActions>
                         </Form>

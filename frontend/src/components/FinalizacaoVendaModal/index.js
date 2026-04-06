@@ -144,7 +144,7 @@ const FinalizacaoVendaModal = ({ open, onClose, ticket, onFinalizar }) => {
                 <Grid item xs={12}>
                   <FormControl component="fieldset">
                     <FormLabel component="legend">
-                      A venda foi concluída?
+                      La vendita è stata conclusa?
                     </FormLabel>
                     <RadioGroup
                       value={vendaConcluida}
@@ -155,12 +155,12 @@ const FinalizacaoVendaModal = ({ open, onClose, ticket, onFinalizar }) => {
                       <FormControlLabel
                         value={true}
                         control={<Radio />}
-                        label="Sim, venda concluída"
+                        label="Sì, vendita conclusa"
                       />
                       <FormControlLabel
                         value={false}
                         control={<Radio />}
-                        label="Não, venda não concluída"
+                        label="No, vendita non conclusa"
                       />
                     </RadioGroup>
                   </FormControl>
@@ -168,7 +168,7 @@ const FinalizacaoVendaModal = ({ open, onClose, ticket, onFinalizar }) => {
                 {vendaConcluida ? (
                   <Grid item xs={12}>
                     <TextField
-                      label={`Valor da Venda (${currency.symbol})`}
+                      label={`Valore della vendita (${currency.symbol})`}
                       type="number"
                       value={valorVenda}
                       onChange={(e) => setValorVenda(e.target.value)}
@@ -190,14 +190,14 @@ const FinalizacaoVendaModal = ({ open, onClose, ticket, onFinalizar }) => {
                       margin="dense"
                       required
                     >
-                      <InputLabel>Motivo da Não Venda *</InputLabel>
+                      <InputLabel>Motivo della mancata vendita *</InputLabel>
                       <Select
                         value={motivoNaoVenda}
                         onChange={(e) => setMotivoNaoVenda(e.target.value)}
-                        label="Motivo da Não Venda *"
+                        label="Motivo della mancata vendita *"
                       >
                         <MenuItem value="">
-                          <em>Selecione um motivo</em>
+                          <em>Seleziona un motivo</em>
                         </MenuItem>
                         {motivosFinalizacao.map((motivo) => (
                           <MenuItem key={motivo.id} value={motivo.name}>
@@ -217,14 +217,14 @@ const FinalizacaoVendaModal = ({ open, onClose, ticket, onFinalizar }) => {
                   margin="dense"
                   required
                 >
-                  <InputLabel>Motivo da Finalização *</InputLabel>
+                  <InputLabel>Motivo della conclusione *</InputLabel>
                   <Select
                     value={motivoFinalizacao}
                     onChange={(e) => setMotivoFinalizacao(e.target.value)}
-                    label="Motivo da Finalização *"
+                    label="Motivo della conclusione *"
                   >
                     <MenuItem value="">
-                      <em>Selecione um motivo</em>
+                      <em>Seleziona un motivo</em>
                     </MenuItem>
                     {motivosFinalizacao.map((motivo) => (
                       <MenuItem key={motivo.id} value={motivo.name}>
@@ -240,7 +240,7 @@ const FinalizacaoVendaModal = ({ open, onClose, ticket, onFinalizar }) => {
       )}
       <DialogActions>
         <Button onClick={handleClose} color="secondary" disabled={loading}>
-          Cancelar
+          Annulla
         </Button>
         <Button
           onClick={handleSubmit}
@@ -248,7 +248,7 @@ const FinalizacaoVendaModal = ({ open, onClose, ticket, onFinalizar }) => {
           variant="contained"
           disabled={loading || loadingConfig}
         >
-          {loading ? "Finalizando..." : "Finalizar Atendimento"}
+          {loading ? "Conclusione in corso..." : "Concludi assistenza"}
         </Button>
       </DialogActions>
     </Dialog>

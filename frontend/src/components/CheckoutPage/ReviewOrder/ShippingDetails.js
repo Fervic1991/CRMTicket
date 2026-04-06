@@ -15,9 +15,9 @@ function PaymentDetails(props) {
       <Typography variant="h6" gutterBottom className={classes.title}>
         Detalhes do plano
       </Typography>
-      <Typography gutterBottom>Usuários: {users}</Typography>
-      <Typography gutterBottom>Conexão: {connections}</Typography>
-      <Typography gutterBottom>Filas: {queues}</Typography>
+      <Typography gutterBottom>Utenti: {users}</Typography>
+      <Typography gutterBottom>Connessione: {connections}</Typography>
+      <Typography gutterBottom>Code: {queues}</Typography>
       <Typography gutterBottom>Cobrança: Mensal</Typography>
     </Grid>
   );

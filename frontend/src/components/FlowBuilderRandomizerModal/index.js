@@ -119,8 +119,8 @@ const FlowBuilderRandomizerModal = ({
       >
         <DialogTitle id="form-dialog-title">
           {open === "create"
-            ? `Adicionar um randomizador ao fluxo`
-            : `Editar randomizador`}
+            ? `Aggiungi randomizzatore al flusso`
+            : `Modifica randomizzatore`}
         </DialogTitle>
         <Stack>
           <DialogContent dividers>
@@ -150,7 +150,7 @@ const FlowBuilderRandomizerModal = ({
               className={classes.btnWrapper}
               onClick={() => handleSaveContact()}
             >
-              {open === "create" ? `Adicionar` : "Editar"}
+              {open === "create" ? `Aggiungi` : "Modifica"}
             </Button>
           </DialogActions>
         </Stack>

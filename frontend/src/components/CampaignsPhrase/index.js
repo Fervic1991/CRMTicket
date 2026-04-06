@@ -195,7 +195,7 @@ const CampaignsPhrase = () => {
   // NOVA FUNÇÃO: Renderizar chips das conexões
   const renderWhatsAppConnections = (whatsappIds) => {
     if (!whatsappIds || !Array.isArray(whatsappIds) || whatsappIds.length === 0) {
-      return <Typography variant="body2" color="textSecondary">Nenhuma conexão</Typography>;
+      return <Typography variant="body2" color="textSecondary">Nessuna connessione</Typography>;
     }
 
     // Se há muitas conexões, mostrar resumo
@@ -321,7 +321,7 @@ const CampaignsPhrase = () => {
               Nome
             </Grid>
             <Grid item xs={3} style={{ color: colorTopTable() }} align="center">
-              Conexões
+              Connessioni
             </Grid>
             <Grid item xs={3} style={{ color: colorTopTable() }} align="center">
               Status
@@ -380,7 +380,7 @@ const CampaignsPhrase = () => {
                       </Stack>
                     </Grid>
 
-                    {/* NOVA COLUNA: Conexões WhatsApp */}
+                    {/* NOVA COLUNA: Connessioni WhatsApp */}
                     <Grid item xs={3} align="center">
                       <Stack justifyContent={"center"} height={"100%"}>
                         {renderWhatsAppConnections(flow.whatsappIds)}
@@ -391,7 +391,7 @@ const CampaignsPhrase = () => {
                     <Grid item xs={3} align="center" style={{ color: "#ededed" }}>
                       <Stack justifyContent={"center"} height={"100%"}>
                         <Chip 
-                          label={flow.status ? "Ativo" : "Desativado"}
+                          label={flow.status ? "Attivo" : "Disattivato"}
                           size="small"
                           color={flow.status ? "success" : "default"}
                           variant={flow.status ? "filled" : "outlined"}
@@ -408,7 +408,7 @@ const CampaignsPhrase = () => {
                             setCampaignFlowSelected(flow.id);
                             setModalOpenPhrase(true);
                           }}
-                          title="Editar campanha"
+                          title="Modifica campagna"
                         >
                           <EditIcon style={{ color: "#ededed" }} />
                         </IconButton>
@@ -422,7 +422,7 @@ const CampaignsPhrase = () => {
                                 setConfirmModalOpen(true);
                                 setDeletingContact(flow);
                               }}
-                              title="Excluir campanha"
+                              title="Elimina campagna"
                             >
                               <DeleteOutlineIcon style={{ color: "#ededed" }} />
                             </IconButton>
@@ -440,7 +440,7 @@ const CampaignsPhrase = () => {
                   style={{ color: "#ededed" }}
                 >
                   <Typography variant="body1">
-                    Nenhuma campanha encontrada
+                    Nessuna campagna trovata
                   </Typography>
                   <Typography variant="body2" style={{ marginTop: "8px", color: "#bbb" }}>
                     Clique em "Nova Campanha" para criar sua primeira campanha de fluxo

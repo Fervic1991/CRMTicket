@@ -110,7 +110,7 @@ const FlowBuilderConditionCompareModal = ({
         <Box display="flex" alignItems="center" gap={1}>
           <CompareArrows />
           <Typography variant="h6">
-            {data ? "Editar Comparação" : "Nova Comparação"}
+            {data ? "Modifica confronto" : "Nuovo confronto"}
           </Typography>
         </Box>
       </DialogTitle>
@@ -165,7 +165,7 @@ const FlowBuilderConditionCompareModal = ({
       
       <DialogActions>
         <Button onClick={close} color="secondary">
-          Cancelar
+          Annulla
         </Button>
         <Button
           onClick={handleSubmit}
@@ -173,7 +173,7 @@ const FlowBuilderConditionCompareModal = ({
           variant="contained"
           disabled={loading}
         >
-          {loading ? <CircularProgress size={24} /> : "Salvar"}
+          {loading ? <CircularProgress size={24} /> : "Salva"}
         </Button>
       </DialogActions>
     </Dialog>

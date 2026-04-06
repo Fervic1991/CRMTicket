@@ -144,12 +144,12 @@ export function ContactNotes({ ticket }) {
                 onSave={handleSave}
             />
             <ConfirmationModal
-                title="Excluir Registro"
+                title="Elimina voce"
                 open={showOnDeleteDialog}
                 onClose={setShowOnDeleteDialog}
                 onConfirm={handleDelete}
             >
-                Deseja realmente excluir este registro?
+                Vuoi davvero eliminare questa voce?
             </ConfirmationModal>
             <Formik
                 initialValues={newNote}
@@ -200,12 +200,12 @@ export function ContactNotes({ ticket }) {
                                             variant="outlined"
                                             fullWidth
                                         >
-                                            Cancelar
+                                            Annulla
                                         </Button>
                                     </Grid>
                                     <Grid xs={6} item>
                                         <ButtonWithSpinner loading={loading} color="primary" type="submit" variant="contained" autoFocus fullWidth>
-                                            Salvar
+                                            Salva
                                         </ButtonWithSpinner>
                                     </Grid>
                                 </Grid>

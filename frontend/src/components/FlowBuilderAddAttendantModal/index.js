@@ -138,12 +138,12 @@ const FlowBuilderAttendantModal = ({ open, onSave, data, onUpdate, close }) => {
         scroll="paper"
       >
         <DialogTitle id="form-dialog-title">
-          {open === "create" ? `Adicionar um atendente ao fluxo` : `Editar atendente`}
+          {open === "create" ? `Aggiungi un operatore al flusso` : `Modifica operatore`}
         </DialogTitle>
         <Stack>
           <DialogContent dividers>
             <Grid style={{ width: "100%", marginTop: 40 }} container>
-              <Typography>Escolha um atendente</Typography>
+              <Typography>Scegli un operatore</Typography>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
@@ -166,18 +166,18 @@ const FlowBuilderAttendantModal = ({ open, onSave, data, onUpdate, close }) => {
                 }}
                 renderValue={() => {
                   if (selectedUser === "") {
-                    return "Selecione um usuário";
+                    return "Seleziona un utente";
                   }
                   const user = users.find((usr) => usr.id === selectedUser);
                   if (user === undefined) {
-                    return "Selecione um usuário";
+                    return "Seleziona un utente";
                   }
                   return user.name;
                 }}
               >
                 {/* Adiciona a opção vazia */}
                 <MenuItem value="">
-                  <em>Selecione um usuário</em>
+                  <em>Seleziona un utente</em>
                 </MenuItem>
 
                 {/* Exibe a lista de usuários */}
@@ -201,7 +201,7 @@ const FlowBuilderAttendantModal = ({ open, onSave, data, onUpdate, close }) => {
               className={classes.btnWrapper}
               onClick={handleSaveContact}
             >
-              {open === "create" ? `Adicionar` : "Editar"}
+              {open === "create" ? `Aggiungi` : "Modifica"}
             </Button>
           </DialogActions>
         </Stack>

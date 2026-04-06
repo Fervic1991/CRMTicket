@@ -77,11 +77,11 @@ const ContactSchema = Yup.object().shape({
   name: Yup.string()
     .min(2, "Muito curto!")
     .max(50, "Muito longo!")
-    .required("Digite um nome!"),
+    .required("Inserisci un nome!"),
   text: Yup.string()
     .min(2, "Muito curto!")
     .max(50, "Muito longo!")
-    .required("Digite uma mensagem!")
+    .required("Inserisci un messaggio!")
 });
 
 const FlowBuilderConditionModal = ({ open, onSave, onUpdate, data, close }) => {
@@ -97,15 +97,15 @@ const FlowBuilderConditionModal = ({ open, onSave, onUpdate, data, close }) => {
   const [valueCondition, setValueCondition] = useState();
 
   const [labels, setLabels] = useState({
-    title: "Adicionar condição ao fluxo",
-    btn: "Adicionar"
+    title: "Aggiungi condizione al flusso",
+    btn: "Aggiungi"
   });
 
   useEffect(() => {
     if (open === "edit") {
       setLabels({
-        title: "Editar condição",
-        btn: "Salvar"
+        title: "Modifica condizione",
+        btn: "Salva"
       });
       setTextDig(data.data.key);
       setRule(data.data.condition);
@@ -113,8 +113,8 @@ const FlowBuilderConditionModal = ({ open, onSave, onUpdate, data, close }) => {
       setActiveModal(true);
     } else if (open === "create") {
       setLabels({
-        title: "Adicionar condição ao fluxo",
-        btn: "Adicionar"
+        title: "Aggiungi condizione al flusso",
+        btn: "Aggiungi"
       });
       setTextDig();
       setRule();
@@ -169,7 +169,7 @@ const FlowBuilderConditionModal = ({ open, onSave, onUpdate, data, close }) => {
             style={{ height: "250px", gap: "8px", padding: "16px" }}
           >
             <TextField
-              label={"Campo da condição (Digiter apenas 1 chave)"}
+              label={"Campo della condizione (digita solo 1 chiave)"}
               rows={7}
               name="text"
               variant="outlined"

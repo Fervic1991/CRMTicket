@@ -104,7 +104,7 @@ const ToDoList = () => {
           variant="outlined"
         />
         <Button variant="contained" color="primary" onClick={handleAddTask}>
-          {editIndex >= 0 ? 'Salvar' : 'Adicionar'}
+          {editIndex >= 0 ? 'Salva' : 'Aggiungi'}
         </Button>
       </div>
       <div className={classes.listContainer}>

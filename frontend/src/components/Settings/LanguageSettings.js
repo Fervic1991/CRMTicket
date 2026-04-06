@@ -297,14 +297,14 @@ const LanguageSettings = () => {
               onClick={handleSaveLanguages}
               disabled={saving}
             >
-              {saving ? <CircularProgress size={20} /> : t("settings.save", "Salvar")}
+              {saving ? <CircularProgress size={20} /> : t("settings.save", "Salva")}
             </Button>
             <Button
               variant="outlined"
               onClick={loadSettings}
               disabled={saving}
             >
-              {t("settings.cancel", "Cancelar")}
+              {t("settings.cancel", "Annulla")}
             </Button>
           </div>
         </div>
@@ -334,7 +334,7 @@ const LanguageSettings = () => {
             <Box display="flex" alignItems="center" gap={1}>
               <Person fontSize="small" />
               <Typography variant="body2">
-                <strong>Usuário:</strong>{" "}
+                <strong>Utente:</strong>{" "}
                 {t("settings.languages.userDesc", "Seleciona seu idioma preferido dentre os disponibilizados")}
               </Typography>
             </Box>

@@ -147,7 +147,7 @@ const RelatorioVendas = () => {
     return (
       <div className={classes.root}>
         <Typography variant="h4" className={classes.title}>
-          Relatório de Vendas
+          Report vendite
         </Typography>
 
         <Paper className={classes.filterSection}>
@@ -196,7 +196,7 @@ const RelatorioVendas = () => {
                 disabled={loading}
                 fullWidth
               >
-                {loading ? "Gerando..." : "Gerar Relatório"}
+                {loading ? "Generazione..." : "Genera report"}
               </Button>
             </Grid>
           </Grid>
@@ -208,7 +208,7 @@ const RelatorioVendas = () => {
   return (
     <div className={classes.root}>
       <Typography variant="h4" className={classes.title}>
-        Relatório de Vendas
+        Report vendite
       </Typography>
 
       <Paper className={classes.filterSection}>
@@ -293,7 +293,7 @@ const RelatorioVendas = () => {
               disabled={loading}
               fullWidth
             >
-              {loading ? "Gerando..." : "Gerar Relatório"}
+              {loading ? "Generazione..." : "Genera report"}
             </Button>
           </Grid>
         </Grid>

@@ -492,7 +492,7 @@ const HttpRequestNode = React.memo(({ data, id, selected }) => {
               {...params} 
               label="Selecionar preset" 
               size="small"
-              placeholder="Escolha uma configuração pronta..."
+              placeholder="Scegli una configurazione pronta..."
             />
           )}
           renderOption={(props, option) => (
@@ -765,7 +765,7 @@ const HttpRequestNode = React.memo(({ data, id, selected }) => {
                 fullWidth
               >
                 <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Typography variant="h6">Editar corpo da requisição</Typography>
+                  <Typography variant="h6">Modifica corpo della richiesta</Typography>
                   <IconButton onClick={() => setShowFullEditor(false)}>
                     <CloseIcon />
                   </IconButton>
@@ -888,7 +888,7 @@ const HttpRequestNode = React.memo(({ data, id, selected }) => {
               letterSpacing: '0.2px'
             }}
           >
-            Adicionar variável
+            Aggiungi variabile
           </Button>
 
           <Box

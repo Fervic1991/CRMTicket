@@ -187,7 +187,7 @@ const CampaignSchema = Yup.object().shape({
   // CORREÇÃO: Validar como array mas permitir vazio
   recurrenceDaysOfWeek: Yup.array().when(['isRecurring', 'recurrenceType'], {
     is: (isRecurring, recurrenceType) => isRecurring && recurrenceType === 'weekly',
-    then: Yup.array().min(1, 'Selecione pelo menos um dia da semana').required(),
+    then: Yup.array().min(1, 'Seleziona almeno un giorno della settimana').required(),
     otherwise: Yup.array().nullable()
   }),
   recurrenceDayOfMonth: Yup.number().when(['isRecurring', 'recurrenceType'], {
@@ -236,7 +236,7 @@ const CampaignModal = ({
     confirmation: false,
     scheduledAt: "",
     contactListId: "",
-    tagListId: "Nenhuma",
+    tagListId: "Nessuna",
     companyId,
     statusTicket: "closed",
     openTicket: "disabled",
@@ -765,7 +765,7 @@ const handleSaveCampaign = async (values) => {
                         error={touched.contactListId && Boolean(errors.contactListId)}
                         disabled={!campaignEditable}
                       >
-                        <MenuItem value="">Nenhuma</MenuItem>
+                        <MenuItem value="">Nessuna</MenuItem>
                         {contactLists &&
                           contactLists.map((contactList) => (
                             <MenuItem key={contactList.id} value={contactList.id}>

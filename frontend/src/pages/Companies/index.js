@@ -449,7 +449,7 @@ const Companies = () => {
           <div style={{ padding: 24 }}>
             <EmptyState
               title={i18n.t("compaies.title")}
-              subtitle={i18n.t("compaies.table.noCompanies") || "Nenhuma empresa encontrada."}
+              subtitle={i18n.t("compaies.table.noCompanies") || "Nessuna azienda trovata."}
             />
           </div>
         ) : null}

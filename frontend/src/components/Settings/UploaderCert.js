@@ -217,7 +217,7 @@ return (
       
       	<Grid item xs={12} sm={12} md={12} style={{ display: 'flex' }}>
           <FormControl className={classes.selectContainer}>
-            <InputLabel id="selectOption-label">Escolha uma opção:</InputLabel>
+            <InputLabel id="selectOption-label">Scegli un'opzione:</InputLabel>
             <Select
               labelId="selectOption-label"
               value={selectedOption}

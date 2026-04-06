@@ -105,8 +105,8 @@ const FlowBuilderInputModal = ({ open, onSave, onUpdate, data, close }) => {
   const questionInputRef = useRef(null);
 
   const [labels, setLabels] = useState({
-    title: "Adicionar input ao fluxo",
-    btn: "Adicionar"
+    title: "Aggiungi input al flusso",
+    btn: "Aggiungi"
   });
 
   const exampleVariables = [
@@ -119,16 +119,16 @@ const FlowBuilderInputModal = ({ open, onSave, onUpdate, data, close }) => {
   useEffect(() => {
     if (open === "edit") {
       setLabels({
-        title: "Editar input do fluxo",
-        btn: "Salvar alterações"
+        title: "Modifica input del flusso",
+        btn: "Salva modifiche"
       });
       setQuestion(data.data.question || "");
       setVariableName(data.data.variableName || "");
       setActiveModal(true);
     } else if (open === "create") {
       setLabels({
-        title: "Adicionar input ao fluxo",
-        btn: "Adicionar"
+        title: "Aggiungi input al flusso",
+        btn: "Aggiungi"
       });
       setQuestion("");
       setVariableName("");
@@ -243,7 +243,7 @@ const FlowBuilderInputModal = ({ open, onSave, onUpdate, data, close }) => {
               </Stack>
               
               <TextField
-                label="Digite a pergunta"
+                label="Inserisci la domanda"
                 multiline
                 rows={4}
                 name="question"

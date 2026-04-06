@@ -116,7 +116,7 @@ const TriggerFlowModal = ({
 
   const handleTriggerFlow = async () => {
     if (!selectedFlow) {
-      toast.warning("Selecione um fluxo para disparar");
+      toast.warning("Seleziona un flusso da avviare");
       return;
     }
 

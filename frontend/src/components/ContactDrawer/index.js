@@ -528,7 +528,7 @@ const fetchGroupParticipants = async () => {
 	const handleGoToMessage = (message) => {
 		// Aqui você pode implementar a navegação para a mensagem específica
 		console.log("Navegar para mensagem:", message);
-		toast.info(`Mensagem encontrada: ${message.body.substring(0, 50)}...`);
+		toast.info(`Messaggio trovato: ${message.body.substring(0, 50)}...`);
 		setShowSearchResults(false);
 	};
 
@@ -592,7 +592,7 @@ const fetchGroupParticipants = async () => {
 			return (
 				<div className={classes.emptyState}>
 					<Typography variant="body2">
-						Nenhum participante encontrado
+						Nessun partecipante trovato
 					</Typography>
 				</div>
 			);
@@ -715,7 +715,7 @@ const fetchGroupParticipants = async () => {
 			return (
 				<div className={classes.emptySearchState}>
 					<Typography variant="caption">
-						Nenhuma mensagem encontrada
+						Nessun messaggio trovato
 					</Typography>
 				</div>
 			);
@@ -759,9 +759,9 @@ const fetchGroupParticipants = async () => {
 				return (
 					<div className={classes.emptyState}>
 						<Typography variant="body2">
-							{type === "images" && "Nenhuma imagem encontrada"}
-							{type === "videos" && "Nenhum vídeo encontrado"}
-							{type === "audios" && "Nenhum áudio encontrado"}
+							{type === "images" && "Nessuna immagine trovata"}
+							{type === "videos" && "Nessun video trovato"}
+							{type === "audios" && "Nessun audio trovato"}
 						</Typography>
 					</div>
 				);
@@ -814,7 +814,7 @@ const fetchGroupParticipants = async () => {
 			if (mediaData.documents.length === 0) {
 				return (
 					<div className={classes.emptyState}>
-						<Typography variant="body2">Nenhum documento encontrado</Typography>
+						<Typography variant="body2">Nessun documento trovato</Typography>
 					</div>
 				);
 			}
@@ -845,7 +845,7 @@ const fetchGroupParticipants = async () => {
 			if (mediaData.links.length === 0) {
 				return (
 					<div className={classes.emptyState}>
-						<Typography variant="body2">Nenhum link encontrado</Typography>
+						<Typography variant="body2">Nessun link trovato</Typography>
 					</div>
 				);
 			}
@@ -1199,7 +1199,7 @@ const fetchGroupParticipants = async () => {
 									) : (
 										mediaData.images.length === 0 ? (
 											<div className={classes.emptyState}>
-												<Typography variant="body2">Nenhuma imagem encontrada</Typography>
+												<Typography variant="body2">Nessuna immagine trovata</Typography>
 											</div>
 										) : (
 											<Grid container spacing={1} className={classes.mediaGrid}>
@@ -1231,7 +1231,7 @@ const fetchGroupParticipants = async () => {
 									) : (
 										mediaData.videos.length === 0 ? (
 											<div className={classes.emptyState}>
-												<Typography variant="body2">Nenhum vídeo encontrado</Typography>
+												<Typography variant="body2">Nessun video trovato</Typography>
 											</div>
 										) : (
 											<Grid container spacing={1} className={classes.mediaGrid}>
@@ -1264,7 +1264,7 @@ const fetchGroupParticipants = async () => {
 									) : (
 										mediaData.audios.length === 0 ? (
 											<div className={classes.emptyState}>
-												<Typography variant="body2">Nenhum áudio encontrado</Typography>
+												<Typography variant="body2">Nessun audio trovato</Typography>
 											</div>
 										) : (
 											<Grid container spacing={1} className={classes.mediaGrid}>
@@ -1297,7 +1297,7 @@ const fetchGroupParticipants = async () => {
 									) : (
 										mediaData.documents.length === 0 ? (
 											<div className={classes.emptyState}>
-												<Typography variant="body2">Nenhum documento encontrado</Typography>
+												<Typography variant="body2">Nessun documento trovato</Typography>
 											</div>
 										) : (
 											<List>
@@ -1330,7 +1330,7 @@ const fetchGroupParticipants = async () => {
 									) : (
 										mediaData.links.length === 0 ? (
 											<div className={classes.emptyState}>
-												<Typography variant="body2">Nenhum link encontrado</Typography>
+												<Typography variant="body2">Nessun link trovato</Typography>
 											</div>
 										) : (
 											<List>

@@ -44,15 +44,15 @@ const FlowBuilderConditionCompareModal = ({ open, onSave, data, onUpdate, close 
   const [activeField, setActiveField] = useState(null);
 
   const availableVariables = [
-    { name: "nome", description: "Nome do contato", category: "Contato" },
-    { name: "email", description: "Email do contato", category: "Contato" },
-    { name: "telefone", description: "Telefone do contato", category: "Contato" },
-    { name: "ultimaMensagem", description: "Última mensagem recebida", category: "Mensagem" },
-    { name: "dataContato", description: "Data do último contato", category: "Contato" },
-    { name: "apiResponse", description: "Resposta da última requisição HTTP", category: "API" },
+    { name: "nome", description: "Nome del contatto", category: "Contatto" },
+    { name: "email", description: "Email del contatto", category: "Contatto" },
+    { name: "telefone", description: "Telefono del contatto", category: "Contatto" },
+    { name: "ultimaMensagem", description: "Ultimo messaggio ricevuto", category: "Messaggio" },
+    { name: "dataContato", description: "Data dell'ultimo contatto", category: "Contatto" },
+    { name: "apiResponse", description: "Risposta dell'ultima richiesta HTTP", category: "API" },
   ];
 
-  const categoryOrder = ["Contato", "Mensagem", "API"];
+  const categoryOrder = ["Contatto", "Messaggio", "API"];
   const groupedVariables = availableVariables.reduce((acc, variable) => {
     if (!acc[variable.category]) {
       acc[variable.category] = [];
@@ -62,17 +62,17 @@ const FlowBuilderConditionCompareModal = ({ open, onSave, data, onUpdate, close 
   }, {});
 
   const comparisonOperators = [
-    { value: "equals", label: "Igual a", icon: "=" },
-    { value: "notEquals", label: "Diferente de", icon: "≠" },
-    { value: "contains", label: "Contém", icon: "∈" },
-    { value: "startsWith", label: "Começa com", icon: "⊰" },
-    { value: "endsWith", label: "Termina com", icon: "⊱" },
-    { value: "greaterThan", label: "Maior que", icon: ">" },
-    { value: "lessThan", label: "Menor que", icon: "<" },
-    { value: "greaterOrEqual", label: "Maior ou igual a", icon: "≥" },
-    { value: "lessOrEqual", label: "Menor ou igual a", icon: "≤" },
-    { value: "isEmpty", label: "Está vazio", icon: "∅" },
-    { value: "isNotEmpty", label: "Não está vazio", icon: "¬∅" },
+    { value: "equals", label: "Uguale a", icon: "=" },
+    { value: "notEquals", label: "Diverso da", icon: "≠" },
+    { value: "contains", label: "Contiene", icon: "∈" },
+    { value: "startsWith", label: "Inizia con", icon: "⊰" },
+    { value: "endsWith", label: "Termina con", icon: "⊱" },
+    { value: "greaterThan", label: "Maggiore di", icon: ">" },
+    { value: "lessThan", label: "Minore di", icon: "<" },
+    { value: "greaterOrEqual", label: "Maggiore o uguale a", icon: "≥" },
+    { value: "lessOrEqual", label: "Minore o uguale a", icon: "≤" },
+    { value: "isEmpty", label: "È vuoto", icon: "∅" },
+    { value: "isNotEmpty", label: "Non è vuoto", icon: "¬∅" },
   ];
 
   const isUnaryOperator = operator === "isEmpty" || operator === "isNotEmpty";
@@ -92,12 +92,12 @@ const FlowBuilderConditionCompareModal = ({ open, onSave, data, onUpdate, close 
 
   const handleSave = () => {
     if (!leftValue) {
-      setError("O primeiro valor é obrigatório");
+      setError("Il primo valore è obbligatorio");
       return;
     }
 
     if (!isUnaryOperator && !rightValue) {
-      setError("O segundo valor é obrigatório para este operador");
+      setError("Il secondo valore è obbligatorio per questo operatore");
       return;
     }
 
@@ -190,7 +190,7 @@ const FlowBuilderConditionCompareModal = ({ open, onSave, data, onUpdate, close 
         <Stack direction="row" spacing={1.5} alignItems="center">
           <CompareArrowsIcon sx={{ color: "#9c27b0" }} />
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            {open === "edit" ? "Editar Comparação" : "Nova Comparação"}
+            {open === "edit" ? "Modifica confronto" : "Nuovo confronto"}
           </Typography>
         </Stack>
         <IconButton 
@@ -211,10 +211,10 @@ const FlowBuilderConditionCompareModal = ({ open, onSave, data, onUpdate, close 
         <Stack spacing={3}>
           <Stack spacing={1}>
             <Stack direction="row" alignItems="center" spacing={1}>
-              <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                Valor 1
-              </Typography>
-              <Tooltip title="Este é o valor que será comparado. Pode ser texto fixo ou uma variável.">
+                <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                Valore 1
+                </Typography>
+              <Tooltip title="Questo è il valore da confrontare. Può essere testo fisso o una variabile.">
                 <HelpIcon fontSize="small" sx={{ color: "text.secondary" }} />
               </Tooltip>
             </Stack>
@@ -222,7 +222,7 @@ const FlowBuilderConditionCompareModal = ({ open, onSave, data, onUpdate, close 
               fullWidth
               value={leftValue}
               onChange={(e) => setLeftValue(e.target.value)}
-              placeholder="Digite um valor ou selecione uma variável"
+              placeholder="Inserisci un valore o seleziona una variabile"
               variant="outlined"
               size="small"
               InputProps={{
@@ -240,7 +240,7 @@ const FlowBuilderConditionCompareModal = ({ open, onSave, data, onUpdate, close 
                         },
                       }}
                     >
-                      Variável
+                      Variabile
                     </Button>
                   </InputAdornment>
                 ),
@@ -249,13 +249,13 @@ const FlowBuilderConditionCompareModal = ({ open, onSave, data, onUpdate, close 
           </Stack>
           <FormControl fullWidth>
             <InputLabel id="operador-comparacao-label">
-              Operador de Comparação
+              Operatore di confronto
             </InputLabel>
             <Select
               labelId="operador-comparacao-label"
               value={operator}
               onChange={(e) => setOperator(e.target.value)}
-              label="Operador de Comparação"
+              label="Operatore di confronto"
               sx={{
                 "& .MuiSelect-select": {
                   display: "flex",
@@ -293,10 +293,10 @@ const FlowBuilderConditionCompareModal = ({ open, onSave, data, onUpdate, close 
           {!isUnaryOperator && (
             <Stack spacing={1}>
               <Stack direction="row" alignItems="center" spacing={1}>
-                <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                  Valor 2
-                </Typography>
-                <Tooltip title="Este é o valor com o qual o primeiro valor será comparado. Pode ser texto fixo ou uma variável.">
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                  Valore 2
+                  </Typography>
+                <Tooltip title="Questo è il valore con cui verrà confrontato il primo valore. Può essere testo fisso o una variabile.">
                   <HelpIcon fontSize="small" sx={{ color: "text.secondary" }} />
                 </Tooltip>
               </Stack>
@@ -304,7 +304,7 @@ const FlowBuilderConditionCompareModal = ({ open, onSave, data, onUpdate, close 
                 fullWidth
                 value={rightValue}
                 onChange={(e) => setRightValue(e.target.value)}
-                placeholder="Digite um valor ou selecione uma variável"
+                placeholder="Inserisci un valore o seleziona una variabile"
                 variant="outlined"
                 size="small"
                 InputProps={{
@@ -322,7 +322,7 @@ const FlowBuilderConditionCompareModal = ({ open, onSave, data, onUpdate, close 
                           },
                         }}
                       >
-                        Variável
+                        Variabile
                       </Button>
                     </InputAdornment>
                   ),
@@ -370,7 +370,7 @@ const FlowBuilderConditionCompareModal = ({ open, onSave, data, onUpdate, close 
             },
           }}
         >
-          Cancelar
+          Annulla
         </Button>
         <Button
           onClick={handleSave}
@@ -388,7 +388,7 @@ const FlowBuilderConditionCompareModal = ({ open, onSave, data, onUpdate, close 
             },
           }}
         >
-          {isSubmitting ? "Salvando..." : open === "edit" ? "Salvar alterações" : "Adicionar"}
+          {isSubmitting ? "Salvataggio..." : open === "edit" ? "Salva modifiche" : "Aggiungi"}
         </Button>
       </DialogActions>
 
@@ -416,18 +416,18 @@ const FlowBuilderConditionCompareModal = ({ open, onSave, data, onUpdate, close 
         <Paper sx={{ p: 2 }}>
           <Stack spacing={2}>
             <Stack spacing={0.5}>
-              <Typography variant="subtitle1" sx={{ fontWeight: 600, color: "#1a1a1a" }}>
-                Selecionar Variável
-              </Typography>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, color: "#1a1a1a" }}>
+                Seleziona variabile
+                </Typography>
               <Typography variant="caption" sx={{ color: "text.secondary" }}>
-                Estas são variáveis de exemplo. Configure as variáveis reais no nó de Variável Global ou em outros nós do fluxo.
+                Queste sono variabili di esempio. Configura le variabili reali nel nodo Variabile Globale o in altri nodi del flusso.
               </Typography>
             </Stack>
 
             <TextField
               fullWidth
               size="small"
-              placeholder="Buscar variável..."
+              placeholder="Cerca variabile..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               InputProps={{
@@ -492,7 +492,7 @@ const FlowBuilderConditionCompareModal = ({ open, onSave, data, onUpdate, close 
                                     fontSize: "0.7rem"
                                   }}
                                 >
-                                  (Configure no nó de Variável Global)
+                                  (Configura nel nodo Variabile Globale)
                                 </Typography>
                               </Typography>
                             }
@@ -516,7 +516,7 @@ const FlowBuilderConditionCompareModal = ({ open, onSave, data, onUpdate, close 
                   color: "text.secondary" 
                 }}
               >
-                Nenhuma variável encontrada
+                Nessuna variabile trovata
               </Typography>
             )}
           </Stack>

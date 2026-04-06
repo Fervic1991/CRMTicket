@@ -1172,7 +1172,7 @@ const MessageInput = ({
     setLoading(true);
 
     if (!mediasUpload.length) {
-      console.log("Nenhuma mídia selecionada.");
+      console.log("Nessun file multimediale selezionato.");
       setLoading(false);
       return;
     }
@@ -1454,7 +1454,7 @@ const MessageInput = ({
       }
 
       formData.append("medias", blob, filename);
-      formData.append("body", "🎵 Mensagem de voz"); // ✅ Body mais claro
+      formData.append("body", "🎵 Messaggio vocale");
       formData.append("fromMe", true);
       formData.append("isPrivate", (privateMessage || isTicketPending()) ? "true" : "false");
 

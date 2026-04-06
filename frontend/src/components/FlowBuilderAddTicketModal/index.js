@@ -152,12 +152,12 @@ const FlowBuilderTicketModal = ({ open, onSave, data, onUpdate, close }) => {
         scroll="paper"
       >
         <DialogTitle id="form-dialog-title">
-          {open === "create" ? `Adicionar uma fila ao fluxo` : `Editar fila`}
+          {open === "create" ? `Aggiungi una coda al flusso` : `Modifica coda`}
         </DialogTitle>
         <Stack>
           <DialogContent dividers>
             <Grid style={{ width: "100%", marginTop: 10 }} container>
-              <Typography>Escolha a fila que deseja tranferir</Typography>
+              <Typography>Scegli la coda verso cui trasferire</Typography>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
@@ -180,7 +180,7 @@ const FlowBuilderTicketModal = ({ open, onSave, data, onUpdate, close }) => {
                 }}
                 renderValue={() => {
                   if (selectedQueue === "") {
-                    return "Selecione uma Conexão";
+                    return "Seleziona una connessione";
                   }
                   const queue = queues.find((w) => w.id === selectedQueue);
                   return queue.name;
@@ -206,7 +206,7 @@ const FlowBuilderTicketModal = ({ open, onSave, data, onUpdate, close }) => {
               className={classes.btnWrapper}
               onClick={handleSaveContact}
             >
-              {open === "create" ? `Adicionar` : "Editar"}
+              {open === "create" ? `Aggiungi` : "Modifica"}
             </Button>
           </DialogActions>
         </Stack>

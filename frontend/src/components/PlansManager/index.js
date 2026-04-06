@@ -216,7 +216,7 @@ export function PlanManagerForm(props) {
                         <Grid xs={12} sm={6} md={1} item>
                             <Field
                                 as={TextField}
-                                label="Filas"
+                                label="Code"
                                 name="queues"
                                 variant="outlined"
                                 className={classes.fullWidth}
@@ -527,7 +527,7 @@ export function PlansManagerGrid(props) {
                         <TableCell align="center">{i18n.t("plans.form.users")}</TableCell>
                         <TableCell align="center">{i18n.t("plans.form.public")}</TableCell>
                         <TableCell align="center">{i18n.t("plans.form.connections")}</TableCell>
-                        <TableCell align="center">Filas</TableCell>
+                        <TableCell align="center">Code</TableCell>
                         <TableCell align="center">Valor ({currency.code})</TableCell>
                         <TableCell align="center">Whatsapp</TableCell>
                         <TableCell align="center">Whatsapp Oficial</TableCell>
@@ -796,7 +796,7 @@ export default function PlansManager() {
                                     variant="contained" 
                                     color="primary"
                                 >
-                                    Salvar Fuso Horário
+                                    Salva fuso orario
                                 </ButtonWithSpinner>
                             </Grid>
                         </Grid>

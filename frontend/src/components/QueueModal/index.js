@@ -644,7 +644,7 @@ const QueueModal = ({ open, onClose, queueId, onEdit }) => {
                         labelId="fileListId-selection-label"
                         value={values.fileListId || ""}
                       >
-                        <MenuItem value={""} >{"Nenhum"}</MenuItem>
+                        <MenuItem value={""} >{"Nessuno"}</MenuItem>
                         {file.map(f => (
                           <MenuItem key={f.id} value={f.id}>
                             {f.name}

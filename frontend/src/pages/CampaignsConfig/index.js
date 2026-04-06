@@ -252,7 +252,7 @@ const CampaignsConfig = () => {
             }}
             style={{ marginRight: "10px" }}
           >
-            Salvar
+            Salva
           </Button>
 
         </Paper> */}

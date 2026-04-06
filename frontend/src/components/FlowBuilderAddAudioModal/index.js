@@ -67,8 +67,8 @@ const FlowBuilderAddAudioModal = ({ open, onSave, onUpdate, data, close }) => {
   const [preview, setPreview] = useState();
 
   const [labels, setLabels] = useState({
-    title: "Adicionar audio ao fluxo",
-    btn: "Adicionar"
+    title: "Aggiungi audio al flusso",
+    btn: "Aggiungi"
   });
 
   const [textDig, setTextDig] = useState();
@@ -78,16 +78,16 @@ const FlowBuilderAddAudioModal = ({ open, onSave, onUpdate, data, close }) => {
   useEffect(() => {
     if (open === "edit") {
       setLabels({
-        title: "Editar audio",
-        btn: "Salvar"
+        title: "Modifica audio",
+        btn: "Salva"
       });
       setPreview(process.env.REACT_APP_BACKEND_URL + '/public/' + data.data.url)
       setRecord(data.data.record)
       setActiveModal(true);
     } else if (open === "create") {
       setLabels({
-        title: "Adicionar audio ao fluxo",
-        btn: "Adicionar"
+        title: "Aggiungi audio al flusso",
+        btn: "Aggiungi"
       });
       setTextDig("");
       setActiveModal(true);
@@ -203,13 +203,13 @@ const FlowBuilderAddAudioModal = ({ open, onSave, onUpdate, data, close }) => {
                 <Stack direction={'row'} justifyContent={'center'}>
                 <Checkbox checked={record} onChange={(e) => setRecord(old => !old)}/>
                 <Stack justifyContent={'center'}>
-                <Typography>Enviar como audio gravado na hora</Typography>
+                <Typography>Invia come audio registrato al momento</Typography>
                 </Stack>
                 </Stack>
               )}
               {!loading && open !== "edit" && (
                 <Button variant="contained" component="label">
-                  Enviar audio
+                  Invia audio
                   <input
                     type="file"
                     accept="audio/ogg, audio/mp3"

@@ -188,7 +188,7 @@ const OpenAiSchema = Yup.object().shape({
   }),
   flowMode: Yup.string()
     .oneOf(["permanent", "temporary"], "Modo de fluxo inválido")
-    .required("Selecione o modo de fluxo"),
+    .required("Seleziona la modalita del flusso"),
   maxInteractions: Yup.number().when("flowMode", {
     is: "temporary",
     then: Yup.number()
@@ -248,16 +248,16 @@ const FlowBuilderOpenAIModal = ({ open, onSave, data, onUpdate, close }) => {
   const [showApiKey, setShowApiKey] = useState(false);
   const [integration, setIntegration] = useState(initialState);
   const [labels, setLabels] = useState({
-    title: "Adicionar OpenAI ao fluxo",
-    btn: "Adicionar",
+    title: "Aggiungi OpenAI al flusso",
+    btn: "Aggiungi",
   });
   const [newKeyword, setNewKeyword] = useState("");
 
   useEffect(() => {
     if (open === "edit") {
       setLabels({
-        title: "Editar OpenAI do fluxo",
-        btn: "Salvar",
+        title: "Modifica OpenAI del flusso",
+        btn: "Salva",
       });
       const typebotIntegration = data?.data?.typebotIntegration || {};
       setIntegration({
@@ -275,8 +275,8 @@ const FlowBuilderOpenAIModal = ({ open, onSave, data, onUpdate, close }) => {
       });
     } else if (open === "create") {
       setLabels({
-        title: "Adicionar OpenAI ao fluxo",
-        btn: "Adicionar",
+        title: "Aggiungi OpenAI al flusso",
+        btn: "Aggiungi",
       });
       setIntegration(initialState);
     }
@@ -675,7 +675,7 @@ const FlowBuilderOpenAIModal = ({ open, onSave, data, onUpdate, close }) => {
                                   <TextField
                                     variant="outlined"
                                     size="small"
-                                    placeholder="Digite uma palavra-chave"
+                                    placeholder="Inserisci una parola chiave"
                                     value={newKeyword}
                                     onChange={(e) => setNewKeyword(e.target.value)}
                                     onKeyPress={(e) => {
@@ -691,7 +691,7 @@ const FlowBuilderOpenAIModal = ({ open, onSave, data, onUpdate, close }) => {
                                     onClick={() => addKeyword(arrayHelpers, newKeyword)}
                                     disabled={!newKeyword.trim()}
                                   >
-                                    Adicionar
+                                    Aggiungi
                                   </Button>
                                 </Box>
                                 <Box display="flex" flexWrap="wrap" gap={0.5}>
@@ -784,7 +784,7 @@ const FlowBuilderOpenAIModal = ({ open, onSave, data, onUpdate, close }) => {
                   variant="outlined"
                   disabled={isSubmitting}
                 >
-                  Cancelar
+                  Annulla
                 </Button>
                 <Button
                   type="submit"

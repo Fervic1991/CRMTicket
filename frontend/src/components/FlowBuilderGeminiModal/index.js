@@ -154,7 +154,7 @@ const GeminiSchema = Yup.object().shape({
     .required("Informe o número máximo de mensagens"),
   flowMode: Yup.string()
     .oneOf(["permanent", "temporary"], "Modo de fluxo inválido")
-    .required("Selecione o modo de fluxo"),
+    .required("Seleziona la modalita del flusso"),
   maxInteractions: Yup.number().when("flowMode", {
     is: "temporary",
     then: Yup.number()
@@ -211,16 +211,16 @@ const FlowBuilderGeminiModal = ({ open, onSave, data, onUpdate, close }) => {
   const [showApiKey, setShowApiKey] = useState(false);
   const [integration, setIntegration] = useState(initialState);
   const [labels, setLabels] = useState({
-    title: "Adicionar Gemini ao fluxo",
-    btn: "Adicionar",
+    title: "Aggiungi Gemini al flusso",
+    btn: "Aggiungi",
   });
   const [newKeyword, setNewKeyword] = useState("");
 
   useEffect(() => {
     if (open === "edit") {
       setLabels({
-        title: "Editar Gemini do fluxo",
-        btn: "Salvar",
+        title: "Modifica Gemini del flusso",
+        btn: "Salva",
       });
       const typebotIntegration = data?.data?.typebotIntegration || {};
       setIntegration({
@@ -238,8 +238,8 @@ const FlowBuilderGeminiModal = ({ open, onSave, data, onUpdate, close }) => {
       });
     } else if (open === "create") {
       setLabels({
-        title: "Adicionar Gemini ao fluxo",
-        btn: "Adicionar",
+        title: "Aggiungi Gemini al flusso",
+        btn: "Aggiungi",
       });
       setIntegration(initialState);
     }
@@ -564,7 +564,7 @@ const FlowBuilderGeminiModal = ({ open, onSave, data, onUpdate, close }) => {
                                   <TextField
                                     variant="outlined"
                                     size="small"
-                                    placeholder="Digite uma palavra-chave"
+                                    placeholder="Inserisci una parola chiave"
                                     value={newKeyword}
                                     onChange={(e) => setNewKeyword(e.target.value)}
                                     onKeyPress={(e) => {
@@ -580,7 +580,7 @@ const FlowBuilderGeminiModal = ({ open, onSave, data, onUpdate, close }) => {
                                     onClick={() => addKeyword(arrayHelpers, newKeyword)}
                                     disabled={!newKeyword.trim()}
                                   >
-                                    Adicionar
+                                    Aggiungi
                                   </Button>
                                 </Box>
                                 <Box display="flex" flexWrap="wrap" gap={0.5}>
@@ -673,7 +673,7 @@ const FlowBuilderGeminiModal = ({ open, onSave, data, onUpdate, close }) => {
                   variant="outlined"
                   disabled={isSubmitting}
                 >
-                  Cancelar
+                  Annulla
                 </Button>
                 <Button
                   type="submit"

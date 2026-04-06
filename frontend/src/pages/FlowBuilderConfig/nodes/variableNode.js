@@ -157,7 +157,7 @@ const VariableNode = React.memo(({ data, id }) => {
           startIcon={<CheckCircleOutlineIcon />}
           sx={{ textTransform: 'none', boxShadow: 2 }}
         >
-          Salvar variável
+          Salva variabile
         </Button>
       </Box>
       

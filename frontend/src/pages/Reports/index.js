@@ -403,24 +403,24 @@ const Reports = () => {
 
         return {
           id: ticket.id,
-          Conexão: ticket.whatsappName,
+          Connessione: ticket.whatsappName,
           Contato: ticket.contactName,
-          Usuário: ticket.userName,
-          Fila: ticket.queueName,
+          Utente: ticket.userName,
+          Coda: ticket.queueName,
           Status: ticket.status,
-          ÚltimaMensagem: ticket.lastMessage,
-          DataAbertura: createdAtFormatted.date,
-          HoraAbertura: createdAtFormatted.time,
-          DataFechamento: closedAtFormatted.date,
-          HoraFechamento: closedAtFormatted.time,
-          TempoDeAtendimento: formatSupportTime(ticket.supportTime),
+          UltimoMessaggio: ticket.lastMessage,
+          DataApertura: createdAtFormatted.date,
+          OraApertura: createdAtFormatted.time,
+          DataChiusura: closedAtFormatted.date,
+          OraChiusura: closedAtFormatted.time,
+          TempoDiAssistenza: formatSupportTime(ticket.supportTime),
           nps: ticket.NPS || "",
           ValorDaVenda:
             ticket.valorVenda !== undefined && ticket.valorVenda !== null
               ? ticket.valorVenda
               : "-",
-          MotivoDaNaoVenda: ticket.motivoNaoVenda || "-",
-          FinalizadoComVenda:
+          MotivoMancataVendita: ticket.motivoNaoVenda || "-",
+          ConclusoConVendita:
             ticket.finalizadoComVenda === true
               ? i18n.t("reports.finalizadoComVenda.sim")
               : ticket.finalizadoComVenda === false
@@ -441,7 +441,7 @@ const Reports = () => {
         if (!dateStr)
           return getTranslation(
             "reports.exportExcel.notInformed",
-            "Não informado"
+            "Non specificato"
           );
         const [year, month, day] = dateStr.split("-");
         return `${day}/${month}/${year}`;
@@ -450,7 +450,7 @@ const Reports = () => {
       const translations = {
         title: getTranslation(
           "reports.exportExcel.title",
-          "Relatórios de Atendimentos"
+          "Report Assistenze"
         ),
         startDate: getTranslation(
           "reports.exportExcel.startDate",
@@ -461,54 +461,54 @@ const Reports = () => {
           id: getTranslation("reports.exportExcel.columns.id", "ID"),
           connection: getTranslation(
             "reports.exportExcel.columns.connection",
-            "Conexão"
+            "Connessione"
           ),
           contact: getTranslation(
             "reports.exportExcel.columns.contact",
             "Contato"
           ),
-          user: getTranslation("reports.exportExcel.columns.user", "Usuário"),
-          queue: getTranslation("reports.exportExcel.columns.queue", "Fila"),
+          user: getTranslation("reports.exportExcel.columns.user", "Utente"),
+          queue: getTranslation("reports.exportExcel.columns.queue", "Coda"),
           status: getTranslation(
             "reports.exportExcel.columns.status",
             "Status"
           ),
           lastMessage: getTranslation(
             "reports.exportExcel.columns.lastMessage",
-            "Última Mensagem"
+            "Ultimo messaggio"
           ),
           openDate: getTranslation(
             "reports.exportExcel.columns.openDate",
-            "Data Abertura"
+            "Data apertura"
           ),
           openTime: getTranslation(
             "reports.exportExcel.columns.openTime",
-            "Hora Abertura"
+            "Ora apertura"
           ),
           closeDate: getTranslation(
             "reports.exportExcel.columns.closeDate",
-            "Data Fechamento"
+            "Data chiusura"
           ),
           closeTime: getTranslation(
             "reports.exportExcel.columns.closeTime",
-            "Hora Fechamento"
+            "Ora chiusura"
           ),
           supportTime: getTranslation(
             "reports.exportExcel.columns.supportTime",
-            "Tempo de Atendimento"
+            "Tempo di assistenza"
           ),
           nps: getTranslation("reports.exportExcel.columns.nps", "NPS"),
           valorVenda: getTranslation(
             "reports.exportExcel.columns.valorVenda",
-            "Valor da Venda"
+            "Valore della vendita"
           ),
           motivoNaoVenda: getTranslation(
             "reports.exportExcel.columns.motivoNaoVenda",
-            "Motivo da Não Venda"
+            "Motivo mancata vendita"
           ),
           finalizadoComVenda: getTranslation(
             "reports.exportExcel.columns.finalizadoComVenda",
-            "Finalizado com Venda"
+            "Concluso con vendita"
           ),
         },
       };
@@ -606,8 +606,8 @@ const Reports = () => {
         }
       }
 
-      XLSX.utils.book_append_sheet(wb, ws, "RelatorioDeAtendimentos");
-      XLSX.writeFile(wb, "relatorio-de-atendimentos.xlsx", {
+      XLSX.utils.book_append_sheet(wb, ws, "ReportAssistenze");
+      XLSX.writeFile(wb, "report-assistenze.xlsx", {
         cellStyles: true,
         bookType: "xlsx",
       });

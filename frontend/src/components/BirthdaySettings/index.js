@@ -177,7 +177,7 @@ const BirthdaySettings = () => {
 
   const handleTestMessage = async (messageType) => {
     // Para teste, vamos pedir um contato válido
-    const contactId = prompt("Digite o ID de um contato para teste:");
+    const contactId = prompt("Inserisci l'ID di un contatto per il test:");
     if (!contactId) return;
 
     try {
@@ -185,7 +185,7 @@ const BirthdaySettings = () => {
         contactId: parseInt(contactId),
         messageType
       });
-      toast.success("Mensagem de teste enviada! 📱");
+      toast.success("Messaggio di prova inviato! 📱");
     } catch (error) {
       toast.error("Erro ao enviar mensagem de teste");
     }
@@ -243,7 +243,7 @@ const BirthdaySettings = () => {
         <Box display="flex" alignItems="center" justifyContent="space-between">
           <Typography variant="h6" className={classes.sectionTitle}>
             <PersonIcon />
-            Aniversários de Usuários
+            Compleanni degli utenti
           </Typography>
           <IconButton
             className={`${classes.expandButton} ${
@@ -295,7 +295,7 @@ const BirthdaySettings = () => {
                 fullWidth
                 multiline
                 rows={3}
-                label="Mensagem de aniversário para usuários"
+                label="Messaggio di compleanno per gli utenti"
                 value={settings?.userBirthdayMessage || ""}
                 onChange={(e) => handleSettingChange("userBirthdayMessage", e.target.value)}
                 disabled={!settings?.userBirthdayEnabled}
@@ -348,7 +348,7 @@ const BirthdaySettings = () => {
                 fullWidth
                 multiline
                 rows={4}
-                label="Mensagem de aniversário para contatos"
+                label="Messaggio di compleanno per i contatti"
                 value={settings?.contactBirthdayMessage || ""}
                 onChange={(e) => handleSettingChange("contactBirthdayMessage", e.target.value)}
                 disabled={!settings?.contactBirthdayEnabled}
@@ -366,7 +366,7 @@ const BirthdaySettings = () => {
                   size="small"
                   style={{ marginTop: 8 }}
                 >
-                  Testar Mensagem
+                  Prova messaggio
                 </Button>
               )}
             </Grid>
@@ -431,7 +431,7 @@ const BirthdaySettings = () => {
           disabled={saving}
           size="large"
         >
-          {saving ? "Salvando..." : "Salvar Configurações"}
+          {saving ? "Salvataggio..." : "Salva impostazioni"}
         </Button>
       </Box>
     </Box>

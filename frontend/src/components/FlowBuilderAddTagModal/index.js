@@ -146,12 +146,12 @@ const FlowBuilderTagModal = ({ open, onSave, data, onUpdate, close }) => {
         scroll="paper"
       >
         <DialogTitle id="form-dialog-title">
-          {open === "create" ? `Adicionar uma tag ao fluxo` : `Editar tag`}
+          {open === "create" ? "Aggiungi un'etichetta al flusso" : "Modifica etichetta"}
         </DialogTitle>
         <Stack>
           <DialogContent dividers>
             <Grid style={{ width: "100%", marginTop: 40 }} container>
-              <Typography>Escolha uma tag</Typography>
+              <Typography>Scegli un'etichetta</Typography>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
@@ -174,18 +174,18 @@ const FlowBuilderTagModal = ({ open, onSave, data, onUpdate, close }) => {
                 }}
                 renderValue={() => {
                   if (selectedTag === "") {
-                    return "Selecione uma tag";
+                    return "Seleziona un'etichetta";
                   }
                   const tag = tags.find((t) => t.id === selectedTag);
                   if (tag === undefined) {
-                    return "Nenhuma tag selecionada";
+                    return "Nessuna etichetta selezionata";
                   }
                   return tag.name;
                 }}
               >
                 {/* Adiciona a opção vazia */}
                 <MenuItem value="">
-                  <em>Selecione uma tag</em>
+                  <em>Seleziona un'etichetta</em>
                 </MenuItem>
 
                 {/* Exibe a lista de usuários */}
@@ -209,7 +209,7 @@ const FlowBuilderTagModal = ({ open, onSave, data, onUpdate, close }) => {
               className={classes.btnWrapper}
               onClick={handleSaveContact}
             >
-              {open === "create" ? `Adicionar` : "Editar"}
+              {open === "create" ? `Aggiungi` : "Modifica"}
             </Button>
           </DialogActions>
         </Stack>

@@ -336,7 +336,7 @@ export default function ChatPopover(volume) {
                         >
                           {typeof item.lastMessage === "string"
                             ? item.lastMessage
-                            : item.lastMessage?.message || "Nenhuma mensagem"}
+                            : item.lastMessage?.message || "Nessun messaggio"}
                         </Typography>
                       </div>
                     }

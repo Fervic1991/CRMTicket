@@ -376,7 +376,7 @@ const MessageModal = ({ open, onClose, messageId, reload }) => {
                           <TextField
                             {...params}
                             variant="outlined"
-                            placeholder="Conexão"
+                            placeholder="Connessione"
                           />
                         )}
                       />

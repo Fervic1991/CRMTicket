@@ -83,7 +83,7 @@ export default memo(({ data, isConnectable, id }) => {
             marginTop: "4px"
           }}
         />
-        <div style={{ color: "#ededed", fontSize: "16px" }}>Mensagem</div>
+        <div style={{ color: "#ededed", fontSize: "16px" }}>Messaggio</div>
       </div>
       <div style={{ color: "#ededed", fontSize: "12px", width: 180 }}>
         {data.label}

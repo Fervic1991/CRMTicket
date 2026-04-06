@@ -86,11 +86,11 @@ export default function SystemSettings() {
                     {/* Moeda do Sistema */}
                     <Grid item xs={12} md={6}>
                         <FormControl variant="outlined" fullWidth>
-                            <InputLabel>Selecione a Moeda</InputLabel>
+                            <InputLabel>Seleziona la valuta</InputLabel>
                             <Select
                                 value={selectedCurrency}
                                 onChange={handleCurrencyChange}
-                                label="Selecione a Moeda"
+                                label="Seleziona la valuta"
                             >
                                 {currencies.map((curr) => (
                                     <MenuItem key={curr.code} value={curr.code}>
@@ -121,7 +121,7 @@ export default function SystemSettings() {
                             color="primary"
                             size="large"
                         >
-                            Salvar Moeda
+                            Salva valuta
                         </ButtonWithSpinner>
                     </Grid>
                 </Grid>

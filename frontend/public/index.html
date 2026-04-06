@@ -478,7 +478,8 @@
       const lang = userLang.startsWith('en') ? 'en' : 
                    userLang.startsWith('es') ? 'es' :
                    userLang.startsWith('ar') ? 'ar' :
-                   userLang.startsWith('tr') ? 'tr' : 'pt-BR';
+                   userLang.startsWith('tr') ? 'tr' :
+                   userLang.startsWith('it') ? 'it' : 'pt-BR';
       
       // Traduções
       const translations = {
@@ -517,6 +518,18 @@
             "Finalizando carga..."
           ],
           redirecting: "Redirigiendo..."
+        },
+        'it': {
+          subtitle: 'Stiamo caricando la tua esperienza...',
+          messages: [
+            "Inizializzazione dell'applicazione...",
+            "Caricamento dei componenti...",
+            "Configurazione dell'interfaccia...",
+            "Connessione ai servizi...",
+            "Preparazione del sistema...",
+            "Completamento del caricamento..."
+          ],
+          redirecting: "Reindirizzamento..."
         },
         'ar': {
           subtitle: 'جاري تحميل تجربتك...',

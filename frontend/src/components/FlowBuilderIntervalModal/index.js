@@ -110,7 +110,7 @@ const FlowBuilderIntervalModal = ({
     <div className={classes.root}>
       <Dialog open={activeModal} onClose={handleClose} fullWidth="md" scroll="paper">
         <DialogTitle id="form-dialog-title">
-          {open === 'create' ? `Adicionar um intervalo ao fluxo`: `Editar intervalo`}
+          {open === 'create' ? `Aggiungi un intervallo al flusso`: `Modifica intervallo`}
         </DialogTitle>        
             <Stack>
               <DialogContent dividers>

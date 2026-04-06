@@ -61,7 +61,7 @@ const OptimizedList = memo(({
     onScroll,
     onItemsRendered,
     loading = false,
-    emptyMessage = "Nenhum item encontrado",
+    emptyMessage = "Nessun elemento trovato",
     className = "",
     initialScrollOffset = 0,
     scrollToIndex,

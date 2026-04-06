@@ -27,7 +27,7 @@ const ColorBoxModal = ({ onChange, currentColor, handleClose, open }) => {
 
         <Dialog open={open} onClose={handleClose}>
 
-            <DialogTitle>Escolha uma cor</DialogTitle>
+            <DialogTitle>Scegli un colore</DialogTitle>
             <DialogContent>
                 <ColorBox
                     disableAlpha={true}
@@ -40,7 +40,7 @@ const ColorBoxModal = ({ onChange, currentColor, handleClose, open }) => {
             <DialogActions>
 
                 <Button onClick={handleClose} color="primary">
-                    Cancelar
+                    Annulla
                 </Button>
                 <Button
                     color="primary"

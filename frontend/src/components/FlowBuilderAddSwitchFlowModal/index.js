@@ -66,7 +66,7 @@ const FlowBuilderAddSwitchFlowModal = ({
   const [flowSelected, setFlowSelected] = useState();
 
   const [labels, setLabels] = useState({
-    title: "Adicionar Perguta ao fluxo",
+    title: "Aggiungi domanda al flusso",
     btn: i18n.t('common.add'),
   });
 
@@ -74,7 +74,7 @@ const FlowBuilderAddSwitchFlowModal = ({
     getFlows();
     if (open === "edit") {
       setLabels({
-        title: "Editar Perguta do fluxo",
+        title: "Modifica domanda del flusso",
         btn: i18n.t('common.save'),
       });
 
@@ -141,8 +141,8 @@ const FlowBuilderAddSwitchFlowModal = ({
       >
         <DialogTitle id="form-dialog-title">
           {open === "create"
-            ? `Adicionar Troca de Fluxo`
-            : `Editar Troca de Fluxo`}
+            ? `Aggiungi cambio di flusso`
+            : `Modifica cambio di flusso`}
         </DialogTitle>
         <DialogContent dividers>
           <Grid style={{ with: "100%", marginTop: 10, height: "250px" }}>
@@ -160,7 +160,7 @@ const FlowBuilderAddSwitchFlowModal = ({
                   <TextField
                     {...params}
                     variant="outlined"
-                    placeholder="Escolha um fluxo"
+                    placeholder="Scegli un flusso"
                   />
                 )}
                 renderTags={(value, getTagProps) =>

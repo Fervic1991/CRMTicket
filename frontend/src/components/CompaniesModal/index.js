@@ -174,7 +174,7 @@ const CompanyModal = ({ open, onClose, companyId }) => {
 												checked={values.status}
 											/>
 										}
-										label={"Ativo"}
+										label={"Attivo"}
 									/>
 								</div>
 								<div className={classes.multFieldLine}>

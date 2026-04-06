@@ -464,7 +464,7 @@ const CampaignModalPhrase = ({ open, onClose, FlowCampaignId, onSave }) => {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Selecione um fluxo"
+                  label="Seleziona un flusso"
                   variant="outlined"
                   error={dataItemError.flowId}
                   helperText={dataItemError.flowId ? "Fluxo é obrigatório" : ""}
@@ -474,18 +474,18 @@ const CampaignModalPhrase = ({ open, onClose, FlowCampaignId, onSave }) => {
             />
           </Stack>
 
-          {/* ALTERAÇÃO: Seleção de Múltiplas Conexões WhatsApp */}
+          {/* ALTERAÇÃO: Seleção de Múltiplas Connessioni WhatsApp */}
           <Stack gap={1}>
             <Typography variant="subtitle1" fontWeight={500}>
               {i18n.t("campaignsPhrase.selectAConnection")} (Múltiplas)
             </Typography>
             <FormControl fullWidth variant="outlined" error={dataItemError.whatsappIds}>
-              <InputLabel>Conexões WhatsApp</InputLabel>
+              <InputLabel>Connessioni WhatsApp</InputLabel>
               <Select
                 multiple
                 value={selectedWhatsapps}
                 onChange={handleWhatsappChange}
-                label="Conexões WhatsApp"
+                label="Connessioni WhatsApp"
                 disabled={loading}
                 renderValue={(selected) => (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -579,7 +579,7 @@ const CampaignModalPhrase = ({ open, onClose, FlowCampaignId, onSave }) => {
                     }}
                     variant="outlined"
                     fullWidth
-                    placeholder="Digite a frase ou palavra-chave"
+                    placeholder="Inserisci la frase o parola chiave"
                     error={dataItemError.phrases && !phrase.text.trim()}
                     helperText={
                       dataItemError.phrases && !phrase.text.trim() 
@@ -623,7 +623,7 @@ const CampaignModalPhrase = ({ open, onClose, FlowCampaignId, onSave }) => {
               className={classes.addButton}
               disabled={loading}
             >
-              Adicionar Frase
+              Aggiungi frase
             </Button>
           </Stack>
 

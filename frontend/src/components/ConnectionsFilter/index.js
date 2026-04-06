@@ -56,7 +56,7 @@ export function ConnectionsFilter({ onFiltered }) {
                 <TextField
                     {...params}
                     variant="outlined"
-                    placeholder="Conexões"
+                    placeholder="Connessioni"
                 />
             )}
         />

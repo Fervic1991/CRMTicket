@@ -1250,12 +1250,12 @@ function Chat(props) {
         maxWidth="md"
         fullWidth
       >
-        <DialogTitle>Editar Mensagem</DialogTitle>
+        <DialogTitle>Modifica messaggio</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
-            label="Mensagem"
+            label="Messaggio"
             type="text"
             fullWidth
             value={editText}
@@ -1298,7 +1298,7 @@ function Chat(props) {
         <DialogTitle>Encaminhar Mensagem</DialogTitle>
         <DialogContent>
           <FormControl fullWidth margin="dense">
-            <InputLabel>Selecione o chat</InputLabel>
+            <InputLabel>Seleziona la conversazione</InputLabel>
             <Select
               value={selectedChatForForward || ""}
               onChange={(e) => setSelectedChatForForward(e.target.value)}
@@ -1315,7 +1315,7 @@ function Chat(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setForwardModalOpen(false)} color="secondary">
-            Cancelar
+            Annulla
           </Button>
           <Button
             onClick={handleForwardSubmit}

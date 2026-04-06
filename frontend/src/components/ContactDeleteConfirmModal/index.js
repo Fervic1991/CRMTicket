@@ -63,9 +63,9 @@ const ContactDeleteConfirmModal = ({
 
   const getTitle = () => {
     if (deleteType === 'all') {
-      return `Excluir TODOS os ${totalCount} contatos?`;
+      return `Eliminare TUTTI i ${totalCount} contatti?`;
     }
-    return `Excluir ${selectedCount} contatos selecionados?`;
+    return `Eliminare i ${selectedCount} contatti selezionati?`;
   };
 
   const getMessage = () => {
@@ -130,7 +130,7 @@ const ContactDeleteConfirmModal = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="default">
-          Cancelar
+          Annulla
         </Button>
         <Button
           onClick={handleConfirm}
@@ -138,7 +138,7 @@ const ContactDeleteConfirmModal = ({
           variant="contained"
           disabled={!isConfirmValid}
         >
-          {deleteType === 'all' ? 'Excluir Todos' : 'Excluir Selecionados'}
+          {deleteType === 'all' ? 'Elimina tutti' : 'Elimina selezionati'}
         </Button>
       </DialogActions>
     </Dialog>

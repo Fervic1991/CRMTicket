@@ -491,7 +491,7 @@ export function CompaniesManagerGrid(props) {
   const theme = useTheme();
 
   const renderStatus = (row) => {
-    return row.status === false ? "Não" : "Sim";
+    return row.status === false ? "No" : "Sì";
   };
 
   const renderPlan = (row) => {

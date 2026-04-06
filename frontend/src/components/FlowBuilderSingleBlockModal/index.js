@@ -139,8 +139,8 @@ const FlowBuilderSingleBlockModal = ({
   const [numberDocs, setNumberDocs] = useState(0);
 
   const [labels, setLabels] = useState({
-    title: "Adicionar conteúdo ao fluxo",
-    btn: "Adicionar",
+    title: "Aggiungi contenuto al flusso",
+    btn: "Aggiungi",
   });
 
   const { user } = useContext(AuthContext);
@@ -672,7 +672,7 @@ const FlowBuilderSingleBlockModal = ({
             component="label"
             className={`btnImg${number}`}
           >
-            Enviar imagem
+            Invia immagine
             <input
               type="file"
               accept="image/png, image/jpg, image/jpeg"
@@ -740,7 +740,7 @@ const FlowBuilderSingleBlockModal = ({
             component="label"
             className={`btnAudio${number}`}
           >
-            Enviar audio
+            Invia audio
             <input
               type="file"
               accept="audio/ogg, audio/mp3, audio/opus"
@@ -755,7 +755,7 @@ const FlowBuilderSingleBlockModal = ({
             defaultChecked={valueRecordDefault === "ok" ? false : true}
           />
           <Stack justifyContent={"center"}>
-            <Typography>Enviar como audio gravado na hora</Typography>
+            <Typography>Invia come audio registrato al momento</Typography>
           </Stack>
         </Stack>
       </Stack>
@@ -802,7 +802,7 @@ const FlowBuilderSingleBlockModal = ({
             component="label"
             className={`btnVideo${number}`}
           >
-            Enviar video
+            Invia video
             <input
               type="file"
               accept="video/mp4"
@@ -832,7 +832,7 @@ const FlowBuilderSingleBlockModal = ({
         </Stack>
         <Typography textAlign={"center"}>Texto</Typography>
         <TextField
-          label={"Mensagem"}
+          label={"Messaggio"}
           defaultValue={valueDefault}
           multiline
           rows={7}
@@ -915,7 +915,7 @@ const FlowBuilderSingleBlockModal = ({
             component="label"
             className={`btnDocument${number}`}
           >
-            Enviar Documento
+            Invia documento
             <input
               type="file"
               accept=".doc,.docx,.pdf"
@@ -976,8 +976,8 @@ const FlowBuilderSingleBlockModal = ({
 
     if (open === "edit") {
       setLabels({
-        title: "Editar conteúdo",
-        btn: "Salvar",
+        title: "Modifica contenuto",
+        btn: "Salva",
       });
 
       setElementsSeq(data.data.seq);
@@ -1098,8 +1098,8 @@ const FlowBuilderSingleBlockModal = ({
     }
     if (open === "create") {
       setLabels({
-        title: "Adicionar menu ao fluxo",
-        btn: "Adicionar",
+        title: "Aggiungi menu al flusso",
+        btn: "Aggiungi",
       });
       setTextDig();
       setArrayOption([]);
@@ -1378,7 +1378,7 @@ const FlowBuilderSingleBlockModal = ({
       <Dialog open={activeModal} fullWidth="lg" scroll="paper">
         {!loading && (
           <DialogTitle id="form-dialog-title">
-            Adicionar conteúdo ao fluxo
+            Aggiungi contenuto al flusso
           </DialogTitle>
         )}
         <Stack>

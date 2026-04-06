@@ -236,7 +236,7 @@ const BirthdayModal = ({ open, onClose, user }) => {
     
     try {
       await api.post("/birthdays/send-message", { contactId });
-      toast.success(`Mensagem de parabéns enviada para ${contactName}! 🎉`);
+      toast.success(`Messaggio di auguri inviato a ${contactName}! 🎉`);
     } catch (error) {
       toast.error("Erro ao enviar mensagem de aniversário");
     } finally {
@@ -285,7 +285,7 @@ const BirthdayModal = ({ open, onClose, user }) => {
         
         <CakeIcon className={classes.headerIcon} />
         <Typography variant="h4" className={classes.headerTitle}>
-          🎉 Parabéns!
+          🎉 Auguri!
         </Typography>
         <Typography className={classes.headerSubtitle}>
           Hoje é um dia especial!
@@ -322,7 +322,7 @@ const BirthdayModal = ({ open, onClose, user }) => {
                   secondary={
                     <Box className={classes.personType}>
                       <PersonIcon fontSize="small" />
-                      <span>Usuário do Sistema</span>
+                      <span>Utente di sistema</span>
                     </Box>
                   }
                 />
@@ -382,7 +382,7 @@ const BirthdayModal = ({ open, onClose, user }) => {
                   >
                     {sendingMessages.has(birthdayContact.id) 
                       ? "Enviando..." 
-                      : "Enviar Parabéns"
+                      : "Invia auguri"
                     }
                   </Button>
                 </ListItemSecondaryAction>

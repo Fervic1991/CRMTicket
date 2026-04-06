@@ -158,7 +158,7 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
     if (!contactId) return;
     // if (selectedQueue === "" && user.profile !== 'admin') {
     if (selectedQueue === "") {
-      toast.error("Selecione uma fila");
+      toast.error("Seleziona una coda");
       return;
     }
 
@@ -329,7 +329,7 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
                 }}
                 renderValue={() => {
                   if (selectedQueue === "") {
-                    return "Selecione uma fila"
+                    return "Seleziona una coda"
                   }
                   const queue = user.queues.find(q => q.id === selectedQueue)
                   return queue.name
@@ -368,7 +368,7 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
                 }}
                 renderValue={() => {
                   if (selectedWhatsapp === "") {
-                    return "Selecione uma Conexão"
+                    return "Seleziona una connessione"
                   }
                   const whatsapp = whatsapps.find(w => w.id === selectedWhatsapp)
                   return whatsapp?.name

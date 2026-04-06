@@ -67,8 +67,8 @@ const FlowBuilderAddVideoModal = ({ open, onSave, onUpdate, data, close }) => {
   const [preview, setPreview] = useState();
 
   const [labels, setLabels] = useState({
-    title: "Adicionar video ao fluxo",
-    btn: "Adicionar"
+    title: "Aggiungi video al flusso",
+    btn: "Aggiungi"
   });
 
   const [medias, setMedias] = useState([]);
@@ -76,16 +76,16 @@ const FlowBuilderAddVideoModal = ({ open, onSave, onUpdate, data, close }) => {
   useEffect(() => {
     if (open === "edit") {
       setLabels({
-        title: "Editar video",
-        btn: "Salvar"
+        title: "Modifica video",
+        btn: "Salva"
       });
       setPreview(process.env.REACT_APP_BACKEND_URL + '/public/' + data.data.url)
       setRecord(data.data.record)
       setActiveModal(true);
     } else if (open === "create") {
       setLabels({
-        title: "Adicionar video ao fluxo",
-        btn: "Adicionar"
+        title: "Aggiungi video al flusso",
+        btn: "Aggiungi"
       });
       setActiveModal(true);
     } else {
@@ -197,7 +197,7 @@ const FlowBuilderAddVideoModal = ({ open, onSave, onUpdate, data, close }) => {
               {!loading && open !== "edit" && !preview && (
                 <>
                 <Button variant="contained" component="label">
-                  Enviar video
+                  Invia video
                   <input
                     type="file"
                     accept="video/mp4"
