@@ -434,6 +434,31 @@ const normalizeContactIdentifier = (msg: proto.IWebMessageInfo): string => {
   return normalizeJid(msg.key.lid || msg.key.remoteJid);
 };
 
+const normalizeIncomingRemoteJid = (msg: proto.IWebMessageInfo): proto.IWebMessageInfo => {
+  const remoteJid = msg?.key?.remoteJid;
+  const senderPn = (msg?.key as any)?.senderPn;
+
+  if (
+    remoteJid?.includes("@lid") &&
+    senderPn &&
+    String(senderPn).includes("@s.whatsapp.net")
+  ) {
+    if (ENABLE_LID_DEBUG) {
+      logger.info(
+        `[LID-DEBUG] NormalizeIncomingRemoteJid - Replacing ${remoteJid} with senderPn ${senderPn}`
+      );
+    }
+
+    msg.key.remoteJid = senderPn;
+
+    if (!msg.key.fromMe && !msg.key.participant) {
+      msg.key.participant = senderPn;
+    }
+  }
+
+  return msg;
+};
+
 const getContactMessage = async (msg: proto.IWebMessageInfo, wbot: Session) => {
   const isGroup = msg.key.remoteJid.includes("g.us");
   const normalizedId = normalizeContactIdentifier(msg);
@@ -4718,6 +4743,7 @@ const filterMessages = (msg: WAMessage): boolean => {
 const wbotMessageListener = (wbot: Session, companyId: number): void => {
   wbot.ev.on("messages.upsert", async (messageUpsert: ImessageUpsert) => {
     const messages = messageUpsert.messages
+      .map(normalizeIncomingRemoteJid)
       .filter(filterMessages)
       .map(msg => msg);
 
