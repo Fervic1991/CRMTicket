@@ -614,8 +614,8 @@ const sendCampaignWhatsAppOfficialMessage = async ({
   campaignShipping,
   recipientNumber,
   body,
-  ticket,
-  contact,
+  ticket = null,
+  contact = null,
   includeMedia = true
 }) => {
   const publicFolder = path.resolve(__dirname, "..", "public");
@@ -691,8 +691,8 @@ const sendCampaignMetaMessage = async ({
   campaignShipping,
   recipientId,
   body,
-  ticket,
-  contact,
+  ticket = null,
+  contact = null,
   includeMedia = true
 }) => {
   const channel = campaign?.whatsapp?.channel;
@@ -1758,6 +1758,7 @@ async function handleDeleteCampaignMessage(job) {
       whatsappId,
       remoteJid,
       messageId,
+      timestamp,
       participant
     }: DeleteCampaignMessageData = job.data;
 
@@ -1791,7 +1792,7 @@ async function handleDeleteCampaignMessage(job) {
             }
           ]
         }
-      },
+      } as any,
       getJidOf(remoteJid)
     );
 
