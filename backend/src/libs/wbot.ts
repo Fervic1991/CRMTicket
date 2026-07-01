@@ -421,6 +421,23 @@ export const initWASocket = async (whatsapp: Whatsapp): Promise<Session> => {
                 return;
               }
 
+              if (statusCode === 440) {
+                await whatsapp.update({ status: "DISCONNECTED" });
+                io.of(String(companyId))
+                  .emit(`company-${whatsapp.companyId}-whatsappSession`, {
+                    action: "update",
+                    session: whatsapp
+                  });
+                removeWbot(id, false);
+                wsocket.ev.removeAllListeners("connection.update");
+                try {
+                  wsocket.ws.close();
+                } catch (e) {
+                  logger.error(e);
+                }
+                return;
+              }
+
               if (statusCode !== DisconnectReason.loggedOut) {
                 await whatsapp.update({ status: "DISCONNECTED" });
                 io.of(String(companyId))
