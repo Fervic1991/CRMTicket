@@ -172,17 +172,16 @@ export async function verifyContact(
     } else if (foundContact) {
       if (!foundContact.whatsappLidMap) {
         const ow = await wbot.onWhatsApp(msgContact.id);
-        if (!ow?.[0]?.exists) {
-          throw new Error("ERR_WAPP_CONTACT_NOT_FOUND");
-        }
-        const lid = ow?.[0]?.lid as string;
-        if (lid) {
-          await checkAndDedup(foundContact, lid);
-          await WhatsappLidMap.create({
-            companyId,
-            lid,
-            contactId: foundContact.id
-          });
+        if (ow?.[0]?.exists) {
+          const lid = ow?.[0]?.lid as string;
+          if (lid) {
+            await checkAndDedup(foundContact, lid);
+            await WhatsappLidMap.create({
+              companyId,
+              lid,
+              contactId: foundContact.id
+            });
+          }
         }
       }
       return updateContact(foundContact, {
