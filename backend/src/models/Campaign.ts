@@ -126,6 +126,12 @@ class Campaign extends Model<Campaign> {
   openTicket: string;
 
   @Column({ defaultValue: false })
+  autoDeleteMessages: boolean;
+
+  @Column({ defaultValue: 5 })
+  autoDeleteDelayMinutes: number;
+
+  @Column({ defaultValue: false })
   isRecurring: boolean;
 
   @Column

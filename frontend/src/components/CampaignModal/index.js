@@ -204,6 +204,12 @@ const CampaignSchema = Yup.object().shape({
     is: true,
     then: Yup.number().min(1, 'Número máximo deve ser maior que 0').nullable(),
     otherwise: Yup.number().nullable()
+  }),
+  autoDeleteMessages: Yup.boolean().default(false),
+  autoDeleteDelayMinutes: Yup.number().when("autoDeleteMessages", {
+    is: true,
+    then: Yup.number().min(1, "Inserisci almeno 1 minuto").required("Il ritardo è obbligatorio"),
+    otherwise: Yup.number().nullable()
   })
 });
 
@@ -240,6 +246,8 @@ const CampaignModal = ({
     companyId,
     statusTicket: "closed",
     openTicket: "disabled",
+    autoDeleteMessages: false,
+    autoDeleteDelayMinutes: 5,
     // Novos campos de recorrência
     isRecurring: false,
     recurrenceType: "",
@@ -283,6 +291,11 @@ const CampaignModal = ({
 
     return labels[channel] || "Connessione";
   };
+
+  const selectedConnection = whatsapps.find(
+    connection => Number(connection.id) === Number(whatsappId)
+  );
+  const isClassicWhatsappConnection = selectedConnection?.channel === "whatsapp";
 
   // Opções para dias da semana
   const daysOfWeekOptions = [
@@ -563,6 +576,11 @@ const handleSaveCampaign = async (values) => {
       dataValues.recurrenceDayOfMonth = null;
       dataValues.recurrenceEndDate = null;
       dataValues.maxExecutions = null;
+    }
+
+    if (!isClassicWhatsappConnection) {
+      dataValues.autoDeleteMessages = false;
+      dataValues.autoDeleteDelayMinutes = 5;
     }
 
     if (campaignId) {
@@ -873,6 +891,68 @@ const handleSaveCampaign = async (values) => {
                       className={classes.textField}
                       disabled={!campaignEditable}
                     />
+                  </Grid>
+
+                  <Grid xs={12} item>
+                    <Card className={classes.sectionCard}>
+                      <Box display="flex" flexDirection="column" gridGap={8}>
+                        <Typography variant="h6">
+                          Cancellazione automatica messaggi
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          Rimuove i messaggi solo dal tuo WhatsApp Web/app. Il cliente continua a vederli.
+                        </Typography>
+                        <FormControlLabel
+                          control={
+                            <Field
+                              as={Switch}
+                              name="autoDeleteMessages"
+                              color="primary"
+                              checked={values.autoDeleteMessages}
+                              onChange={(e) => {
+                                setFieldValue("autoDeleteMessages", e.target.checked);
+                                if (!e.target.checked) {
+                                  setFieldValue("autoDeleteDelayMinutes", 5);
+                                }
+                              }}
+                              disabled={!campaignEditable || !isClassicWhatsappConnection}
+                            />
+                          }
+                          label="Rimuovi i messaggi della campagna solo dal mio WhatsApp"
+                        />
+
+                        {values.autoDeleteMessages && (
+                          <Grid container spacing={2}>
+                            <Grid xs={12} md={4} item>
+                              <Field
+                                as={TextField}
+                                name="autoDeleteDelayMinutes"
+                                label="Cancella dopo (minuti)"
+                                type="number"
+                                variant="outlined"
+                                margin="dense"
+                                fullWidth
+                                inputProps={{ min: 1 }}
+                                error={touched.autoDeleteDelayMinutes && Boolean(errors.autoDeleteDelayMinutes)}
+                                helperText={
+                                  (touched.autoDeleteDelayMinutes && errors.autoDeleteDelayMinutes) ||
+                                  "Solo per messaggi 1:1 su WhatsApp QR"
+                                  
+                                }
+                                disabled={!campaignEditable || !isClassicWhatsappConnection}
+                                className={classes.field}
+                              />
+                            </Grid>
+                          </Grid>
+                        )}
+
+                        {!isClassicWhatsappConnection && (
+                          <Typography variant="caption" color="error">
+                            Seleziona una connessione WhatsApp QR per abilitare la cancellazione automatica.
+                          </Typography>
+                        )}
+                      </Box>
+                    </Card>
                   </Grid>
 
                   {/* SEÇÃO DE RECORRÊNCIA */}

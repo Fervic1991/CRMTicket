@@ -56,6 +56,8 @@ type StoreData = {
   whatsappId: number;
   statusTicket: string;
   openTicket: string;
+  autoDeleteMessages?: boolean;
+  autoDeleteDelayMinutes?: number | null;
   // Novos campos de recorrência
   isRecurring?: boolean;
   recurrenceType?: string | null;
@@ -103,6 +105,12 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     queueId: Yup.number().nullable(),
     statusTicket: Yup.string().required(),
     openTicket: Yup.string().required(),
+    autoDeleteMessages: Yup.boolean().default(false),
+    autoDeleteDelayMinutes: Yup.number().when("autoDeleteMessages", {
+      is: true,
+      then: Yup.number().min(1).required(),
+      otherwise: Yup.number().nullable()
+    }),
     // Validação de recorrência
     isRecurring: Yup.boolean().default(false),
     recurrenceType: Yup.string().when('isRecurring', {
@@ -155,6 +163,8 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
       queueId,
       statusTicket,
       openTicket,
+      autoDeleteMessages,
+      autoDeleteDelayMinutes,
       // Novos campos de recorrência
       isRecurring,
       recurrenceType,
@@ -221,6 +231,8 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
       queueId: queueId || null,
       statusTicket,
       openTicket,
+      autoDeleteMessages: !!autoDeleteMessages,
+      autoDeleteDelayMinutes: Number(autoDeleteDelayMinutes || 5),
       companyId,
       status: "PROGRAMADA",
       // Adicionar campos de recorrência processados
@@ -269,6 +281,12 @@ export const update = async (req: Request, res: Response): Promise<Response> => 
     queueId: Yup.number().nullable(),
     statusTicket: Yup.string().required(),
     openTicket: Yup.string().required(),
+    autoDeleteMessages: Yup.boolean().default(false),
+    autoDeleteDelayMinutes: Yup.number().when("autoDeleteMessages", {
+      is: true,
+      then: Yup.number().min(1).required(),
+      otherwise: Yup.number().nullable()
+    }),
     // Validação de recorrência
     isRecurring: Yup.boolean().default(false),
     recurrenceType: Yup.string().when('isRecurring', {
@@ -321,6 +339,8 @@ export const update = async (req: Request, res: Response): Promise<Response> => 
       queueId,
       statusTicket,
       openTicket,
+      autoDeleteMessages,
+      autoDeleteDelayMinutes,
       // Novos campos de recorrência
       isRecurring,
       recurrenceType,
@@ -382,6 +402,8 @@ export const update = async (req: Request, res: Response): Promise<Response> => 
       queueId: queueId || null,
       statusTicket,
       openTicket,
+      autoDeleteMessages: !!autoDeleteMessages,
+      autoDeleteDelayMinutes: Number(autoDeleteDelayMinutes || 5),
       companyId,
       // Adicionar campos de recorrência processados
       ...processedRecurrenceData
