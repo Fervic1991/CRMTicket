@@ -23,6 +23,12 @@ export interface MessageData {
   isPrivate?: boolean;
   ticketImported?: any;
   isForwarded?: boolean;
+  remoteJid?: string;
+  participant?: string;
+  dataJson?: string;
+  quotedMsgId?: string | number;
+  createdAt?: string | Date;
+  originalName?: string;
 }
 interface Request {
   messageData: MessageData;

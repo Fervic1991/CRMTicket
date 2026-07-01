@@ -83,6 +83,16 @@ interface DispatchCampaignData {
   contactListItemId: number;
 }
 
+interface DeleteCampaignMessageData {
+  campaignId: number;
+  campaignShippingId: number;
+  whatsappId: number;
+  remoteJid: string;
+  messageId: string;
+  timestamp: number | string;
+  participant?: string | null;
+}
+
 export const userMonitor = new BullQueue("UserMonitor", connection);
 export const scheduleMonitor = new BullQueue("ScheduleMonitor", connection);
 export const sendScheduledMessages = new BullQueue(
@@ -90,6 +100,7 @@ export const sendScheduledMessages = new BullQueue(
   connection
 );
 export const campaignQueue = new BullQueue("CampaignQueue", connection);
+export const campaignDeleteQueue = new BullQueue("CampaignDeleteQueue", connection);
 export const queueMonitor = new BullQueue("QueueMonitor", connection);
 
 export const messageQueue = new BullQueue("MessageQueue", connection, {
@@ -513,6 +524,32 @@ const logCampaignDispatch = (payload: Record<string, any>) => {
   logger.info(`[CAMPAIGN DISPATCH DEBUG] ${JSON.stringify(payload)}`);
 };
 
+const normalizeMessageTimestamp = (timestamp: any) => {
+  if (!timestamp) {
+    return Math.floor(Date.now() / 1000);
+  }
+
+  if (typeof timestamp === "number") {
+    return timestamp;
+  }
+
+  if (typeof timestamp === "string") {
+    return timestamp;
+  }
+
+  if (typeof timestamp?.toString === "function") {
+    return timestamp.toString();
+  }
+
+  return Math.floor(Date.now() / 1000);
+};
+
+const shouldAutoDeleteCampaignMessages = (campaign: any, contact?: any) =>
+  campaign?.whatsapp?.channel === "whatsapp" &&
+  !!campaign?.autoDeleteMessages &&
+  Number(campaign?.autoDeleteDelayMinutes || 0) > 0 &&
+  !contact?.isGroup;
+
 const resolveOfficialCampaignType = (filePath?: string) => {
   if (!filePath) return "text";
 
@@ -625,7 +662,7 @@ const sendCampaignWhatsAppOfficialMessage = async ({
     await CreateMessageService({
       companyId: campaign.companyId,
       messageData: {
-        wid: sendResult?.idMessageWhatsApp?.[0] || `campaign-official-${campaign.id}-${Date.now()}`,
+        wid: sendResult?.messages?.[0]?.id || `campaign-official-${campaign.id}-${Date.now()}`,
         ticketId: ticket.id,
         contactId: contact.id,
         body: messageBody,
@@ -719,6 +756,71 @@ const sendCampaignMetaMessage = async ({
   }
 
   return sendResult;
+};
+
+const scheduleCampaignMessageDeletion = async ({
+  campaign,
+  campaignShippingId,
+  sentMessage,
+  contact
+}) => {
+  if (!shouldAutoDeleteCampaignMessages(campaign, contact)) {
+    if (campaign?.autoDeleteMessages && contact?.isGroup) {
+      logCampaignDispatch({
+        step: "delete-skip-group",
+        campaignId: campaign.id,
+        campaignShippingId,
+        recipient: contact?.number || null
+      });
+    }
+    return;
+  }
+
+  const messageId = sentMessage?.key?.id;
+  const remoteJid = sentMessage?.key?.remoteJid;
+
+  if (!messageId || !remoteJid) {
+    logCampaignDispatch({
+      step: "delete-skip-missing-key",
+      campaignId: campaign.id,
+      campaignShippingId,
+      messageId: messageId || null,
+      remoteJid: remoteJid || null
+    });
+    return;
+  }
+
+  const delay = Number(campaign.autoDeleteDelayMinutes || 0) * 60 * 1000;
+
+  const deletionJob = await campaignDeleteQueue.add(
+    "DeleteCampaignMessage",
+    {
+      campaignId: campaign.id,
+      campaignShippingId,
+      whatsappId: campaign.whatsappId,
+      remoteJid,
+      messageId,
+      timestamp: normalizeMessageTimestamp(sentMessage?.messageTimestamp),
+      participant: sentMessage?.key?.participant || null
+    },
+    {
+      delay,
+      removeOnComplete: true,
+      removeOnFail: false
+    }
+  );
+
+  logCampaignDispatch({
+    step: "delete-scheduled",
+    campaignId: campaign.id,
+    campaignShippingId,
+    whatsappId: campaign.whatsappId,
+    recipient: contact?.number || null,
+    messageId,
+    remoteJid,
+    delayMinutes: Number(campaign.autoDeleteDelayMinutes || 0),
+    deleteJobId: deletionJob.id
+  });
 };
 
 async function getContact(id) {
@@ -1419,6 +1521,13 @@ async function handleDispatchCampaign(job) {
                 true,
                 false
               );
+
+              await scheduleCampaignMessageDeletion({
+                campaign,
+                campaignShippingId,
+                sentMessage,
+                contact
+              });
             }
 
             if (campaign.mediaPath) {
@@ -1449,6 +1558,13 @@ async function handleDispatchCampaign(job) {
                     true,
                     false
                   );
+
+                  await scheduleCampaignMessageDeletion({
+                    campaign,
+                    campaignShippingId,
+                    sentMessage: audioMessage,
+                    contact
+                  });
                 }
                 const sentMessage = await wbot.sendMessage(getJidOf(chatId), {
                   ...options
@@ -1463,6 +1579,13 @@ async function handleDispatchCampaign(job) {
                   true,
                   wbot
                 );
+
+                await scheduleCampaignMessageDeletion({
+                  campaign,
+                  campaignShippingId,
+                  sentMessage,
+                  contact
+                });
               }
             }
           }
@@ -1543,8 +1666,15 @@ async function handleDispatchCampaign(job) {
           });
         } else {
           if (!campaign.mediaPath) {
-            await wbot.sendMessage(getJidOf(chatId), {
+            const sentMessage = await wbot.sendMessage(getJidOf(chatId), {
               text: campaignShipping.message
+            });
+
+            await scheduleCampaignMessageDeletion({
+              campaign,
+              campaignShippingId,
+              sentMessage,
+              contact: campaignShipping.contact
             });
           }
 
@@ -1564,11 +1694,25 @@ async function handleDispatchCampaign(job) {
             );
             if (Object.keys(options).length) {
               if (options.mimetype === "audio/mp4") {
-                await wbot.sendMessage(getJidOf(chatId), {
+                const audioMessage = await wbot.sendMessage(getJidOf(chatId), {
                   text: campaignShipping.message
                 });
+
+                await scheduleCampaignMessageDeletion({
+                  campaign,
+                  campaignShippingId,
+                  sentMessage: audioMessage,
+                  contact: campaignShipping.contact
+                });
               }
-              await wbot.sendMessage(getJidOf(chatId), { ...options });
+              const sentMessage = await wbot.sendMessage(getJidOf(chatId), { ...options });
+
+              await scheduleCampaignMessageDeletion({
+                campaign,
+                campaignShippingId,
+                sentMessage,
+                contact: campaignShipping.contact
+              });
             }
           }
         }
@@ -1603,6 +1747,71 @@ async function handleDispatchCampaign(job) {
     Sentry.captureException(err);
     logger.error(err.message);
     console.log(err.stack);
+  }
+}
+
+async function handleDeleteCampaignMessage(job) {
+  try {
+    const {
+      campaignId,
+      campaignShippingId,
+      whatsappId,
+      remoteJid,
+      messageId,
+      participant
+    }: DeleteCampaignMessageData = job.data;
+
+    const whatsapp = await Whatsapp.findByPk(whatsappId);
+
+    if (!whatsapp || whatsapp.channel !== "whatsapp") {
+      logCampaignDispatch({
+        step: "delete-skip-invalid-channel",
+        campaignId,
+        campaignShippingId,
+        whatsappId
+      });
+      return;
+    }
+
+    const wbot = await GetWhatsappWbot(whatsapp);
+
+    if (!wbot) {
+      throw new Error(`Wbot not found for whatsappId ${whatsappId}`);
+    }
+
+    await wbot.chatModify(
+      {
+        clear: {
+          messages: [
+            {
+              id: messageId,
+              fromMe: true,
+              timestamp: String(timestamp),
+              participant: participant || undefined
+            }
+          ]
+        }
+      },
+      getJidOf(remoteJid)
+    );
+
+    logCampaignDispatch({
+      step: "delete-for-me-success",
+      campaignId,
+      campaignShippingId,
+      whatsappId,
+      remoteJid,
+      messageId
+    });
+  } catch (err: any) {
+    Sentry.captureException(err);
+    logger.error(`campaignDeleteQueue -> DeleteCampaignMessage -> error: ${err.message}`);
+    logCampaignDispatch({
+      step: "delete-error",
+      error: err.message,
+      ...(job?.data || {})
+    });
+    throw err;
   }
 }
 
@@ -2467,6 +2676,8 @@ export async function startQueueProcess() {
   campaignQueue.process("PrepareContact", handlePrepareContact);
 
   campaignQueue.process("DispatchCampaign", handleDispatchCampaign);
+
+  campaignDeleteQueue.process("DeleteCampaignMessage", handleDeleteCampaignMessage);
 
   userMonitor.process("VerifyLoginStatus", handleLoginStatus);
 
