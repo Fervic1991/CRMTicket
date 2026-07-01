@@ -158,7 +158,7 @@ export async function verifyContact(
       const partialLidContact = await Contact.findOne({
         where: {
           companyId,
-          number: number.substring(0, number.indexOf("@"))
+          number
         },
         include: ["tags", "extraInfo"]
       });
@@ -189,12 +189,9 @@ export async function verifyContact(
       });
     } else if (!isGroup && !foundContact) {
       const ow = await wbot.onWhatsApp(msgContact.id);
-      if (!ow?.[0]?.exists) {
-        throw new Error("ERR_WAPP_CONTACT_NOT_FOUND");
-      }
       const lid = ow?.[0]?.lid as string;
 
-      if (lid) {
+      if (ow?.[0]?.exists && lid) {
         const lidContact = await Contact.findOne({
           where: {
             companyId,
