@@ -436,10 +436,8 @@ const normalizeContactIdentifier = (msg: proto.IWebMessageInfo): string => {
 
 const getContactMessage = async (msg: proto.IWebMessageInfo, wbot: Session) => {
   const isGroup = msg.key.remoteJid.includes("g.us");
-  const rawNumber = msg.key.remoteJid.replace(/\D/g, "");
-
-  // Usa o identificador normalizado que considera o lid
-  // const normalizedId = normalizeContactIdentifier(msg);
+  const normalizedId = normalizeContactIdentifier(msg);
+  const rawNumber = normalizedId.replace(/\D/g, "");
 
   return isGroup
     ? {
@@ -447,7 +445,7 @@ const getContactMessage = async (msg: proto.IWebMessageInfo, wbot: Session) => {
       name: msg.pushName
     }
     : {
-      id: msg.key.remoteJid,
+      id: normalizedId,
       name: msg.key.fromMe ? rawNumber : msg.pushName
     };
 };
