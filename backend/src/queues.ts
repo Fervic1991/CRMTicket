@@ -835,7 +835,7 @@ const scheduleCampaignMessageDeletion = async ({
 
 async function getContact(id) {
   return await ContactListItem.findByPk(id, {
-    attributes: ["id", "name", "number", "email", "isGroup"]
+    attributes: ["id", "name", "number", "email", "isGroup", "isWhatsappValid"]
   });
 }
 
