@@ -1347,7 +1347,7 @@ async function handlePrepareContact(job) {
           contactListItemId: contactId
         },
         {
-          delay
+          delay: 0
         }
       );
 
