@@ -1,9 +1,11 @@
 import pino from 'pino';
 import moment from 'moment-timezone';
 
+const APP_TIMEZONE = process.env.APP_TIMEZONE || process.env.TZ || 'Europe/Rome';
+
 // Função para obter o timestamp com fuso horário
 const timezoned = () => {
-  return moment().tz('America/Sao_Paulo').format('DD-MM-YYYY HH:mm:ss');
+  return moment().tz(APP_TIMEZONE).format('DD-MM-YYYY HH:mm:ss');
 };
 
 const logger = pino({

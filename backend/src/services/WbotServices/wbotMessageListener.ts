@@ -136,6 +136,8 @@ interface ImessageUpsert {
 interface IMe {
   name: string;
   id: string;
+  realRemoteJid?: string;
+  lid?: string;
 }
 
 const lidUpdateMutex = new Mutex();
@@ -461,8 +463,17 @@ const normalizeIncomingRemoteJid = (msg: proto.IWebMessageInfo): proto.IWebMessa
 
 const getContactMessage = async (msg: proto.IWebMessageInfo, wbot: Session) => {
   const isGroup = msg.key.remoteJid.includes("g.us");
-  const normalizedId = normalizeContactIdentifier(msg);
+  const senderPn =
+    (msg?.key as any)?.senderPn || (msg?.key as any)?.participantPn;
+  const normalizedId =
+    !isGroup && senderPn && String(senderPn).includes("@s.whatsapp.net")
+      ? normalizeJid(String(senderPn))
+      : normalizeContactIdentifier(msg);
   const rawNumber = normalizedId.replace(/\D/g, "");
+  const originalLid =
+    !isGroup && msg?.key?.lid && String(msg.key.lid).includes("@lid")
+      ? normalizeJid(String(msg.key.lid))
+      : undefined;
 
   return isGroup
     ? {
@@ -471,7 +482,9 @@ const getContactMessage = async (msg: proto.IWebMessageInfo, wbot: Session) => {
     }
     : {
       id: normalizedId,
-      name: msg.key.fromMe ? rawNumber : msg.pushName
+      name: msg.key.fromMe ? rawNumber : msg.pushName,
+      realRemoteJid: normalizedId,
+      lid: originalLid
     };
 };
 

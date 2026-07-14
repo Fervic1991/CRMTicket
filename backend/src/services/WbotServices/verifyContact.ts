@@ -9,7 +9,6 @@ import Ticket from "../../models/Ticket";
 import UpdateTicketService from "../TicketServices/UpdateTicketService";
 import { proto, WASocket } from "@whiskeysockets/baileys";
 import WhatsappLidMap from "../../models/WhatsapplidMap";
-import GetProfilePicUrl from "./GetProfilePicUrl";
 
 const lidUpdateMutex = new Mutex();
 
@@ -24,7 +23,14 @@ export type Session = WASocket & {
 interface IMe {
   name: string;
   id: string;
+  realRemoteJid?: string;
+  lid?: string;
 }
+
+const extractDigits = (value?: string | null): string => {
+  if (!value) return "";
+  return value.replace(/\D/g, "");
+};
 
 export async function checkAndDedup(
   contact: Contact,
@@ -98,20 +104,27 @@ export async function verifyContact(
   //   profilePicUrl = `${process.env.FRONTEND_URL}/nopicture.png`;
   // }
 
-  const isLid = msgContact.id.includes("@lid");
-  const isGroup = msgContact.id.includes("@g.us");
-  const normalizedLid = isLid ? msgContact.id : "";
-  const normalizedNumber = msgContact.id.substring(0, msgContact.id.indexOf("@"));
-
-  const number = normalizedNumber;
+  const remoteJid =
+    msgContact.realRemoteJid && msgContact.realRemoteJid.includes("@")
+      ? msgContact.realRemoteJid
+      : msgContact.id;
+  const normalizedLid =
+    msgContact.lid && msgContact.lid.includes("@lid")
+      ? msgContact.lid
+      : msgContact.id.includes("@lid")
+        ? msgContact.id
+        : "";
+  const isLid = normalizedLid.includes("@lid");
+  const isGroup = remoteJid.includes("@g.us");
+  const number = extractDigits(remoteJid) || extractDigits(normalizedLid);
 
   const contactData = {
-    name: msgContact?.name || msgContact.id.replace(/\D/g, ""),
+    name: msgContact?.name || remoteJid.replace(/\D/g, ""),
     number,
     lid: normalizedLid,
-    remoteJid: msgContact.id,
+    remoteJid,
     profilePicUrl,
-    isGroup: msgContact.id.includes("g.us"),
+    isGroup,
     companyId
   };
 
@@ -120,25 +133,55 @@ export async function verifyContact(
   }
 
   return lidUpdateMutex.runExclusive(async () => {
-    const foundContact = await Contact.findOne({
-      where: {
-        companyId,
-        number
-      },
-      include: ["tags", "extraInfo", "whatsappLidMap"]
-    });
+    let foundContact: Contact | null = null;
+
+    if (normalizedLid) {
+      foundContact = await Contact.findOne({
+        where: {
+          companyId,
+          lid: normalizedLid
+        },
+        include: ["tags", "extraInfo", "whatsappLidMap"]
+      });
+    }
+
+    if (!foundContact && remoteJid && !remoteJid.endsWith("@lid")) {
+      foundContact = await Contact.findOne({
+        where: {
+          companyId,
+          remoteJid
+        },
+        include: ["tags", "extraInfo", "whatsappLidMap"]
+      });
+    }
+
+    if (!foundContact && number) {
+      foundContact = await Contact.findOne({
+        where: {
+          companyId,
+          number
+        },
+        include: ["tags", "extraInfo", "whatsappLidMap"]
+      });
+    }
 
     if (isLid) {
       if (foundContact) {
         return updateContact(foundContact, {
+          number: contactData.number,
+          remoteJid: contactData.remoteJid,
+          lid: normalizedLid,
           profilePicUrl: contactData.profilePicUrl
         });
       }
 
+      const lidDigits = extractDigits(normalizedLid);
       const foundMappedContact = await WhatsappLidMap.findOne({
         where: {
           companyId,
-          lid: number
+          lid: {
+            [Op.or]: [normalizedLid, lidDigits]
+          }
         },
         include: [
           {
@@ -151,6 +194,9 @@ export async function verifyContact(
 
       if (foundMappedContact) {
         return updateContact(foundMappedContact.contact, {
+          number: contactData.number,
+          remoteJid: contactData.remoteJid,
+          lid: normalizedLid,
           profilePicUrl: contactData.profilePicUrl
         });
       }
@@ -158,7 +204,14 @@ export async function verifyContact(
       const partialLidContact = await Contact.findOne({
         where: {
           companyId,
-          number
+          [Op.or]: [
+            { lid: normalizedLid },
+            {
+              number: {
+                [Op.or]: [normalizedLid, lidDigits]
+              }
+            }
+          ]
         },
         include: ["tags", "extraInfo"]
       });
@@ -166,50 +219,75 @@ export async function verifyContact(
       if (partialLidContact) {
         return updateContact(partialLidContact, {
           number: contactData.number,
+          remoteJid: contactData.remoteJid,
+          lid: normalizedLid,
           profilePicUrl: contactData.profilePicUrl
         });
       }
     } else if (foundContact) {
       if (!foundContact.whatsappLidMap) {
-        const ow = await wbot.onWhatsApp(msgContact.id);
+        const ow = await wbot.onWhatsApp(contactData.remoteJid);
         if (ow?.[0]?.exists) {
           const lid = ow?.[0]?.lid as string;
           if (lid) {
             await checkAndDedup(foundContact, lid);
-            await WhatsappLidMap.create({
-              companyId,
-              lid,
-              contactId: foundContact.id
+            await WhatsappLidMap.findOrCreate({
+              where: {
+                companyId,
+                lid
+              },
+              defaults: {
+                companyId,
+                lid,
+                contactId: foundContact.id
+              }
             });
           }
         }
       }
       return updateContact(foundContact, {
+        number: contactData.number,
+        remoteJid: contactData.remoteJid,
+        lid: normalizedLid || foundContact.lid,
         profilePicUrl: contactData.profilePicUrl
       });
     } else if (!isGroup && !foundContact) {
-      const ow = await wbot.onWhatsApp(msgContact.id);
+      const ow = await wbot.onWhatsApp(contactData.remoteJid);
       const lid = ow?.[0]?.lid as string;
 
       if (ow?.[0]?.exists && lid) {
+        const lidDigits = extractDigits(lid);
         const lidContact = await Contact.findOne({
           where: {
             companyId,
-            number: {
-              [Op.or]: [lid, lid.substring(0, lid.indexOf("@"))]
-            }
+            [Op.or]: [
+              { lid },
+              {
+                number: {
+                  [Op.or]: [lid, lidDigits]
+                }
+              }
+            ]
           },
           include: ["tags", "extraInfo"]
         });
 
         if (lidContact) {
-          await WhatsappLidMap.create({
-            companyId,
-            lid,
-            contactId: lidContact.id
+          await WhatsappLidMap.findOrCreate({
+            where: {
+              companyId,
+              lid
+            },
+            defaults: {
+              companyId,
+              lid,
+              contactId: lidContact.id
+            }
           });
           return updateContact(lidContact, {
             number: contactData.number,
+            remoteJid: contactData.remoteJid,
+            lid,
             profilePicUrl: contactData.profilePicUrl
           });
         }
