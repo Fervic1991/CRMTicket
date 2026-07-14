@@ -81,7 +81,41 @@ export const resolveOutboundJid = async (
 
   const inboundJid = lastInboundMessage ? parseMessageJid(lastInboundMessage) : null;
   if (inboundJid) {
+    const inboundNumber = extractDigits(inboundJid);
+    if (inboundNumber && (contact.number !== inboundNumber || contact.remoteJid !== inboundJid)) {
+      await contact.update({
+        number: inboundNumber,
+        remoteJid: inboundJid
+      });
+    }
     return inboundJid;
+  }
+
+  const lastInboundForContact = await Message.findOne({
+    where: {
+      contactId: contact.id,
+      companyId: ticket.companyId,
+      fromMe: false
+    },
+    order: [["createdAt", "DESC"]]
+  });
+
+  const contactInboundJid = lastInboundForContact
+    ? parseMessageJid(lastInboundForContact)
+    : null;
+
+  if (contactInboundJid) {
+    const inboundNumber = extractDigits(contactInboundJid);
+    if (
+      inboundNumber &&
+      (contact.number !== inboundNumber || contact.remoteJid !== contactInboundJid)
+    ) {
+      await contact.update({
+        number: inboundNumber,
+        remoteJid: contactInboundJid
+      });
+    }
+    return contactInboundJid;
   }
 
   if (
@@ -99,4 +133,3 @@ export const resolveOutboundJid = async (
 
   throw new Error(`Unable to resolve outbound jid for ticket ${ticket.id}`);
 };
-
