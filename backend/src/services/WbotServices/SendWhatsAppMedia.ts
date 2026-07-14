@@ -15,8 +15,7 @@ import CreateMessageService from "../MessageServices/CreateMessageService";
 import formatBody from "../../helpers/Mustache";
 import logger from "../../utils/logger";
 import { ENABLE_LID_DEBUG } from "../../config/debug";
-import { normalizeJid } from "../../utils";
-import { getJidOf } from "./getJidOf";
+import { resolveOutboundJid } from "./resolveOutboundJid";
 
 ffmpeg.setFfmpegPath(ffmpegStatic!);
 
@@ -342,19 +341,7 @@ const SendWhatsAppMedia = async ({
 
     const contactNumber = await Contact.findByPk(ticket.contactId);
 
-    let jid;
-    if (contactNumber.lid && contactNumber.lid !== "") {
-      jid = contactNumber.lid;
-    } else if (
-      contactNumber.remoteJid &&
-      contactNumber.remoteJid !== "" &&
-      contactNumber.remoteJid.includes("@")
-    ) {
-      jid = contactNumber.remoteJid;
-    } else {
-      jid = `${contactNumber.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`;
-    }
-    jid = normalizeJid(jid);
+    const jid = await resolveOutboundJid(ticket, contactNumber);
 
     let sentMessage: WAMessage;
 
@@ -366,7 +353,7 @@ const SendWhatsAppMedia = async ({
       try {
         // sentMessage = await wbot.sendMessage(jid, options);
 
-        sentMessage = await wbot.sendMessage(getJidOf(ticket), options);
+        sentMessage = await wbot.sendMessage(jid, options);
       } catch (err1) {
         if (err1.message && err1.message.includes("senderMessageKeys")) {
           // const simpleOptions = { ...options } as any;
@@ -376,7 +363,7 @@ const SendWhatsAppMedia = async ({
 
           // sentMessage = await wbot.sendMessage(jid, simpleOptions);
 
-          sentMessage = await wbot.sendMessage(getJidOf(ticket), options);
+          sentMessage = await wbot.sendMessage(jid, options);
         } else {
           // const otherOptions = { ...options } as any;
           // if (otherOptions.contextInfo) {
@@ -384,12 +371,12 @@ const SendWhatsAppMedia = async ({
           // }
           // sentMessage = await wbot.sendMessage(jid, otherOptions);
 
-          sentMessage = await wbot.sendMessage(getJidOf(ticket), options);
+          sentMessage = await wbot.sendMessage(jid, options);
         }
       }
     } else {
       // sentMessage = await wbot.sendMessage(jid, options);
-      sentMessage = await wbot.sendMessage(getJidOf(ticket), options);
+      sentMessage = await wbot.sendMessage(jid, options);
     }
 
     await ticket.update({

@@ -10,7 +10,7 @@ import { isNil } from "lodash";
 import formatBody from "../../helpers/Mustache";
 import logger from "../../utils/logger";
 import { ENABLE_LID_DEBUG } from "../../config/debug";
-import { normalizeJid } from "../../utils";
+import { resolveOutboundJid } from "./resolveOutboundJid";
 interface Request {
   body: string;
   ticket: Ticket;
@@ -35,11 +35,7 @@ const SendWhatsAppMessage = async ({
     throw new AppError("Contato do ticket não encontrado");
   }
 
-  // Sempre envie para o JID tradicional
-  let jid = `${contactNumber.number}@${
-    ticket.isGroup ? "g.us" : "s.whatsapp.net"
-  }`;
-  jid = normalizeJid(jid);
+  const jid = await resolveOutboundJid(ticket, contactNumber);
 
   if (ENABLE_LID_DEBUG) {
     logger.info(
