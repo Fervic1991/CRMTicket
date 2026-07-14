@@ -463,16 +463,17 @@ const normalizeIncomingRemoteJid = (msg: proto.IWebMessageInfo): proto.IWebMessa
 
 const getContactMessage = async (msg: proto.IWebMessageInfo, wbot: Session) => {
   const isGroup = msg.key.remoteJid.includes("g.us");
+  const messageKey = msg.key as any;
   const senderPn =
-    (msg?.key as any)?.senderPn || (msg?.key as any)?.participantPn;
+    messageKey?.senderPn || messageKey?.participantPn;
   const normalizedId =
     !isGroup && senderPn && String(senderPn).includes("@s.whatsapp.net")
       ? normalizeJid(String(senderPn))
       : normalizeContactIdentifier(msg);
   const rawNumber = normalizedId.replace(/\D/g, "");
   const originalLid =
-    !isGroup && msg?.key?.lid && String(msg.key.lid).includes("@lid")
-      ? normalizeJid(String(msg.key.lid))
+    !isGroup && messageKey?.lid && String(messageKey.lid).includes("@lid")
+      ? normalizeJid(String(messageKey.lid))
       : undefined;
 
   return isGroup

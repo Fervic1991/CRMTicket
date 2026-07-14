@@ -46,6 +46,8 @@ interface ContactData {
   channel?: string;
   disableBot?: boolean;
   language?: string;
+  remoteJid?: string;
+  lid?: string | null;
 }
 
 export const updateContact = async (
