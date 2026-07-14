@@ -410,9 +410,19 @@ async function handleVerifyCampaigns(job) {
         `SELECT id, "scheduledAt", "nextScheduledAt" 
          FROM "Campaigns" c
          WHERE (
-           ("scheduledAt" BETWEEN NOW() AND NOW() + INTERVAL '3 hour' AND status = 'PROGRAMADA' AND "executionCount" = 0)
+           (
+             "scheduledAt" IS NOT NULL
+             AND "scheduledAt" <= NOW() + INTERVAL '3 hour'
+             AND status = 'PROGRAMADA'
+             AND "executionCount" = 0
+           )
            OR 
-           ("nextScheduledAt" BETWEEN NOW() AND NOW() + INTERVAL '3 hour' AND status = 'PROGRAMADA' AND "isRecurring" = true)
+           (
+             "nextScheduledAt" IS NOT NULL
+             AND "nextScheduledAt" <= NOW() + INTERVAL '3 hour'
+             AND status = 'PROGRAMADA'
+             AND "isRecurring" = true
+           )
          )`,
         { type: QueryTypes.SELECT }
       );
@@ -429,7 +439,7 @@ async function handleVerifyCampaigns(job) {
           const now = moment();
           const executeAt = campaign.nextScheduledAt || campaign.scheduledAt;
           const scheduledAt = moment(executeAt);
-          const delay = scheduledAt.diff(now, "milliseconds");
+          const delay = Math.max(0, scheduledAt.diff(now, "milliseconds"));
           
           logger.info(
             `Campanha enviada para a fila: Campanha=${campaign.id}, Delay=${delay}`
