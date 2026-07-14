@@ -4316,6 +4316,9 @@ if (!msg.key.fromMe && ticket.useIntegration && ticket.status !== "open") {
 
       // Verificar campanhas SEMPRE, independente do estado do ticket
       try {
+        if (!ticket.integrationId) {
+          return;
+        }
 
         const queueIntegrations = await ShowQueueIntegrationService(
           ticket.integrationId,
@@ -4529,6 +4532,10 @@ if (!msg.key.fromMe && ticket.useIntegration && ticket.status !== "open") {
 
           // Só verificar se não entrou em fluxo
           if (!ticket.flowWebhook || !ticket.lastFlowId) {
+            if (!whatsapp.integrationId) {
+              return;
+            }
+
             const contactForCampaign = await ShowContactService(
               ticket.contactId,
               ticket.companyId

@@ -509,6 +509,31 @@ async function getCampaign(id) {
 const normalizeCampaignRecipient = (value?: string | number | null) =>
   String(value || "").trim();
 
+const resolveCampaignWhatsappJid = async (wbot: any, number: string, isGroup = false) => {
+  const recipient = normalizeCampaignRecipient(number);
+
+  if (!recipient) {
+    throw new Error("Invalid campaign recipient");
+  }
+
+  if (recipient.includes("@")) {
+    return recipient;
+  }
+
+  if (isGroup) {
+    return `${recipient}@g.us`;
+  }
+
+  const lookup = await wbot.onWhatsApp(`${recipient}@s.whatsapp.net`);
+  const resolvedJid = lookup?.[0]?.jid;
+
+  if (!lookup?.[0]?.exists || !resolvedJid) {
+    throw new Error(`Campaign recipient not found on WhatsApp: ${recipient}`);
+  }
+
+  return resolvedJid;
+};
+
 const isCampaignContactCompatible = (channel: string, contact: any) => {
   const recipient = normalizeCampaignRecipient(contact?.number);
 
@@ -1395,9 +1420,15 @@ async function handleDispatchCampaign(job) {
       }
     );
 
-    const chatId = campaignShipping.contact.isGroup
-      ? `${campaignShipping.number}@g.us`
-      : `${campaignShipping.number}@s.whatsapp.net`;
+    const chatId = usesWbot
+      ? await resolveCampaignWhatsappJid(
+          wbot,
+          campaignShipping.number,
+          campaignShipping.contact.isGroup
+        )
+      : campaignShipping.contact.isGroup
+        ? `${campaignShipping.number}@g.us`
+        : `${campaignShipping.number}@s.whatsapp.net`;
 
     if (campaign.openTicket === "enabled") {
       let contact = await Contact.findOne({
@@ -1451,9 +1482,11 @@ async function handleDispatchCampaign(job) {
       ticket = await ShowTicketService(ticket.id, campaign.companyId);
 
       if (whatsapp.status === "CONNECTED") {
+        let dispatchResult: any = null;
+
         if (campaign.confirmation && campaignShipping.confirmation === null) {
           if (isOfficialChannel) {
-            await sendCampaignWhatsAppOfficialMessage({
+            dispatchResult = await sendCampaignWhatsAppOfficialMessage({
               campaign,
               campaignShipping,
               recipientNumber: campaignShipping.number,
@@ -1463,7 +1496,7 @@ async function handleDispatchCampaign(job) {
               includeMedia: false
             });
           } else if (isSocialChannel) {
-            await sendCampaignMetaMessage({
+            dispatchResult = await sendCampaignMetaMessage({
               campaign,
               campaignShipping,
               recipientId: campaignShipping.number,
@@ -1476,6 +1509,7 @@ async function handleDispatchCampaign(job) {
             const confirmationMessage = await wbot.sendMessage(getJidOf(chatId), {
               text: `\u200c ${campaignShipping.confirmationMessage}`
             });
+            dispatchResult = confirmationMessage;
 
             await verifyMessage(
               confirmationMessage,
@@ -1498,7 +1532,7 @@ async function handleDispatchCampaign(job) {
           });
         } else {
           if (isOfficialChannel) {
-            await sendCampaignWhatsAppOfficialMessage({
+            dispatchResult = await sendCampaignWhatsAppOfficialMessage({
               campaign,
               campaignShipping,
               recipientNumber: campaignShipping.number,
@@ -1508,7 +1542,7 @@ async function handleDispatchCampaign(job) {
               includeMedia: !!campaign.mediaPath
             });
           } else if (isSocialChannel) {
-            await sendCampaignMetaMessage({
+            dispatchResult = await sendCampaignMetaMessage({
               campaign,
               campaignShipping,
               recipientId: campaignShipping.number,
@@ -1522,6 +1556,7 @@ async function handleDispatchCampaign(job) {
               const sentMessage = await wbot.sendMessage(getJidOf(chatId), {
                 text: `\u200c ${campaignShipping.message}`
               });
+              dispatchResult = sentMessage;
 
               await verifyMessage(
                 sentMessage,
@@ -1559,6 +1594,7 @@ async function handleDispatchCampaign(job) {
                   const audioMessage = await wbot.sendMessage(getJidOf(chatId), {
                     text: `\u200c ${campaignShipping.message}`
                   });
+                  dispatchResult = audioMessage;
 
                   await verifyMessage(
                     audioMessage,
@@ -1579,6 +1615,7 @@ async function handleDispatchCampaign(job) {
                 const sentMessage = await wbot.sendMessage(getJidOf(chatId), {
                   ...options
                 });
+                dispatchResult = sentMessage;
 
                 await verifyMediaMessage(
                   sentMessage,
@@ -1613,6 +1650,13 @@ async function handleDispatchCampaign(job) {
           //     });
           // }
         }
+
+        if (usesWbot && !dispatchResult?.key?.id) {
+          throw new Error(
+            `Campaign WhatsApp dispatch returned no message id for recipient ${campaignShipping.number}`
+          );
+        }
+
         await campaignShipping.update({ deliveredAt: moment() });
         logCampaignDispatch({
           step: "dispatch-delivered",
@@ -1621,13 +1665,17 @@ async function handleDispatchCampaign(job) {
           channel,
           contactId: contact.id,
           recipient: campaignShipping.number,
-          openTicket: true
+          openTicket: true,
+          jid: chatId,
+          messageId: dispatchResult?.key?.id || null
         });
       }
     } else {
+      let dispatchResult: any = null;
+
       if (campaign.confirmation && campaignShipping.confirmation === null) {
         if (isOfficialChannel) {
-          await sendCampaignWhatsAppOfficialMessage({
+          dispatchResult = await sendCampaignWhatsAppOfficialMessage({
             campaign,
             campaignShipping,
             recipientNumber: campaignShipping.number,
@@ -1635,7 +1683,7 @@ async function handleDispatchCampaign(job) {
             includeMedia: false
           });
         } else if (isSocialChannel) {
-          await sendCampaignMetaMessage({
+          dispatchResult = await sendCampaignMetaMessage({
             campaign,
             campaignShipping,
             recipientId: campaignShipping.number,
@@ -1643,7 +1691,7 @@ async function handleDispatchCampaign(job) {
             includeMedia: false
           });
         } else {
-          await wbot.sendMessage(getJidOf(chatId), {
+          dispatchResult = await wbot.sendMessage(getJidOf(chatId), {
             text: campaignShipping.confirmationMessage
           });
         }
@@ -1659,7 +1707,7 @@ async function handleDispatchCampaign(job) {
         });
       } else {
         if (isOfficialChannel) {
-          await sendCampaignWhatsAppOfficialMessage({
+          dispatchResult = await sendCampaignWhatsAppOfficialMessage({
             campaign,
             campaignShipping,
             recipientNumber: campaignShipping.number,
@@ -1667,7 +1715,7 @@ async function handleDispatchCampaign(job) {
             includeMedia: !!campaign.mediaPath
           });
         } else if (isSocialChannel) {
-          await sendCampaignMetaMessage({
+          dispatchResult = await sendCampaignMetaMessage({
             campaign,
             campaignShipping,
             recipientId: campaignShipping.number,
@@ -1679,6 +1727,7 @@ async function handleDispatchCampaign(job) {
             const sentMessage = await wbot.sendMessage(getJidOf(chatId), {
               text: campaignShipping.message
             });
+            dispatchResult = sentMessage;
 
             await scheduleCampaignMessageDeletion({
               campaign,
@@ -1707,6 +1756,7 @@ async function handleDispatchCampaign(job) {
                 const audioMessage = await wbot.sendMessage(getJidOf(chatId), {
                   text: campaignShipping.message
                 });
+                dispatchResult = audioMessage;
 
                 await scheduleCampaignMessageDeletion({
                   campaign,
@@ -1716,6 +1766,7 @@ async function handleDispatchCampaign(job) {
                 });
               }
               const sentMessage = await wbot.sendMessage(getJidOf(chatId), { ...options });
+              dispatchResult = sentMessage;
 
               await scheduleCampaignMessageDeletion({
                 campaign,
@@ -1728,6 +1779,12 @@ async function handleDispatchCampaign(job) {
         }
       }
 
+      if (usesWbot && !dispatchResult?.key?.id) {
+        throw new Error(
+          `Campaign WhatsApp dispatch returned no message id for recipient ${campaignShipping.number}`
+        );
+      }
+
       await campaignShipping.update({ deliveredAt: moment() });
       logCampaignDispatch({
         step: "dispatch-delivered",
@@ -1736,7 +1793,9 @@ async function handleDispatchCampaign(job) {
         channel,
         contactId: campaignShipping.contactId,
         recipient: campaignShipping.number,
-        openTicket: false
+        openTicket: false,
+        jid: chatId,
+        messageId: dispatchResult?.key?.id || null
       });
     }
     await verifyAndFinalizeCampaign(campaign);
