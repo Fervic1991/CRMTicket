@@ -1507,7 +1507,7 @@ async function handleDispatchCampaign(job) {
             });
           } else {
             const confirmationMessage = await wbot.sendMessage(getJidOf(chatId), {
-              text: `\u200c ${campaignShipping.confirmationMessage}`
+              text: campaignShipping.confirmationMessage
             });
             dispatchResult = confirmationMessage;
 
@@ -1554,7 +1554,7 @@ async function handleDispatchCampaign(job) {
           } else {
             if (!campaign.mediaPath) {
               const sentMessage = await wbot.sendMessage(getJidOf(chatId), {
-                text: `\u200c ${campaignShipping.message}`
+                text: campaignShipping.message
               });
               dispatchResult = sentMessage;
 
@@ -1587,12 +1587,12 @@ async function handleDispatchCampaign(job) {
                 campaign.mediaName,
                 filePath,
                 String(campaign.companyId),
-                `\u200c ${campaignShipping.message}`
+                campaignShipping.message
               );
               if (Object.keys(options).length) {
                 if (options.mimetype === "audio/mp4") {
                   const audioMessage = await wbot.sendMessage(getJidOf(chatId), {
-                    text: `\u200c ${campaignShipping.message}`
+                    text: campaignShipping.message
                   });
                   dispatchResult = audioMessage;
 
