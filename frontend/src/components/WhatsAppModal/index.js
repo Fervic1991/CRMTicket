@@ -342,6 +342,16 @@ const WhatsAppModal = ({ open, onClose, whatsAppId, channel }) => {
   };
 
   useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    if (!whatsAppId) {
+      setIsOficial(channel === "whatsapp_oficial");
+    }
+  }, [open, channel, whatsAppId]);
+
+  useEffect(() => {
     const fetchSession = async () => {
       if (!whatsAppId) return;
 
@@ -592,6 +602,7 @@ const WhatsAppModal = ({ open, onClose, whatsAppId, channel }) => {
   const handleClose = () => {
     onClose();
     setWhatsApp(initialState);
+    setIsOficial(false);
     setEnableImportMessage(false);
     // inputFileRef.current.value = null
     setAttachment(null);
