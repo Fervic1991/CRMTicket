@@ -175,6 +175,15 @@ export const initWASocket = async (whatsapp: Whatsapp): Promise<Session> => {
         ): Promise<WAMessageContent> {
           if (!key.id) return null;
 
+          const cachedProtocolMessage = msgDB.get(key);
+          if (cachedProtocolMessage) {
+            logger.debug(
+              { key },
+              "cacheMessage: recovered from protocol cache"
+            );
+            return cachedProtocolMessage;
+          }
+
           const message = store.get(key.id);
 
           if (message) {
@@ -190,7 +199,7 @@ export const initWASocket = async (whatsapp: Whatsapp): Promise<Session> => {
           let msg: Message;
 
           msg = await Message.findOne({
-            where: { id: key.id, fromMe: true }
+            where: { wid: key.id, fromMe: true }
           });
 
           if (!msg) {
@@ -249,7 +258,7 @@ export const initWASocket = async (whatsapp: Whatsapp): Promise<Session> => {
           transactionOpts: { maxCommitRetries: 10, delayBetweenTriesMs: 3000 },
           connectTimeoutMs: 25_000,
           // keepAliveIntervalMs: 60_000,
-          getMessage: msgDB.get,
+          getMessage,
         });
 
         wsocket.cacheMessage = (msg: proto.IWebMessageInfo): void => {

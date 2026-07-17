@@ -4768,10 +4768,10 @@ const wbotMessageListener = (wbot: Session, companyId: number): void => {
       .filter(filterMessages)
       .map(msg => msg);
 
-    if (!messages) return;
+    if (!messages?.length) return;
 
     // console.log("CIAAAAAAA WBOT " , companyId)
-    messages.forEach(async (message: proto.IWebMessageInfo) => {
+    for (const message of messages) {
       if (
         message?.messageStubParameters?.length &&
         message.messageStubParameters[0].includes("absent")
@@ -4826,7 +4826,7 @@ const wbotMessageListener = (wbot: Session, companyId: number): void => {
 
       if (message.key.remoteJid?.endsWith("@g.us")) {
         if (REDIS_URI_MSG_CONN !== "") {
-          BullQueues.add(
+          await BullQueues.add(
             `${process.env.DB_NAME}-handleMessageAck`,
             { msg: message, chat: 2 },
             {
@@ -4838,7 +4838,7 @@ const wbotMessageListener = (wbot: Session, companyId: number): void => {
           handleMsgAck(message, 2);
         }
       }
-    });
+    }
 
     // messages.forEach(async (message: proto.IWebMessageInfo) => {
     //   const messageExists = await Message.count({
