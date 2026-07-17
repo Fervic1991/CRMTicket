@@ -4750,6 +4750,16 @@ const filterMessages = (msg: WAMessage): boolean => {
     logger.info(
       `[WBOT UPSERT] filtered protocolMessage messageId=${msg.key?.id} remoteJid=${msg.key?.remoteJid}`
     );
+    logger.info(
+      `[WBOT UPSERT] filtered protocolMessage payload=${JSON.stringify({
+        key: msg.key,
+        messageStubType: msg.messageStubType,
+        messageStubParameters: msg.messageStubParameters,
+        protocolMessage: msg.message?.protocolMessage,
+        messageTimestamp: msg.messageTimestamp,
+        pushName: msg.pushName
+      })}`
+    );
     return false;
   }
 
@@ -4763,6 +4773,16 @@ const filterMessages = (msg: WAMessage): boolean => {
   ) {
     logger.info(
       `[WBOT UPSERT] filtered stub messageId=${msg.key?.id} remoteJid=${msg.key?.remoteJid} stubType=${msg.messageStubType}`
+    );
+    logger.info(
+      `[WBOT UPSERT] filtered stub payload=${JSON.stringify({
+        key: msg.key,
+        messageStubType: msg.messageStubType,
+        messageStubParameters: msg.messageStubParameters,
+        messageTimestamp: msg.messageTimestamp,
+        pushName: msg.pushName,
+        hasMessage: !!msg.message
+      })}`
     );
     return false;
   }
