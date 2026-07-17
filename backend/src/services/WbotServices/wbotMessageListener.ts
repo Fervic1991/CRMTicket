@@ -4746,7 +4746,12 @@ const filterMessages = (msg: WAMessage): boolean => {
   msgDB.save(msg);
 
   if (msg.message?.protocolMessage?.editedMessage) return true;
-  if (msg.message?.protocolMessage) return false;
+  if (msg.message?.protocolMessage) {
+    logger.info(
+      `[WBOT UPSERT] filtered protocolMessage messageId=${msg.key?.id} remoteJid=${msg.key?.remoteJid}`
+    );
+    return false;
+  }
 
   if (
     [
@@ -4755,23 +4760,33 @@ const filterMessages = (msg: WAMessage): boolean => {
       WAMessageStubType.E2E_IDENTITY_CHANGED,
       WAMessageStubType.CIPHERTEXT
     ].includes(msg.messageStubType)
-  )
+  ) {
+    logger.info(
+      `[WBOT UPSERT] filtered stub messageId=${msg.key?.id} remoteJid=${msg.key?.remoteJid} stubType=${msg.messageStubType}`
+    );
     return false;
+  }
 
   return true;
 };
 
 const wbotMessageListener = (wbot: Session, companyId: number): void => {
   wbot.ev.on("messages.upsert", async (messageUpsert: ImessageUpsert) => {
-    const messages = messageUpsert.messages
-      .map(normalizeIncomingRemoteJid)
-      .filter(filterMessages)
-      .map(msg => msg);
+    const normalizedMessages = messageUpsert.messages.map(normalizeIncomingRemoteJid);
+    const messages = normalizedMessages.filter(filterMessages).map(msg => msg);
+
+    logger.info(
+      `[WBOT UPSERT] wbot=${wbot.id} companyId=${companyId} type=${messageUpsert.type} received=${messageUpsert.messages.length} normalized=${normalizedMessages.length} filtered=${messages.length}`
+    );
 
     if (!messages?.length) return;
 
     // console.log("CIAAAAAAA WBOT " , companyId)
     for (const message of messages) {
+      logger.info(
+        `[WBOT UPSERT] processing messageId=${message.key.id} remoteJid=${message.key.remoteJid} fromMe=${message.key.fromMe} hasMessage=${!!message.message} stubType=${message.messageStubType || "none"}`
+      );
+
       if (
         message?.messageStubParameters?.length &&
         message.messageStubParameters[0].includes("absent")
@@ -4786,6 +4801,12 @@ const wbotMessageListener = (wbot: Session, companyId: number): void => {
       const messageExists = await Message.count({
         where: { wid: message.key.id!, companyId }
       });
+
+      if (messageExists) {
+        logger.info(
+          `[WBOT UPSERT] skip existing messageId=${message.key.id} remoteJid=${message.key.remoteJid} companyId=${companyId}`
+        );
+      }
 
       if (!messageExists) {
         let isCampaign = false;
@@ -4804,6 +4825,9 @@ const wbotMessageListener = (wbot: Session, companyId: number): void => {
           if (REDIS_URI_MSG_CONN !== "") {
             //} && (!message.key.fromMe || (message.key.fromMe && !message.key.id.startsWith('BAE')))) {
             try {
+              logger.info(
+                `[WBOT UPSERT] queue add start messageId=${message.key.id} remoteJid=${message.key.remoteJid} wbot=${wbot.id} companyId=${companyId}`
+              );
               await BullQueues.add(
                 `${process.env.DB_NAME}-handleMessage`,
                 { message, wbot: wbot.id, companyId },
@@ -4812,10 +4836,20 @@ const wbotMessageListener = (wbot: Session, companyId: number): void => {
                   jobId: `${wbot.id}-handleMessage-${message.key.id}`
                 }
               );
+              logger.info(
+                `[WBOT UPSERT] queue add done messageId=${message.key.id} remoteJid=${message.key.remoteJid} wbot=${wbot.id} companyId=${companyId}`
+              );
             } catch (e) {
+              logger.error(
+                `[WBOT UPSERT] queue add error messageId=${message.key.id} remoteJid=${message.key.remoteJid} wbot=${wbot.id} companyId=${companyId}`
+              );
+              logger.error(e);
               Sentry.captureException(e);
             }
           } else {
+            logger.info(
+              `[WBOT UPSERT] direct handleMessage messageId=${message.key.id} remoteJid=${message.key.remoteJid} wbot=${wbot.id} companyId=${companyId}`
+            );
             await handleMessage(message, wbot, companyId);
           }
         }
