@@ -53,6 +53,7 @@ export type Session = WASocket & {
   myJid?: string;
   myLid?: string;
   cacheMessage?: (msg: proto.IWebMessageInfo) => void;
+  isRefreshing?: boolean;
 };
 
 const sessions: Session[] = [];
@@ -228,6 +229,28 @@ export const initWASocket = async (whatsapp: Whatsapp): Promise<Session> => {
 
         const { state, saveCreds } = await useMultiFileAuthState(whatsapp);
 
+        const scheduleReconnect = async (
+          delayMs: number,
+          status: "DISCONNECTED" | "PENDING"
+        ) => {
+          if (wsocket?.isRefreshing) {
+            logger.warn(`Socket ${name} reconnect già in corso, skip duplicate`);
+            return;
+          }
+
+          wsocket.isRefreshing = true;
+          await whatsapp.update({ status });
+          io.of(String(companyId))
+            .emit(`company-${whatsapp.companyId}-whatsappSession`, {
+              action: "update",
+              session: whatsapp
+            });
+          await removeWbot(id, false);
+          setTimeout(() => {
+            StartWhatsAppSession(whatsapp, whatsapp.companyId);
+          }, delayMs);
+        };
+
         wsocket = makeWASocket({
           version: versionWA || [2, 3000, 1024710243],
           logger: loggerBaileys,
@@ -254,7 +277,7 @@ export const initWASocket = async (whatsapp: Whatsapp): Promise<Session> => {
           retryRequestDelayMs: 500,
           maxMsgRetryCount: 5,
           emitOwnEvents: true,
-          fireInitQueries: true,
+          fireInitQueries: false,
           transactionOpts: { maxCommitRetries: 10, delayBetweenTriesMs: 3000 },
           connectTimeoutMs: 25_000,
           // keepAliveIntervalMs: 60_000,
@@ -422,11 +445,7 @@ export const initWASocket = async (whatsapp: Whatsapp): Promise<Session> => {
                     action: "update",
                     session: whatsapp
                   });
-                removeWbot(id, false);
-                setTimeout(
-                  () => StartWhatsAppSession(whatsapp, whatsapp.companyId),
-                  2000
-                );
+                await scheduleReconnect(4000, "PENDING");
                 return;
               }
 
@@ -448,17 +467,11 @@ export const initWASocket = async (whatsapp: Whatsapp): Promise<Session> => {
               }
 
               if (statusCode !== DisconnectReason.loggedOut) {
-                await whatsapp.update({ status: "DISCONNECTED" });
-                io.of(String(companyId))
-                  .emit(`company-${whatsapp.companyId}-whatsappSession`, {
-                    action: "update",
-                    session: whatsapp
-                  });
-                removeWbot(id, false);
-                setTimeout(
-                  () => StartWhatsAppSession(whatsapp, whatsapp.companyId),
-                  2000
-                );
+                const reconnectDelay =
+                  statusCode === 428 || statusCode === 500 || statusCode === 515
+                    ? 7000
+                    : 3000;
+                await scheduleReconnect(reconnectDelay, "DISCONNECTED");
               } else {
                 await whatsapp.update({ status: "PENDING", session: "" });
                 await DeleteBaileysService(whatsapp.id);
@@ -468,15 +481,12 @@ export const initWASocket = async (whatsapp: Whatsapp): Promise<Session> => {
                     action: "update",
                     session: whatsapp
                   });
-                removeWbot(id, false);
-                setTimeout(
-                  () => StartWhatsAppSession(whatsapp, whatsapp.companyId),
-                  2000
-                );
+                await scheduleReconnect(4000, "PENDING");
               }
             }
 
             if (connection === "open") {
+              wsocket.isRefreshing = false;
 
               wsocket.myLid = jidNormalizedUser(wsocket.user?.lid)
               wsocket.myJid = jidNormalizedUser(wsocket.user.id)
