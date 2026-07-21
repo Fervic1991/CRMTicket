@@ -117,6 +117,9 @@ export async function verifyContact(
   const isLid = normalizedLid.includes("@lid");
   const isGroup = remoteJid.includes("@g.us");
   const number = extractDigits(remoteJid) || extractDigits(normalizedLid);
+  // A LID is an internal WhatsApp identifier, not a phone number. When an
+  // incoming event has only a LID, preserve the real phone/JID already known.
+  const hasOnlyLidIdentity = isLid && remoteJid.endsWith("@lid");
 
   const contactData = {
     name: msgContact?.name || remoteJid.replace(/\D/g, ""),
@@ -168,10 +171,14 @@ export async function verifyContact(
     if (isLid) {
       if (foundContact) {
         return updateContact(foundContact, {
-          number: contactData.number,
-          remoteJid: contactData.remoteJid,
           lid: normalizedLid,
-          profilePicUrl: contactData.profilePicUrl
+          profilePicUrl: contactData.profilePicUrl,
+          ...(hasOnlyLidIdentity
+            ? {}
+            : {
+              number: contactData.number,
+              remoteJid: contactData.remoteJid
+            })
         });
       }
 
@@ -194,10 +201,14 @@ export async function verifyContact(
 
       if (foundMappedContact) {
         return updateContact(foundMappedContact.contact, {
-          number: contactData.number,
-          remoteJid: contactData.remoteJid,
           lid: normalizedLid,
-          profilePicUrl: contactData.profilePicUrl
+          profilePicUrl: contactData.profilePicUrl,
+          ...(hasOnlyLidIdentity
+            ? {}
+            : {
+              number: contactData.number,
+              remoteJid: contactData.remoteJid
+            })
         });
       }
 
@@ -218,10 +229,14 @@ export async function verifyContact(
 
       if (partialLidContact) {
         return updateContact(partialLidContact, {
-          number: contactData.number,
-          remoteJid: contactData.remoteJid,
           lid: normalizedLid,
-          profilePicUrl: contactData.profilePicUrl
+          profilePicUrl: contactData.profilePicUrl,
+          ...(hasOnlyLidIdentity
+            ? {}
+            : {
+              number: contactData.number,
+              remoteJid: contactData.remoteJid
+            })
         });
       }
     } else if (foundContact) {
