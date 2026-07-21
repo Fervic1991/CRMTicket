@@ -15,7 +15,7 @@ import makeWASocket, {
 import { FindOptions } from "sequelize/types";
 import Whatsapp from "../models/Whatsapp";
 import logger from "../utils/logger";
-import MAIN_LOGGER from "@whiskeysockets/baileys/lib/Utils/logger";
+import pino from "pino";
 import { useMultiFileAuthState } from "../helpers/useMultiFileAuthState";
 import { Boom } from "@hapi/boom";
 import AppError from "../errors/AppError";
@@ -45,8 +45,7 @@ const msgCache = new NodeCache({
   useClones: false
 });
 
-const loggerBaileys = MAIN_LOGGER.child({});
-loggerBaileys.level = "error";
+const loggerBaileys = pino({ level: "error" });
 
 export type Session = WASocket & {
   id?: number;
