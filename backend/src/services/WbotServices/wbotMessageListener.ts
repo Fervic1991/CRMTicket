@@ -433,7 +433,16 @@ const getSenderMessage = (
 
 const normalizeContactIdentifier = (msg: proto.IWebMessageInfo): string => {
   // @ts-ignore: lid pode não estar definido no tipo, mas existe na versão mais recente
-  return normalizeJid(msg.key.lid || msg.key.remoteJid);
+  const rawIdentifier = msg.key.lid || msg.key.remoteJid;
+
+  // Do not convert a LID into a phone-like JID. A LID is only useful for
+  // locating the existing contact that owns it; converting it creates a
+  // duplicate contact with the LID digits as its phone number.
+  if (rawIdentifier?.includes("@lid")) {
+    return rawIdentifier;
+  }
+
+  return normalizeJid(rawIdentifier);
 };
 
 const normalizeIncomingRemoteJid = (msg: proto.IWebMessageInfo): proto.IWebMessageInfo => {
@@ -466,15 +475,18 @@ const getContactMessage = async (msg: proto.IWebMessageInfo, wbot: Session) => {
   const messageKey = msg.key as any;
   const senderPn =
     messageKey?.senderPn || messageKey?.participantPn;
+  const rawLid =
+    messageKey?.lid?.includes("@lid")
+      ? String(messageKey.lid)
+      : messageKey?.remoteJid?.includes("@lid")
+        ? String(messageKey.remoteJid)
+        : undefined;
   const normalizedId =
     !isGroup && senderPn && String(senderPn).includes("@s.whatsapp.net")
       ? normalizeJid(String(senderPn))
-      : normalizeContactIdentifier(msg);
+      : rawLid || normalizeContactIdentifier(msg);
   const rawNumber = normalizedId.replace(/\D/g, "");
-  const originalLid =
-    !isGroup && messageKey?.lid && String(messageKey.lid).includes("@lid")
-      ? normalizeJid(String(messageKey.lid))
-      : undefined;
+  const originalLid = !isGroup ? rawLid : undefined;
 
   return isGroup
     ? {
