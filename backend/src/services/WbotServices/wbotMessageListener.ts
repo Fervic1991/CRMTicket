@@ -761,7 +761,7 @@ const downloadMedia = async (
   let buffer;
   try {
     buffer = await downloadMediaMessage(
-      msg,
+      msg as WAMessage,
       "buffer",
       {},
       {
@@ -2973,7 +2973,7 @@ export const handleMessageIntegration = async (
         await sendDialogflowAwswer(
           wbot,
           ticket,
-          msg,
+          msg as WAMessage,
           ticket.contact,
           inputAudio,
           companyId,
@@ -4889,7 +4889,7 @@ const wbotMessageListener = (wbot: Session, companyId: number): void => {
             }
           );
         } else {
-          handleMsgAck(message, 2);
+          handleMsgAck(message as WAMessage, 2);
         }
       }
     }

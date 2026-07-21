@@ -228,7 +228,7 @@ export async function verifyContact(
       if (!foundContact.whatsappLidMap) {
         const ow = await wbot.onWhatsApp(contactData.remoteJid);
         if (ow?.[0]?.exists) {
-          const lid = ow?.[0]?.lid as string;
+          const lid = (ow?.[0] as any)?.lid as string;
           if (lid) {
             await checkAndDedup(foundContact, lid);
             await WhatsappLidMap.findOrCreate({
@@ -253,7 +253,7 @@ export async function verifyContact(
       });
     } else if (!isGroup && !foundContact) {
       const ow = await wbot.onWhatsApp(contactData.remoteJid);
-      const lid = ow?.[0]?.lid as string;
+      const lid = (ow?.[0] as any)?.lid as string;
 
       if (ow?.[0]?.exists && lid) {
         const lidDigits = extractDigits(lid);
