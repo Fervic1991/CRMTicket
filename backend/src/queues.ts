@@ -1233,7 +1233,10 @@ async function handleProcessCampaign(job) {
           const queuePromise = campaignQueue.add(
             "PrepareContact",
             { contactId, campaignId, variables, delay },
-            { removeOnComplete: true }
+            {
+              delay: Math.max(0, delay),
+              removeOnComplete: true
+            }
           );
           queuePromises.push(queuePromise);
           logger.info(
